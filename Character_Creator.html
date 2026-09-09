@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Character Creator — Naruto D&D 5e</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #0d1517; --deep: #12232a; --mist: #3c5a63; --mist-light: #7a9aa3;
+    --foam: #d9e6e6; --blood: #7c1d22; --blood-bright: #b3383f; --gold: #a98a4f;
+    --panel-rgb: 18,35,42; --border-rgb: 122,154,163; --line-rgb: 217,230,230;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(60,90,99,0.35), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(124,29,34,0.18), transparent 50%),
+      var(--ink);
+    color:var(--foam); font-family:'Zen Kaku Gothic New', sans-serif;
+    padding:28px 16px 60px; min-height:100vh;
+  }
+  .wrap{ max-width:960px; margin:0 auto; }
+  input, textarea, select{
+    background:rgba(var(--panel-rgb),0.55); border:1px solid rgba(var(--border-rgb),0.3); color:var(--foam);
+    font-family:'Zen Kaku Gothic New', sans-serif; padding:6px 9px; font-size:0.9rem;
+  }
+  input:focus, textarea:focus, select:focus{ outline:none; border-color:var(--blood-bright); }
+  #f_ryo::-webkit-inner-spin-button, #f_ryo::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0; }
+  #f_ryo{ -moz-appearance:textfield; }
+  .name-input{ font-family:'Shippori Mincho', serif; font-weight:700; font-size:1.7rem; background:transparent; border:none; border-bottom:1px solid rgba(var(--line-rgb),0.25); padding:2px 0; color:var(--foam); width:100%; }
+  .name-input:focus{ border-bottom-color:var(--blood-bright); }
+
+  section{ margin-bottom:30px; }
+  h2{
+    font-family:'Shippori Mincho', serif; font-weight:500; font-size:1.05rem; color:var(--mist-light);
+    margin:0 0 12px; letter-spacing:0.04em; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+  h2::after{ content:''; flex:1; height:1px; background:rgba(var(--border-rgb),0.25); min-width:20px; }
+  h2 .inline-input{ width:60px; text-align:center; }
+  h2 .points-remaining{ font-family:'Shippori Mincho', serif; font-size:0.95rem; color:var(--gold); }
+  h2 .points-remaining.negative{ color:var(--blood-bright); }
+
+  .vitals{ display:flex; gap:14px; flex-wrap:wrap; }
+  .vital-box{ flex:1; min-width:190px; background:rgba(var(--panel-rgb),0.6); border:1px solid rgba(var(--border-rgb),0.25); padding:14px 16px; }
+  .vital-label{ font-size:0.75rem; color:var(--mist-light); text-transform:uppercase; letter-spacing:0.08em; }
+  .vital-value{ font-family:'Shippori Mincho', serif; font-size:1.4rem; margin-top:4px; display:flex; align-items:center; gap:6px; }
+  .vital-value input.max-input{ width:55px; text-align:center; font-family:'Shippori Mincho', serif; font-size:1.1rem; }
+  .track-row{ display:flex; align-items:center; gap:8px; margin-top:8px; }
+  .track-row button{ width:28px; height:28px; border:1px solid var(--mist); background:transparent; color:var(--foam); cursor:pointer; font-size:1rem; line-height:1; flex-shrink:0; }
+  .track-row button:hover{ background:var(--mist); }
+  .bar-outer{ flex:1; display:flex; align-items:center; }
+  .chakra-slider{ width:100%; height:8px; -webkit-appearance:none; appearance:none; background:rgba(var(--line-rgb),0.1); outline:none; cursor:pointer; border:none; padding:0; margin:0; }
+  .chakra-slider::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:15px; height:15px; border-radius:50%; background:var(--gold); border:2px solid var(--ink); cursor:pointer; }
+  .chakra-slider::-moz-range-thumb{ width:15px; height:15px; border-radius:50%; background:var(--gold); border:2px solid var(--ink); cursor:pointer; }
+  .chakra-slider::-moz-range-track{ height:8px; background:transparent; border:none; }
+
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
+  .ability{ background:rgba(var(--panel-rgb),0.5); border:1px solid rgba(var(--border-rgb),0.25); padding:12px; text-align:center; }
+  .ability .name{ font-size:0.7rem; letter-spacing:0.1em; color:var(--mist-light); text-transform:uppercase; margin-bottom:4px; }
+  .ability .score-input{ width:56px; font-family:'Shippori Mincho', serif; font-size:1.4rem; text-align:center; margin:2px 0; }
+  .ability .mod{ font-size:0.85rem; color:var(--gold); margin:4px 0; }
+  .ability .save-row{ display:flex; align-items:center; justify-content:center; gap:5px; font-size:0.68rem; color:var(--mist-light); margin:6px 0; }
+  .ability .roll-btns{ display:flex; gap:5px; margin-top:6px; }
+  .ability .roll-btns button{ flex:1; background:transparent; border:1px solid var(--mist-light); color:var(--foam); padding:4px 2px; font-size:0.68rem; cursor:pointer; }
+  .ability .roll-btns button:hover{ border-color:var(--blood-bright); color:var(--blood-bright); }
+
+  .row-card{ background:rgba(var(--panel-rgb),0.4); border:1px solid rgba(var(--border-rgb),0.18); padding:10px 14px; margin-bottom:6px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .row-card .name-field{ flex:1; min-width:140px; font-weight:500; }
+  .row-card .desc-field{ flex:2; min-width:180px; font-size:0.8rem; color:var(--mist-light); }
+  .row-card .ability-tag{ width:80px; font-size:0.72rem; color:var(--mist-light); text-transform:uppercase; letter-spacing:0.04em; text-align:center; }
+  .row-card select{ width:80px; }
+  .row-card .mod-display{ font-family:'Shippori Mincho', serif; color:var(--gold); font-size:1rem; min-width:40px; text-align:center; }
+  .row-card label.prof-check{ display:flex; align-items:center; gap:4px; font-size:0.7rem; color:var(--mist-light); white-space:nowrap; }
+  .row-card button.roll-btn{ background:transparent; border:1px solid var(--mist-light); color:var(--foam); padding:5px 10px; font-size:0.75rem; cursor:pointer; }
+  .row-card button.roll-btn:hover{ border-color:var(--blood-bright); color:var(--blood-bright); }
+  .row-card button.del-btn{ background:transparent; border:1px solid var(--blood); color:var(--blood-bright); width:24px; height:24px; cursor:pointer; font-size:0.9rem; line-height:1; }
+  .row-card button.del-btn:hover{ background:var(--blood); color:var(--foam); }
+
+  .jutsu-card{ background:rgba(var(--panel-rgb),0.4); border:1px solid rgba(var(--border-rgb),0.18); padding:12px 14px; margin-bottom:10px; }
+  .jutsu-top{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:6px; }
+  .jutsu-top input.jname{ flex:2; min-width:160px; font-weight:500; }
+  .jutsu-top input.jrank{ width:50px; text-align:center; }
+  .jutsu-top input.jcost{ width:60px; text-align:center; }
+  .jutsu-top select.jroll{ width:110px; }
+  .jutsu-top input.jatk, .jutsu-top input.jdice{ width:70px; text-align:center; }
+  .jutsu-desc{ width:100%; font-size:0.82rem; color:var(--mist-light); margin-top:6px; resize:vertical; min-height:40px; }
+  .jutsu-actions{ display:flex; gap:8px; margin-top:8px; align-items:center; }
+  .jutsu-actions button.cast-btn{ background:transparent; border:1px solid var(--mist-light); color:var(--foam); padding:6px 12px; cursor:pointer; font-size:0.8rem; }
+  .jutsu-actions button.cast-btn:hover{ border-color:var(--blood-bright); color:var(--blood-bright); }
+  .jutsu-actions button.cast-btn:disabled{ opacity:0.3; cursor:not-allowed; }
+  .jutsu-actions button.del-btn{ background:transparent; border:1px solid var(--blood); color:var(--blood-bright); padding:6px 10px; cursor:pointer; font-size:0.8rem; margin-left:auto; }
+  .jutsu-actions button.del-btn:hover{ background:var(--blood); color:var(--foam); }
+
+  .add-btn{ background:transparent; border:1px dashed var(--mist-light); color:var(--mist-light); padding:8px 16px; cursor:pointer; font-size:0.8rem; width:100%; margin-top:4px; }
+  .add-btn:hover{ border-color:var(--gold); color:var(--gold); }
+
+  .weapon-card{ background:rgba(var(--panel-rgb),0.4); border:1px solid rgba(var(--border-rgb),0.18); padding:12px 14px; }
+  .weapon-row{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .weapon-row input{ flex:1; min-width:100px; }
+  .weapon-row input.small{ flex:0 0 80px; text-align:center; }
+
+  .item-card{ background:rgba(var(--panel-rgb),0.4); border:1px solid rgba(var(--border-rgb),0.18); padding:10px 14px; margin-bottom:6px; display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap; }
+  .item-card input.iname{ flex:1; min-width:140px; font-weight:500; }
+  .item-card textarea.idesc{ flex:2; min-width:200px; font-size:0.82rem; color:var(--mist-light); resize:vertical; min-height:38px; }
+
+  .details-card{ background:rgba(var(--panel-rgb),0.4); border:1px solid rgba(var(--border-rgb),0.18); padding:16px; display:flex; flex-direction:column; gap:12px; }
+  .details-row{ display:flex; gap:12px; flex-wrap:wrap; }
+  .details-row > div{ flex:1; min-width:140px; display:flex; flex-direction:column; gap:4px; }
+  .details-row label{ font-size:0.72rem; color:var(--mist-light); text-transform:uppercase; letter-spacing:0.05em; }
+  .details-card textarea{ width:100%; resize:vertical; min-height:70px; }
+  .level-stepper{ display:flex; gap:4px; align-items:stretch; }
+  .level-stepper input{ width:100%; }
+  .level-stepper-btns{ display:flex; flex-direction:column; gap:2px; }
+  .level-stepper-btns button{
+    width:22px; flex:1; padding:0; font-size:0.6rem; line-height:1; cursor:pointer;
+    background:transparent; border:1px solid var(--mist-light); color:var(--foam);
+  }
+  .level-stepper-btns button:hover{ border-color:var(--blood-bright); color:var(--blood-bright); }
+
+  #log{ position:sticky; bottom:0; margin-top:24px; background:rgba(13,21,23,0.95); border-top:1px solid var(--mist); padding:14px 16px; max-height:150px; overflow-y:auto; }
+  #log .entry{ font-size:0.85rem; padding:3px 0; border-bottom:1px dotted rgba(var(--border-rgb),0.15); }
+  #log .entry .res{ color:var(--gold); font-weight:700; }
+  #log .empty{ color:var(--mist-light); font-style:italic; font-size:0.85rem; }
+
+  /* #log keeps a fixed dark background across all themes, but sand/cloud/yang use a dark --foam
+     (meant for their light panels), which becomes unreadable on that dark background. Force a
+     light log text color for those three themes only. */
+  body[data-theme="sand"] #log, body[data-theme="cloud"] #log, body[data-theme="yang"] #log{ color:#e7ecef; }
+  body[data-theme="sand"] #log .entry, body[data-theme="cloud"] #log .entry, body[data-theme="yang"] #log .entry{ color:#e7ecef; }
+  body[data-theme="sand"] #log .empty, body[data-theme="cloud"] #log .empty, body[data-theme="yang"] #log .empty{ color:#9fb0b8; }
+
+  .io-bar{ display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+  .io-bar button{ background:transparent; border:1px solid var(--gold); color:var(--gold); padding:8px 16px; cursor:pointer; font-size:0.8rem; font-family:'Zen Kaku Gothic New', sans-serif; }
+  .io-bar button:hover{ background:var(--gold); color:var(--ink); }
+  .io-bar input[type=file]{ display:none; }
+
+  .roll-flash{
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-60%); font-family:'Shippori Mincho', serif;
+    font-size:3.5rem; color:var(--foam); pointer-events:none; text-shadow:0 0 20px rgba(0,0,0,0.8); opacity:0; z-index:50;
+  }
+  .roll-flash.show{ animation: flashUp 0.9s ease-out forwards; }
+  @keyframes flashUp{
+    0%{ opacity:0; transform:translate(-50%,-40%) scale(0.7); }
+    20%{ opacity:1; transform:translate(-50%,-60%) scale(1); }
+    75%{ opacity:1; }
+    100%{ opacity:0; transform:translate(-50%,-90%) scale(1); }
+  }
+
+  /* ===== Color Themes ===== */
+  body[data-theme="yin"]{
+    --ink:#020304; --deep:#07090c; --mist:#1c2126; --mist-light:#3a424c; --foam:#c3cbd2;
+    --panel-rgb: 7,9,12; --border-rgb: 58,66,76; --line-rgb: 195,203,210;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(28,33,38,0.45), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(124,29,34,0.16), transparent 50%),
+      var(--ink);
+  }
+  body[data-theme="yang"]{
+    --ink:#ece4d3; --deep:#dcd0b4; --mist:#a68a64; --mist-light:#8a7355; --foam:#2b241a;
+    --panel-rgb: 220,208,180; --border-rgb: 138,115,85; --line-rgb: 43,36,26;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(166,138,100,0.25), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(124,29,34,0.10), transparent 50%),
+      var(--ink);
+  }
+  body[data-theme="mist"]{
+    --ink:#050b16; --deep:#0d1b2e; --mist:#2c4870; --mist-light:#5b7fa6; --foam:#dbe8f5;
+    --panel-rgb: 13,27,46; --border-rgb: 91,127,166; --line-rgb: 219,232,245;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(44,72,112,0.35), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(124,29,34,0.18), transparent 50%),
+      var(--ink);
+  }
+  body[data-theme="leaf"]{
+    --ink:#0c1510; --deep:#16241a; --mist:#3f5c46; --mist-light:#7fa38a; --foam:#dfeee1;
+    --panel-rgb: 22,36,26; --border-rgb: 127,163,138; --line-rgb: 223,238,225;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(63,92,70,0.35), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(124,29,34,0.18), transparent 50%),
+      var(--ink);
+  }
+  body[data-theme="akatsuki"]{
+    --ink:#170a0a; --deep:#2a1012; --mist:#6e2430; --mist-light:#a8515c; --foam:#f0dfd9;
+    --panel-rgb: 42,16,18; --border-rgb: 168,81,92; --line-rgb: 240,223,217;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(110,36,48,0.35), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(168,81,92,0.20), transparent 50%),
+      var(--ink);
+  }
+  body[data-theme="rain"]{
+    --ink:#0d1517; --deep:#12232a; --mist:#3c5a63; --mist-light:#7a9aa3; --foam:#d9e6e6;
+    --panel-rgb: 18,35,42; --border-rgb: 122,154,163; --line-rgb: 217,230,230;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(60,90,99,0.35), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(124,29,34,0.18), transparent 50%),
+      var(--ink);
+  }
+  body[data-theme="sand"]{
+    --ink:#efe2c0; --deep:#e2d0a0; --mist:#b6923f; --mist-light:#8a6d34; --foam:#2e2410;
+    --panel-rgb: 226,208,160; --border-rgb: 138,109,52; --line-rgb: 46,36,16;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(182,146,63,0.25), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(124,29,34,0.08), transparent 50%),
+      var(--ink);
+  }
+  body[data-theme="rock"]{
+    --ink:#15130f; --deep:#221f19; --mist:#5c5245; --mist-light:#948573; --foam:#e8e2d6;
+    --panel-rgb: 34,31,25; --border-rgb: 148,133,115; --line-rgb: 232,226,214;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(92,82,69,0.35), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(124,29,34,0.16), transparent 50%),
+      var(--ink);
+  }
+  body[data-theme="cloud"]{
+    --ink:#e7f0f7; --deep:#d2e3ee; --mist:#6f97b3; --mist-light:#4d7495; --foam:#182633;
+    --panel-rgb: 210,227,238; --border-rgb: 77,116,149; --line-rgb: 24,38,51;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(111,151,179,0.25), transparent 55%),
+      radial-gradient(ellipse at 90% 110%, rgba(124,29,34,0.08), transparent 50%),
+      var(--ink);
+  }
+
+  /* ===== Overlay panels ===== */
+  .overlay-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    display:none; align-items:center; justify-content:center; z-index:200; padding:20px;
+  }
+  .overlay-backdrop.show{ display:flex; }
+  .overlay-panel{
+    background:var(--deep); border:1px solid var(--mist); max-width:720px; width:100%;
+    max-height:85vh; overflow-y:auto; padding:28px 30px; position:relative;
+  }
+  .overlay-panel h2.overlay-title{
+    font-family:'Shippori Mincho', serif; font-weight:700; font-size:1.4rem; color:var(--foam);
+    margin:0 0 4px; border:none;
+  }
+  .overlay-panel h2.overlay-title::after{ content:none; }
+  .overlay-subtitle{ color:var(--mist-light); font-size:0.85rem; margin-bottom:18px; font-style:italic; }
+  .overlay-panel h3{ font-family:'Shippori Mincho', serif; color:var(--gold); margin:20px 0 6px; font-size:1rem; }
+  .overlay-panel p, .overlay-panel li{ font-size:0.87rem; line-height:1.65; color:var(--foam); }
+  .overlay-panel ul{ padding-left:20px; margin:6px 0; }
+  .overlay-close{
+    position:absolute; top:14px; right:14px; background:transparent; border:1px solid var(--mist-light);
+    color:var(--foam); width:30px; height:30px; cursor:pointer; font-size:1rem; line-height:1;
+  }
+  .overlay-close:hover{ border-color:var(--blood-bright); color:var(--blood-bright); }
+  .library-card{ background:rgba(var(--panel-rgb),0.5); border:1px solid rgba(var(--border-rgb),0.25); padding:14px 16px; margin-bottom:12px; }
+  .library-card .lib-top{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+  .library-card .lib-name{ font-family:'Shippori Mincho', serif; font-weight:700; color:var(--foam); font-size:1.05rem; }
+  .library-card .lib-tags{ font-size:0.72rem; color:var(--gold); letter-spacing:0.04em; }
+  .library-card .lib-desc{ font-size:0.85rem; color:var(--mist-light); line-height:1.55; margin-bottom:10px; }
+  .library-card button.lib-add{ background:transparent; border:1px solid var(--gold); color:var(--gold); padding:6px 14px; cursor:pointer; font-size:0.8rem; }
+  .library-card button.lib-add:hover{ background:var(--gold); color:var(--ink); }
+  .elements-shell{ border:1px solid rgba(var(--border-rgb),0.18); background:rgba(var(--panel-rgb),0.18); }
+  .elements-shell summary{ list-style:none; cursor:pointer; padding:10px 14px; color:var(--foam); font-family:'Shippori Mincho',serif; display:flex; align-items:center; gap:8px; }
+  .elements-shell summary::-webkit-details-marker{ display:none; }
+  .elements-shell summary::before{ content:'▸'; color:var(--gold); transition:transform .2s ease; }
+  .elements-shell[open] summary::before{ transform:rotate(90deg); }
+  .elements-body{ padding:0 8px 8px; }
+  .jutsu-library-group{ margin:10px 0; border:1px solid rgba(var(--border-rgb),0.18); background:rgba(var(--panel-rgb),0.12); }
+  .jutsu-library-group summary{ list-style:none; cursor:pointer; padding:10px 14px; display:flex; align-items:center; gap:8px; }
+  .jutsu-library-group summary::-webkit-details-marker{ display:none; }
+  .jutsu-library-group summary::before{ content:'▸'; color:var(--gold); transition:transform .2s ease; flex-shrink:0; }
+  .jutsu-library-group[open] summary::before{ transform:rotate(90deg); }
+  .jutsu-library-group .cat-title{ font-family:'Shippori Mincho',serif; font-size:1rem; }
+  .jutsu-library-group .group-body{ padding:0 14px 14px; }
+  .jutsu-library-group .group-note{ color:var(--mist-light); font-size:.76rem; margin:0 0 10px; }
+  .jutsu-library-group .cat-title.category-fire{color:#ef5350}.jutsu-library-group .cat-title.category-water{color:#42a5f5}.jutsu-library-group .cat-title.category-wind{color:#9be7d8}.jutsu-library-group .cat-title.category-lightning{color:#ffe082}.jutsu-library-group .cat-title.category-earth{color:#b8895a}.jutsu-library-group .cat-title.category-doujutsu{color:#c084fc}.jutsu-library-group .cat-title.category-taijutsu{color:#ffa726}.jutsu-library-group .cat-title.category-fuin{color:#8d6e63}.jutsu-library-group .cat-title.category-yin{color:#77777f}.jutsu-library-group .cat-title.category-yang{color:#f4d35e}.jutsu-library-group .cat-title.category-wood{color:#66bb6a}.jutsu-library-group .cat-title.category-ice{color:#81d4fa}.jutsu-library-group .cat-title.category-lava{color:#ff7043}.jutsu-library-group .cat-title.category-storm{color:#ab8cff}.jutsu-library-group .cat-title.category-magnet{color:#d6b36a}.jutsu-library-group .cat-title.category-boil{color:#ff9f80}.jutsu-library-group .cat-title.category-none{color:#b0bec5}
+  .yin-element .element-name{color:#555860 !important}
+
+  .element-row{ display:flex; align-items:center; gap:10px; background:rgba(var(--panel-rgb),0.4); border:1px solid rgba(var(--border-rgb),0.18); padding:8px 14px; margin-bottom:6px; flex-wrap:wrap; }
+  .element-swatch{ width:16px; height:16px; border-radius:50%; flex-shrink:0; border:1px solid rgba(255,255,255,0.3); }
+  .element-row .el-name{ flex:1; min-width:100px; font-weight:500; }
+  .element-row input[type=text]{ flex:1; min-width:100px; }
+  .element-row input[type=color]{
+    width:26px; height:26px; padding:0; border:1px solid rgba(255,255,255,0.3); border-radius:50%;
+    cursor:pointer; overflow:hidden; background:none; flex-shrink:0;
+  }
+  .element-row input[type=color]::-webkit-color-swatch-wrapper{ padding:0; border-radius:50%; }
+  .element-row input[type=color]::-webkit-color-swatch{ border:none; border-radius:50%; }
+  .element-row input[type=color]::-moz-color-swatch{ border:none; border-radius:50%; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(var(--border-rgb), 0.3);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 0.9rem;
+    color: var(--mist-light);
+    letter-spacing: 0.06em;
+  }
+</style>
+</head>
+<body data-theme="yin">
+
+<div class="roll-flash" id="flash"></div>
+
+<div class="wrap">
+  <div class="io-bar">
+    <button id="themeBtn" onclick="cycleTheme()">🎨 Theme: Yin</button>
+    <button onclick="openOverlay('rules')">📜 Rules</button>
+    <button onclick="exportChar()">⬇ Export Character (JSON)</button>
+    <button onclick="document.getElementById('importFile').click()">⬆ Import Character</button>
+    <input type="file" id="importFile" accept="application/json" onchange="importChar(event)">
+    <button id="resetBtn" onclick="handleResetClick()">✕ Reset to Blank</button>
+  </div>
+
+  <section>
+    <h2>Character Details</h2>
+    <div class="details-card">
+      <div class="details-row">
+        <div style="flex:1 1 100%"><label>Character Name</label><input class="name-input" id="f_name" placeholder="Character Name" oninput="state.name=this.value"></div>
+      </div>
+      <div class="details-row">
+        <div><label>Village</label><input id="f_village" placeholder="Village" oninput="state.village=this.value"></div>
+        <div><label>Clan</label><input id="f_clan" placeholder="Clan" oninput="state.clan=this.value"></div>
+        <div><label>Title / Nickname</label><input id="f_title" placeholder="Title / Nickname" oninput="state.title=this.value"></div>
+        <div><label>Class</label><input id="f_class" placeholder="Class" oninput="state.className=this.value"></div>
+        <div><label>Level</label>
+          <div class="level-stepper">
+            <input id="f_level" type="number" placeholder="Lv" oninput="state.level=parseInt(this.value)||1; renderAbilities(); renderChakraPoints()">
+            <div class="level-stepper-btns">
+              <button type="button" onclick="adjustLevel(1)" title="Level up">▲</button>
+              <button type="button" onclick="adjustLevel(-1)" title="Level down">▼</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="details-row">
+        <div><label>Age</label><input id="d_age" oninput="state.details.age=this.value"></div>
+        <div><label>Role</label><input id="d_role" placeholder="e.g. Genin, Nukenin, Jonin" oninput="state.details.role=this.value"></div>
+      </div>
+      <div>
+        <label>Description</label>
+        <textarea id="d_desc" oninput="state.details.description=this.value"></textarea>
+      </div>
+      <div>
+        <label>Backstory</label>
+        <textarea id="d_backstory" oninput="state.details.backstory=this.value"></textarea>
+      </div>
+      <div>
+        <label>Nindo (Personal Way / Creed)</label>
+        <textarea id="d_nindo" oninput="state.details.nindo=this.value"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Class Preset <span style="font-weight:400; font-size:0.8rem">(auto-assigns ability points &amp; recommended proficiencies — overwrites current allocation)</span></h2>
+    <div class="io-bar" style="margin-bottom:0">
+      <button onclick="applyClassPreset('Ninjutsu Specialist')">Ninjutsu Specialist</button>
+      <button onclick="applyClassPreset('Genjutsu Specialist')">Genjutsu Specialist</button>
+      <button onclick="applyClassPreset('Taijutsu Specialist')">Taijutsu Specialist</button>
+      <button onclick="applyClassPreset('Medical-Nin')">Medical-Nin</button>
+      <button onclick="applyClassPreset('Scout-Nin')">Scout-Nin</button>
+      <button onclick="applyClassPreset('Puppet-Master')">Puppet-Master</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Chakra <span class="points-remaining" id="chakraPointsDisplay"></span></h2>
+    <div class="vitals">
+      <div class="vital-box">
+        <div class="vital-label">Chakra Points</div>
+        <div class="track-row">
+          <button onclick="adjust('cp',-1)">−</button>
+          <div style="flex:1">
+            <div class="vital-value"><span id="cpVal">0</span> / <input class="max-input" type="number" id="f_cpmax" oninput="state.cpMax=parseInt(this.value)||0; state.cp=Math.min(state.cp,state.cpMax); updateBars(); renderJutsu(); renderChakraPoints()"></div>
+            <div class="bar-outer"><input type="range" class="chakra-slider" id="cpSlider" min="0" max="0" value="0" oninput="setChakraFromSlider(this.value)"></div>
+          </div>
+          <button onclick="adjust('cp',1)">+</button>
+        </div>
+      </div>
+      <div class="vital-box">
+        <div class="vital-label">Chakra per Level <span style="font-weight:400; opacity:0.7;">(default 5 — raise it for Uzumaki, Jinchūriki, custom rules, etc.)</span></div>
+        <div class="track-row">
+          <input class="max-input" type="number" id="f_cpl" value="5" min="1" oninput="state.chakraPerLevel=Math.max(1,parseInt(this.value)||1); renderChakraPoints()">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Ability Scores <span class="points-remaining" id="pointsDisplay"></span></h2>
+    <div class="grid" id="abilities"></div>
+  </section>
+
+  <section>
+    <h2>Skills <span style="font-weight:400">— Proficiency Bonus</span> <input class="inline-input" type="number" id="f_prof" oninput="state.profBonus=parseInt(this.value)||0; renderAll()"></h2>
+    <div id="skills"></div>
+  </section>
+
+  <section>
+    <h2>Elements <span style="font-weight:400; font-size:0.8rem">(chakra natures your character can use)</span></h2>
+    <details class="elements-shell" open>
+      <summary>Chakra Natures <span style="font-size:.75rem;color:var(--mist-light);font-family:'Zen Kaku Gothic New',sans-serif">click to collapse / expand</span></summary>
+      <div class="elements-body"><div id="elements"></div>
+      <button class="add-btn" onclick="addCustomElement()">+ Add Custom Element</button></div>
+    </details>
+  </section>
+
+  <section>
+    <h2>Jutsu</h2>
+    <div id="jutsu"></div>
+    <div style="display:flex; gap:8px; margin-top:4px">
+      <button class="add-btn" style="margin-top:0" onclick="addJutsu()">+ Add Jutsu</button>
+      <button class="add-btn" style="margin-top:0" onclick="openOverlay('jutsuLibrary')">📖 Jutsu Library</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Weapons</h2>
+    <div id="weapons"></div>
+    <div style="display:flex; gap:8px; margin-top:4px">
+      <button class="add-btn" style="margin-top:0" onclick="addWeapon()">+ Add Weapon</button>
+      <button class="add-btn" style="margin-top:0" onclick="openOverlay('weaponLibrary')">🗡️ Weapon Library</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Inventory</h2>
+    <div class="vitals" style="margin-bottom:14px">
+      <div class="vital-box">
+        <div class="vital-label">Ryō (両) — Currency</div>
+        <div class="track-row">
+          <button onclick="adjustRyo(-1)">−</button>
+          <div style="flex:1">
+            <div class="vital-value"><input class="max-input" type="number" id="f_ryo" style="width:100%; text-align:center" value="0" oninput="state.ryo=parseInt(this.value)||0"></div>
+          </div>
+          <button onclick="adjustRyo(1)">+</button>
+        </div>
+      </div>
+    </div>
+    <div id="inventory"></div>
+    <div style="display:flex; gap:8px; margin-top:4px">
+      <button class="add-btn" style="margin-top:0" onclick="addItem()">+ Add Item</button>
+      <button class="add-btn" style="margin-top:0" onclick="openOverlay('itemLibrary')">🎒 Item Library</button>
+    </div>
+  </section>
+
+  <div id="log"><div class="empty">Roll results will appear here...</div></div>
+
+  <!-- Footer -->
+  <div class="footer">Naruto D&D Character Sheet by RED7734</div>
+</div>
+
+<div class="overlay-backdrop" id="rulesOverlay" onclick="if(event.target===this) closeOverlay('rules')">
+  <div class="overlay-panel">
+    <button class="overlay-close" onclick="closeOverlay('rules')">✕</button>
+    <h2 class="overlay-title">Naruto D&D RPG</h2>
+    <div class="overlay-subtitle">by RED7734</div>
+
+    <p>Naruto D&D RPG is a D&D-style experience set in the Naruto universe. Its goal is to bring the feel of a D&D campaign into the shinobi world, while removing mechanics like Hit Points and Armor Class, rewarding imagination over pure combat math.</p>
+
+    <h3>Character Creation</h3>
+    <ul>
+      <li>27 points to assign across Ability Scores (each starts at a base of 8). Every 4 levels, 2 more points are gained.</li>
+      <li>Chakra: 5 points per level by default, adjustable per character in the Chakra section (e.g. 15/level for an Uzumaki).</li>
+      <li>Leveling uses a <b>Milestone</b> system, the DM decides when the party levels up based on the story, not experience points.</li>
+    </ul>
+
+    <h3>Combat</h3>
+    <p>Roll <b>Taijutsu, Ninjutsu, Genjutsu, Fūinjutsu, Shurikenjutsu, or Weapons</b>, depending on what you want to use. If the technique costs chakra, spend the corresponding Chakra Points. Whether the attack lands and how much impact it has is decided by the DM, based on:</p>
+    <ul>
+      <li>the number rolled</li>
+      <li>how the player describes using the jutsu (creativity, coherence, narrative effectiveness)</li>
+      <li>whether what's described is plausible and feasible in the DM's judgment</li>
+    </ul>
+    <p>There are no Hit Points. <b>Combat ends when the DM determines a winner</b>, not when someone hits zero. The system rewards whoever best uses imagination to describe and execute interesting, effective attacks.</p>
+
+    <h3>Shurikenjutsu vs Weapons</h3>
+    <p><b>Shurikenjutsu</b> covers thrown weapons: throwing a shuriken, a kunai, senbon, or any similar projectile. <b>Weapons</b> covers everything wielded in hand or used up close: a kunai used as a knife, a sword, a tantō, nunchaku, a puppet, or even a bow.</p>
+
+    <h3>Chakra Control</h3>
+    <p><b>Chakra Control</b> is the skill of shaping and directing your own chakra with precision. It's the ability behind walking up walls or trees, walking on water, and any similar feat of controlling chakra flow through the body. It also governs techniques that are formed and shaped directly from raw chakra rather than a specific nature transformation: the Rasengan, for example, requires Chakra Control because it's simply kneaded chakra spun into a dense ball in the palm, with no elemental nature involved. In the Jutsu Library, Rasengan is rolled with Chakra Control for this reason, not Ninjutsu.</p>
+    <p>Chakra Control is also one of the best tools a player has for inventing new techniques on the fly. A skilled shinobi can reshape an existing jutsu into something new by controlling how the chakra is expressed. As an example, in a personal campaign, a player using an Uchiha character took the Great Fireball Technique and, through Chakra Control, reshaped it into a continuous stream of fire from the mouth, functioning like a flamethrower, effectively creating a brand new technique out of an existing one. Chakra Control is therefore one of the most important and versatile skills a shinobi can have, and how far it can be pushed is limited mostly by imagination.</p>
+
+    <h3>Chakra Recovery</h3>
+    <p>Chakra is restored by sleeping, by the passage of time, or through narrative remedies (ninja pills, a Medical-Nin's jutsu, etc). There are no fixed rules here, it's up to the DM and players to decide together in-game what works and how much chakra is recovered, case by case. After a fight, it's often necessary to rest or sleep to recover chakra, if the DM allows it. A Medical-Nin in the party might know a jutsu to restore chakra faster. There are many options, just use your imagination.</p>
+    <p><b>Constitution</b> represents endurance on both fronts, physical and spiritual. Roll it whenever it's relevant to check how well the character recovers, physically from wounds and exhaustion, spiritually in terms of chakra. It also comes into play when judging how well a character can conserve or push their chakra reserves in the middle of a fight, or how quickly they bounce back afterward.</p>
+
+    <h3>Chakra Consumption</h3>
+    <p>Some techniques don't just have a flat chakra cost, they scale with how much you use them. The Multiple Shadow Clone Technique, for example, costs chakra <b>per clone</b>: if the technique is set at 10 chakra, then every single clone made costs another 10 chakra, so making three clones costs 30. That kind of drain adds up fast, which is why the technique is usually best suited to shinobi with unusually large chakra reserves, like a Jinchūriki or a member of the Uzumaki clan.</p>
+    <p><b>Chakra:</b> Every character receives <b>5 Chakra Points per level</b> as the standard, suggested amount built into the character creator. This is the default baseline and the recommended playstyle for most campaigns.<br><br>This default is not a hard restriction. The Chakra section now has its own <b>Chakra per Level</b> field, set to 5 by default, that you can freely change to fit your character or story. Raise it to 15 for an <b>Uzumaki</b> to represent the clan's naturally enormous reserves, give a <b>Jinchūriki</b> or another exceptionally powerful shinobi an even larger pool, or lower it for a chakra-poor character, whatever fits your playstyle.<br><br>In short: <b>5 Chakra Points per level is the suggested default, not an absolute rule.</b> Change the rate to match your character concept, your campaign, and your table. Your game, your rules.<br><br>More generally, every chakra cost shown in the Jutsu Library is just a <b>suggested example</b>. Nothing stops a player or DM from freely rebalancing how much chakra any technique costs to better fit their own campaign's pace and power level. Example: Susanoo costs 100 Chakra because it's an extremely powerful technique meant to require a high level to use, but if you still find it too broken, raise it to 200. Or maybe you want a less punitive campaign where players get to enjoy strong jutsu more often, then lower it. Your game, your choices, as long as every player and the DM at your table agree on it.</p>
+
+<h3>Fūinjutsu</h3>
+    <p><b>Fūinjutsu</b> isn't limited to casting sealing jutsu in combat. It's a broadly creative skill that can be used to imprint a jutsu onto a scroll for later use, or to imprint a seal onto a scroll that, once opened, summons an item or even a person. This is also a great way to manage inventory space if you and your DM are playing with realistic carry limits: a tent kit, a cooking kit, or anything else that would otherwise eat up a lot of inventory space can be compressed into a seal on a scroll by rolling Fūinjutsu with an empty scroll. Later, breaking the seal releases the stored object. There are many clever ways to use Fūinjutsu beyond direct combat, limited only by your imagination.</p>
+    <p>A filled scroll can also hold a coded message instead of an object or jutsu. In that case, <b>Fūinjutsu</b> is rolled to open or otherwise use the seal itself, while <b>Investigation</b> is rolled separately to actually decipher what the message says.</p>
+    <p><b>Summoning Jutsu:</b> after establishing a bond with a summon animal through roleplay, roll Fūinjutsu to summon it. To direct or control it in combat, roll Animal Handling.</p>
+
+    <h3>Dōjutsu</h3>
+    <ul>
+      <li><b>Byakugan:</b> roll Perception (Wisdom)</li>
+      <li><b>Sharingan:</b> roll Perception (Wisdom), it lets you anticipate an opponent's attacks. Optional Tomoe rule: 1 Tomoe = normal roll, 2 Tomoe = +2, 3 Tomoe = +3</li>
+      <li><b>Mangekyō Sharingan:</b> depends on the ability being used, for example Kamui uses Chakra Control and Tsukuyomi uses Genjutsu, and so on.</li>
+      <li><b>Rinnegan</b> (and its abilities): roll Chakra Control</li>
+    </ul>
+
+    <h3>Puppets</h3>
+    <p>Fighting through a puppet is a two-part check, reflecting both the physical skill of the puppeteer and the chakra threads used to control the puppet:</p>
+    <ul>
+      <li><b>Roll Weapons (Dexterity):</b> represents the puppeteer's physical skill at maneuvering and fighting through the puppet, the same way any other weapon check would.</li>
+      <li><b>Roll Chakra Control:</b> made after the Weapons roll, this represents the precision needed to manage the chakra threads that actually move the puppet.</li>
+      <li><b>Chakra cost:</b> operating a puppet drains chakra. The DM sets whether the cost is paid once per use of the puppet or once per turn it stays active, depending on the campaign's rules.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="overlay-backdrop" id="jutsuLibraryOverlay" onclick="if(event.target===this) closeOverlay('jutsuLibrary')">
+  <div class="overlay-panel">
+    <button class="overlay-close" onclick="closeOverlay('jutsuLibrary')">✕</button>
+    <h2 class="overlay-title">Jutsu Library</h2>
+    <div class="overlay-subtitle">Ready-made techniques, add them straight to your sheet</div>
+    <div id="jutsuLibraryList"></div>
+  </div>
+</div>
+
+<div class="overlay-backdrop" id="weaponLibraryOverlay" onclick="if(event.target===this) closeOverlay('weaponLibrary')">
+  <div class="overlay-panel">
+    <button class="overlay-close" onclick="closeOverlay('weaponLibrary')">✕</button>
+    <h2 class="overlay-title">Weapon Library</h2>
+    <div class="overlay-subtitle">Canonical Naruto weapons and weapon-users, add them straight to your sheet</div>
+    <div id="weaponLibraryList"></div>
+  </div>
+</div>
+
+<div class="overlay-backdrop" id="itemLibraryOverlay" onclick="if(event.target===this) closeOverlay('itemLibrary')">
+  <div class="overlay-panel">
+    <button class="overlay-close" onclick="closeOverlay('itemLibrary')">✕</button>
+    <h2 class="overlay-title">Item Library</h2>
+    <div class="overlay-subtitle">Common shinobi tools, add them straight to your inventory</div>
+    <div id="itemLibraryList"></div>
+  </div>
+</div>
+
+<script>
+const classPresets = {
+  'Ninjutsu Specialist': { abilityPriority:['int','con','wis','dex','str','cha'], skills:['Ninjutsu','Chakra Arcana','Chakra Control'] },
+  'Genjutsu Specialist': { abilityPriority:['wis','int','dex','con','str','cha'], skills:['Genjutsu','Insight','Deception'] },
+  'Taijutsu Specialist': { abilityPriority:['str','con','dex','wis','int','cha'], skills:['Taijutsu','Athletics','Weapons'] },
+  'Medical-Nin':         { abilityPriority:['wis','int','con','dex','str','cha'], skills:['Medicine','Chakra Control','Insight'] },
+  'Scout-Nin':           { abilityPriority:['dex','wis','con','int','str','cha'], skills:['Stealth','Perception','Survival'] },
+  'Puppet-Master':       { abilityPriority:['dex','wis','int','con','str','cha'], skills:['Tactics','Chakra Control','Weapons'] },
+};
+
+function applyClassPreset(className){
+  const preset = classPresets[className];
+  if(!preset) return;
+  const total = pointBuyTotal();
+  const weights = [0.4, 0.25, 0.15, 0.1, 0.06, 0.04];
+  let allocation = {};
+  preset.abilityPriority.forEach((key,idx) => { allocation[key] = Math.round(total * weights[idx]); });
+  let allocatedSum = Object.values(allocation).reduce((a,b)=>a+b,0);
+  let drift = total - allocatedSum;
+  allocation[preset.abilityPriority[0]] += drift;
+
+  state.abilities.forEach(a => { a.score = 8 + Math.max(0, allocation[a.key] || 0); });
+  state.skills.forEach(s => { s.prof = preset.skills.includes(s.name); });
+
+  renderAbilities(); renderSkills();
+  logEntry(`<b>Class preset applied:</b> ${className}`);
+}
+
+function abilityMod(score){ return Math.floor((score-10)/2); }
+function fmt(n){ return (n>=0?'+':'') + n; }
+
+function adjustLevel(delta){
+  state.level = Math.max(1, (parseInt(state.level)||1) + delta);
+  document.getElementById('f_level').value = state.level;
+  renderAbilities(); renderChakraPoints();
+}
+
+const themeOrder = ['yin','yang','akatsuki','leaf','mist','sand','rock','cloud','rain'];
+const themeLabels = {yin:'Yin', yang:'Yang', akatsuki:'Akatsuki', leaf:'Leaf', mist:'Mist', sand:'Sand', rock:'Rock', cloud:'Cloud', rain:'Rain'};
+let currentThemeIndex = 0;
+function cycleTheme(){
+  currentThemeIndex = (currentThemeIndex + 1) % themeOrder.length;
+  const theme = themeOrder[currentThemeIndex];
+  document.body.setAttribute('data-theme', theme);
+  document.getElementById('themeBtn').textContent = `🎨 Theme: ${themeLabels[theme]}`;
+}
+
+function openOverlay(id){ document.getElementById(id+'Overlay').classList.add('show'); }
+function closeOverlay(id){ document.getElementById(id+'Overlay').classList.remove('show'); }
+
+const NON_ELEMENTAL_COLOR = '#8a95a0';
+
+function getElementColor(name){
+  if(!name || name === 'Non-Elemental') return NON_ELEMENTAL_COLOR;
+  const el = state.elements.find(e => e.name === name);
+  return el ? el.color : NON_ELEMENTAL_COLOR;
+}
+
+function availableElementOptions(){
+  return ['Non-Elemental', ...state.elements.filter(e => e.active).map(e => e.name)];
+}
+
+function renderElements(){
+  const el = document.getElementById('elements');
+  el.innerHTML = state.elements.map((e,i) => {
+    if(e.custom){
+      return `
+      <div class="element-row ${e.name==='Yin'?'yin-element':''}">
+        <input type="color" value="${e.color}" onchange="state.elements[${i}].color=this.value; renderElements(); renderJutsu()">
+        <input type="text" value="${e.name}" onchange="state.elements[${i}].name=this.value; renderElements(); renderJutsu()">
+        <button class="del-btn" onclick="state.elements.splice(${i},1); renderElements(); renderJutsu()">×</button>
+      </div>`;
+    }
+    return `
+      <div class="element-row ${e.name==='Yin'?'yin-element':''}">
+        <div class="element-swatch" style="background:${e.color}"></div>
+        <div class="el-name">${e.name}</div>
+        <label class="prof-check"><input type="checkbox" ${e.active?'checked':''} onchange="state.elements[${i}].active=this.checked; renderElements(); renderJutsu()"> Known</label>
+      </div>`;
+  }).join('');
+}
+
+function addCustomElement(){
+  state.elements.push({name:'New Element', color:'#a98a4f', active:true, custom:true});
+  renderElements();
+}
+
+const jutsuPresets = [
+  // Dōjutsu
+  {name:'Sharingan', skillType:'Perception', category:'Dōjutsu', cost:0, desc:'A heightened ocular ability that sharpens perception, helps anticipate movement, and can see through many illusions. Its power develops through its tomoe.'},
+  {name:'Byakugan', skillType:'Perception', category:'Dōjutsu', cost:0, desc:'Grants near-360° vision and lets the user perceive chakra pathways and tenketsu with extraordinary precision, even through many solid objects.'},
+  {name:'Rinnegan', skillType:'Chakra Control', category:'Dōjutsu', cost:25, desc:'A legendary dōjutsu associated with the Six Paths. It grants immense perception and access to powerful abilities such as the Six Paths techniques, depending on the wielder.'},
+  {name:'Mangekyō Sharingan: Kamui', skillType:'Chakra Control', category:'Dōjutsu', cost:40, desc:'A Mangekyō Sharingan space-time technique that warps targets to or from the Kamui dimension. Its applications include teleportation and intangibility.'},
+  {name:'Mangekyō Sharingan: Tsukuyomi', skillType:'Genjutsu', category:'Dōjutsu', cost:90, desc:'An extremely powerful ocular genjutsu that traps the target in a controlled illusion, distorting their perception of time, pain, and experience.'},
+  {name:'Mangekyō Sharingan: Amaterasu', skillType:'Chakra Control', category:'Dōjutsu', cost:60, desc:'Conjures inextinguishable black flames at the user’s focal point of vision, burning anything caught in their path until it is consumed entirely.'},
+  {name:'Mangekyō Sharingan: Kotoamatsukami', skillType:'Genjutsu', category:'Dōjutsu', cost:100, desc:'An extraordinarily rare genjutsu unique to certain Uchiha that subtly rewrites a target’s will and decisions, leaving them unaware they were ever manipulated.'},
+  {name:'Susanoo', skillType:'Chakra Control', category:'Dōjutsu', cost:100, desc:'A gigantic humanoid avatar formed from the user’s chakra, surrounding and defending them while fighting as an extension of their will. Reserved for awakened Mangekyō Sharingan users.'},
+  {name:'Blaze Release: Kagutsuchi', skillType:'Chakra Control', category:'Dōjutsu', cost:40, desc:'A technique which applies shape transformation to the black flames of Amaterasu, allowing the user to manipulate them at will. In Sasuke\'s case, while Amaterasu is cast from his left eye, he uses his right eye to manipulate the flames. Can form a defensive barrier of spike-shaped flames, shape the flames into weapons such as swords or arrows, or enhance other techniques like Chidori.'},
+  {name:'Demonic Illusion: Shackling Stakes Technique', skillType:'Genjutsu', element:'Non-Elemental', category:'Dōjutsu', cost:15, desc:'Demonic Illusion: Shackling Stakes Technique is a genjutsu that traps the target within an illusion created by the user\'s Sharingan. Within the illusion, the victim experiences the sensation of enormous stakes being driven through their body, rendering them unable to move. Although the stakes themselves are purely illusory, the pain and paralysis inflicted by the genjutsu are perceived as real by the victim, leaving them vulnerable to the user\'s will. The technique requires the use of the Genjutsu: Sharingan and direct eye contact with the target.'},
+
+  // Taijutsu
+  {name:'Gentle Fist (Jūken)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:0, desc:'The Hyūga clan’s signature taijutsu style. Strikes are aimed precisely at the tenketsu, damaging a target’s chakra network and internal organs directly rather than harming them on the surface.'},
+  {name:'Eight Trigrams Sixty-Four Palms (Hakke Rokujūyon Shō)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:20, desc:'An advanced Gentle Fist sequence that unleashes a rapid, escalating chain of chakra-point strikes, sealing off more and more of the target’s tenketsu with each successive hit.'},
+  {name:'Primary Lotus (Konoha Senpū)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:15, desc:'A devastating close-combat technique that relies purely on raw taijutsu skill: the user closes in, strikes the target skyward, and drives them into the ground with tremendous force. Famously used by Rock Lee.'},
+  {name:'Front Lotus (Omote Renge)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:15, desc:'Requires the opening of the first of the Eight Chakra Gates, giving the user five times their normal strength. The user launches the opponent into the air and then uses Shadow of the Dancing Leaf. Now behind his opponent, the user restrains them and pile-drives them into the ground headfirst. Because it uses one of the chakra gates, the user is left extremely fatigued, making this jutsu a "double-edged sword."'},
+  {name:'Eight Gates Released Formation (Hachimon Tonkō no Jin)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:100, desc:'The state assumed by a user who has opened all Eight Gates. Entering this state uses up all of the body\'s energy while making the heart pump at maximum power, temporarily gaining powers a hundred times greater than their normal self, far beyond that of the five Kage. Releasing all Eight Gates will lead the user to inevitably die because of the damage done to their body.'},
+  {name:'Morning Peacock (Asakujaku)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:40, desc:'The Morning Peacock is a certain-kill taijutsu born from the philosophy of Might Guy. The principle of this taijutsu is to rapidly increase the body\'s abilities by opening up to and including the sixth of the Eight Gates, and then to strike the enemy down with countless punches. The speed of the punches is so fast that they are set ablaze by sheer speed and friction.'},
+  {name:'Night Guy', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:100, desc:'The Night Guy is a high-level, forbidden taijutsu that can be performed by those users who have opened all Eight Gates. After gathering all of his chakra around his body in a flickering dragon-like shape, Guy dashes forward at immense speed, which distorts space to bypass his targets defence, dealing a powerful kick. Even though this is an extremely powerful technique, it leaves Guy on the brink of death.'},
+
+  // Fire Release
+  {name:'Fire Release: Great Fireball Technique (Gōkakyū no Jutsu)', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:8, desc:'The user kneads chakra into fire and expels it from the mouth, usually as a large blazing sphere. More chakra produces a larger, more destructive flame.'},
+  {name:'Fire Release: Phoenix Sage Fire Technique', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:8, desc:'A volley of small fireballs is launched from the mouth, allowing the user to attack from several angles and conceal weapons within the flames.'},
+  {name:'Fire Release: Dragon Flame Release', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:12, desc:'Fire is sent along a surface or through a prepared path before erupting toward the target as a concentrated flame attack.'},
+  {name:'Fire Release: Flamethrower Technique', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:15, desc:'[Homebrew] A continuous stream of fire is expelled from the mouth like a flamethrower, letting the user sweep flame across an area rather than launching a single blast.'},
+  {name:'Fire Release: Flame Orb Technique', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:5, desc:'[Homebrew] This utility jutsu creates a fire orb that fluctuates around you, creating light and working as a torch at night or in a dark place.'},
+
+  // Water Release
+  {name:'Water Release: Water Bullet Technique', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:6, desc:'The user converts chakra into water and expels it as a forceful torrent toward the target. Its shape and volume can be varied with skill.'},
+  {name:'Water Release: Water Clone Jutsu', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:12, desc:'Creates a physical clone from water. The clone can fight and use techniques, but is far less durable than the original and collapses when destroyed.'},
+  {name:'Water Release: Water Dragon Bullet Technique', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:18, desc:'Shapes water into a dragon and directs it at a target. Existing water makes the technique easier to perform, while skilled shinobi can create the water themselves.'},
+
+  // Wind Release
+  {name:'Wind Release: Gale Palm', skillType:'Ninjutsu', element:'Wind', category:'Wind Release', cost:6, desc:'Compresses chakra into a powerful gale that can knock opponents back or dramatically accelerate thrown kunai and shuriken.'},
+  {name:'Wind Release: Wind Cutter Technique', skillType:'Ninjutsu', element:'Wind', category:'Wind Release', cost:10, desc:'Launches a cutting wave of high-speed wind across the battlefield, striking targets at mid range with a sharp, blade-like gust.'},
+  {name:'Wind Release: Dust Cloud Technique', skillType:'Ninjutsu', element:'Wind', category:'Wind Release', cost:14, desc:'Creates a stream of extremely fast wind carrying dust and debris, shredding and obscuring anything caught inside it.'},
+  {name:'Rasenshuriken', skillType:'Ninjutsu', element:'Wind', category:'Wind Release', cost:70, desc:'An advanced Rasengan infused with Wind Release, formed into a shuriken-shaped sphere of spinning chakra blades. On contact it shreds the target’s chakra network down to the cellular level.'},
+
+  // Lightning Release
+  {name:'Lightning Release: Chidori', skillType:'Ninjutsu', element:'Lightning', category:'Lightning Release', cost:20, desc:'A high concentration of Lightning Release chakra channelled around the hand, creating a piercing close-range attack. Chidori is an A-rank offensive ninjutsu created by Kakashi Hatake.'},
+  {name:'Lightning Release: Lightning Beast Tracking Fang', skillType:'Ninjutsu', element:'Lightning', category:'Lightning Release', cost:10, desc:'Forms lightning into a fast, unpredictable hound that remains linked to the user, allowing its speed and range to be adjusted during the attack.'},
+  {name:'Lightning Release: Lightning Binding', skillType:'Ninjutsu', element:'Lightning', category:'Lightning Release', cost:12, desc:'Creates a three-sided wall of electricity using conductors placed around the target. Contact with the barrier shocks and restrains those inside.'},
+  {name:'Lightning Release Chakra Mode', skillType:'Chakra Control', element:'Lightning', category:'Lightning Release', cost:25, desc:'Wraps the body in lightning chakra, greatly enhancing speed, reflexes, and physical performance while making close combat far more dangerous.'},
+  {name:'Lightning Release: Chidori Sharp Spear', skillType:'Ninjutsu', element:'Lightning', category:'Lightning Release', cost:25, desc:'This technique uses shape transformation to form the original Chidori into a spear or blade-shape, adapting it for mid-range attacks with a maximum range of about five metres. Its increased range means there is less of a risk to the user. When the enemy\'s body is pierced, the user can alter the spear\'s shape into multiple additional blades, increasing the number of wounds.'},
+  {name:'Lightning Release: Chidori Current (Chidori Nagashi)', skillType:'Ninjutsu', element:'Lightning', category:'Lightning Release', cost:20, desc:'By releasing the Chidori in every direction, an electrical discharge flows from the user\'s entire body allowing him to affect multiple enemies. When using this attack on a great number of enemies at once, it can effectively double as an instant defence. The body of the person touched by the Chidori will misinterpret the lightning nature as "electrical signals from the nerves", making its muscles contract.'},
+  {name:'Lightning Release: Chidori Senbon', skillType:'Ninjutsu', element:'Lightning', category:'Lightning Release', cost:18, desc:'A variation of the Chidori that uses shape transformation. In comparison to the standard Chidori, it further specialises in speed, by being transformed into countless sharp senbon, which are all aimed and fired at the enemy. By increasing the amount of chakra used, the number of senbon also increases proportionally. When used in tandem with the Sharingan, it becomes far more effective and deadly, as it allows the user to precisely shoot for the target\'s vital points.'},
+
+  // Earth Release
+  {name:'Earth Release: Earth Shore Return', skillType:'Ninjutsu', element:'Earth', category:'Earth Release', cost:8, desc:'The user tears up the ground and raises it into a sturdy earthen wall, creating immediate cover against incoming attacks.'},
+  {name:'Earth Release: Earth Spear', skillType:'Ninjutsu', element:'Earth', category:'Earth Release', cost:14, desc:'Earth-natured chakra hardens the body, dramatically increasing its defensive strength and making the user difficult to injure.'},
+  {name:'Earth Release: Earth-Style Rampart', skillType:'Ninjutsu', element:'Earth', category:'Earth Release', cost:15, desc:'Raises a massive rampart of earth from the ground, forming a large defensive barrier between the user and the battlefield.'},
+  {name:'Earth Release: Double Suicide Decapitation Technique', skillType:'Ninjutsu', element:'Earth', category:'Earth Release', cost:8, desc:'While lurking underground, the user grabs a target and drags them into the earth, leaving only their head above the surface. Because victims are rendered unable to move in this state, they are easily subjected to torture or decapitation.'},
+  {name:'Earth Release Barrier: Earth Prison Dome of Magnificent Nothingness', skillType:'Ninjutsu', element:'Earth', category:'Earth Release', cost:20, desc:'This jutsu traps the victims inside a self-repairing dome of earth. Jirobo is able to absorb the chakra of anyone trapped inside. Jirobo\'s chakra is distributed throughout the dome, but not equally; near the back, his chakra is much weaker, making the dome weaker in that spot.'},
+
+  // Yin / Yang
+  {name:'Shadow Imitation Technique (Kagemane no Jutsu)', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:10, desc:'The Nara clan’s signature technique extends the user’s shadow until it connects with a target, forcing the target to mirror the user’s movements while the link holds.'},
+  {name:'Shadow Imitation Shadow Bind Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:16, desc:'A more tactical shadow technique that links a target’s shadow to the user’s, allowing the Nara to establish bindings and connect multiple shadows across the battlefield.'},
+  {name:'Multi-Size Technique', skillType:'Ninjutsu', element:'Yang', category:'Yang Release', cost:12, desc:'Uses Yang Release to increase the body’s size dramatically, turning the user into a much larger and stronger combatant.'},
+
+  // Non-elemental
+  {name:'Transformation Jutsu (Henge no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:3, desc:'Transforms the user’s appearance into another person, creature, or object of similar size. The disguise changes form rather than creating a true duplicate.'},
+  {name:'Clone Jutsu (Bunshin no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:3, desc:'Creates intangible illusory copies of the user, useful for distraction, deception, and confusing an opponent’s perception.'},
+  {name:'Multiple Shadow Clone Technique (Tajū Kage Bunshin no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:10, desc:'Creates fully solid, independent clones capable of taking real damage and acting on their own. Extremely chakra-hungry: each clone costs its own share of chakra, making the technique best suited to shinobi with unusually large reserves, such as a Jinchūriki or an Uzumaki.'},
+  {name:'Substitution Jutsu (Kawarimi no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:4, desc:'A defensive escape technique that lets the user replace themselves with a nearby object at the critical moment, evading an incoming attack.'},
+  {name:'Body Flicker Technique (Shunshin no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:6, desc:'Uses chakra to move at extremely high speed, creating the impression of teleportation over short distances.'},
+  {name:'Area Scanning Technique', skillType:'Perception', element:'Non-Elemental', category:'Non-Elemental', cost:0, desc:'By making direct physical contact with a solid surface, the user can channel their chakra through the area, allowing them to accurately scan it. From this a person can roughly map out entire structures and surroundings, as well as determine the presence and location of targets in the surrounding area. Doing so allows to detect for threats, traps, and hidden rooms. It is also possible to determine the weak points and fine details in a single structure.'},
+  {name:'Sexy Technique', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:3, desc:'A variant of the Transformation Technique, the Sexy Technique transforms the user into a very sexy woman, usually nude or in a bikini. Naruto uses this technique to distract or win over men, with all successful attempts causing an exaggerated nosebleed by the victim. It is a joke jutsu but could be used as a distraction.'},
+  {name:'Rope Escape Technique', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:0, desc:'This is the first jutsu taught in Konohagakure\'s Ninja Academy. When the user is bound, they do what they can to escape, such as by finding a way to untie the knot or dislocating their joints in order to get free of the bindings.'},
+
+  // Fūinjutsu
+  {name:'Summoning Technique (Kuchiyose no Jutsu)', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:12, desc:'After forming a contract, the user can summon a bonded creature by using chakra and a blood-marked summoning seal.'},
+  {name:'Dead Demon Consuming Seal (Shiki Fūjin)', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:100, desc:'A forbidden sealing technique that calls upon the Shinigami to rip out and seal away a target’s soul. Its use always costs the caster their own life as payment.'},
+  {name:'Rasengan', skillType:'Chakra Control', element:'Non-Elemental', category:'Non-Elemental', cost:20, desc:'A dense sphere of rotating chakra formed in the palm. It requires no nature transformation and inflicts powerful concentrated impact on contact.'},
+  {name:'Mystical Palm Technique', skillType:'Chakra Control', element:'Non-Elemental', category:'Non-Elemental', cost:8, desc:'A medical-nin technique that gathers healing chakra into the hands, allowing the user to mend wounds and repair damaged tissue directly through touch.'},
+  {name:'Summoning: Impure World Reincarnation (Edo Tensei)', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:150, desc:'The Summoning: Impure World Reincarnation binds the soul of a deceased person to a living vessel, restoring them as they were when they were alive in order to do their summoner\'s bidding. It was originally created by Tobirama Senju, after which he declared it a kinjutsu. Requires DNA of the target and a living sacrifice.'},
+
+  // Genjutsu
+  {name:'Demonic Illusion: False Surroundings Technique', skillType:'Genjutsu', element:'Non-Elemental', category:'Genjutsu', cost:10, desc:'This technique layers an illusion over a location, causing it to look like a different location. Because of how wide an area the illusion can be placed over, that in turn makes it easy to trick others: any who enter the area will be affected by the illusion and see the false location.'},
+  {name:'Demonic Illusion: Hell Viewing Technique', skillType:'Genjutsu', element:'Non-Elemental', category:'Genjutsu', cost:5, desc:'This jutsu causes the target to see a horrifying vision. First, an imaginary circle of leaves will spin around and envelop the target, falling away shortly after. After a short period, the illusion will begin. This is to make the illusion more convincing, since the user will likely have moved before the illusion sets in. A technique used by Kakashi Hatake.'},
+  {name:'Demonic Illusion: Tree Binding Death', skillType:'Genjutsu', element:'Non-Elemental', category:'Genjutsu', cost:20, desc:'The target experiences the illusion of a tree coiling around them, preventing them from moving. Because targets are immobile yet still conscious, this technique is a useful way to perform interrogations. Alternatively, users can simply kill the immobilised targets. This technique has been passed down through the generations among Konohagakure\'s villagers. It was originally created during the time of Hashirama Senju, intended to make victims believe they were fighting Hashirama himself and his Wood Release. A technique used by Kurenai Yuhi.'},
+
+  // Wood Release
+  {name:'Wood Release: Binding Jutsu', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:15, desc:'Wooden growths erupt and coil around a target, restraining movement through the combination of Earth and Water nature transformations.'},
+  {name:'Wood Release: Wood Clone Technique', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:14, desc:'Creates a physical clone from living wood. Unlike a shadow clone, it is a durable, independent body that can take real damage and act on its own.'},
+  {name:'Wood Release: Four-Pillar Prison Technique', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:25, desc:'Raises four great wooden pillars around a target area that grow inward into a dense, enclosing dome, sealing whatever is trapped inside.'},
+  {name:'Wood Release: Deep Forest Emergence', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:35, desc:'Summons a dense forest of massive trees to erupt from the ground across a wide area, overwhelming the battlefield and any enemies caught within it.'},
+  {name:'Wood Release: Nativity of a World of Trees', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:90, desc:'An immense technique that generates a colossal world tree and countless offshoots, capable of blanketing an entire landscape and draining chakra from anyone it touches.'},
+  {name:'Wood Release: Four Pillars House Technique', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:10, desc:'By sending chakra into the ground, the roots of plants are converted into raw materials and forced into accelerated growth to construct a building. The size and shape come from the user\'s imagination or memories. By placing fuda tags around the house, the user creates a barrier that makes it impossible for enemies to detect, allowing the user to camp in peace.'},
+  {name:'Wood Release: Transformation', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:8, desc:'A Transformation Technique that uses Wood Release: wood emerges and covers the user\'s entire body with a puff of smoke or chakra, acting more like a costume than an illusion. The user can leave the wooden shell behind if necessary and can adjust their voice while transformed.'},
+  {name:'Wood Release: Wood Dragon Technique', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:40, desc:'After performing the required hand seals, the user creates a gigantic wooden dragon from any surface, which is then directed to attack an intended target. Its serpentine body can constrict larger opponents and it has the ability to absorb a tailed beast\'s chakra once it is bound.'},
+  {name:'Wood Release: Hand Tool Manipulation', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:5, desc:'The user transforms their hand into a wooden tool. This has been used to create keys, shields, and openings in structures.'},
+  {name:'Transmission Wood', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:6, desc:'A wood clone is transformed into a seed and planted on a target. Only the caster can sense the seed\'s transmissions, allowing them to track the target\'s location.'},
+  {name:'Top Transformed Buddha (Chōjō Kebutsu)', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:100, desc:'A colossal wooden statue with hundreds of thousands of arms delivers an overwhelming barrage of punches. The sheer volume of attacks makes it nearly impossible to defend against.'},
+
+  // Ice, Lava, Storm, Magnet, Boil
+  {name:'Ice Release: Ice Mirrors', skillType:'Ninjutsu', element:'Ice', category:'Ice Release', cost:22, desc:'Creates reflective ice mirrors around the battlefield, allowing the user to move between them at blinding speed while attacking from multiple angles.'},
+  {name:'Lava Release: Lava Release Bullet', skillType:'Ninjutsu', element:'Lava', category:'Lava Release', cost:15, desc:'Expels a mass of molten lava toward the target, combining overwhelming heat with the force of a projectile.'},
+  {name:'Storm Release: Laser Circus', skillType:'Ninjutsu', element:'Storm', category:'Storm Release', cost:20, desc:'Fires multiple guided beams of chakra-based energy that can bend and pursue targets from unexpected angles.'},
+  {name:'Magnet Release: Gold Dust Drizzle', skillType:'Ninjutsu', element:'Magnet', category:'Magnet Release', cost:18, desc:'Controls magnetised particles as a spreading projectile or field, allowing the user to attack and restrict movement from range.'},
+  {name:'Boil Release: Skilled Mist Technique', skillType:'Ninjutsu', element:'Boil', category:'Boil Release', cost:25, desc:'A corrosive mist is expelled from the user\'s mouth, capable of melting even Susanoo\'s bones. The technique is indiscriminate, so it must be used carefully away from allies.'},
+  {name:'Boil Release: Unrivalled Strength', skillType:'Ninjutsu', element:'Boil', category:'Boil Release', cost:20, desc:'Chakra is heated to the boiling point, generating powerful steam that evaporates water and ice on contact. The steam pressure enhances physical attacks, granting immense strength and speed.'},
+
+  // Explosion Release
+  {name:'C1', skillType:'Ninjutsu', element:'Explosion', category:'Explosion Release', cost:10, desc:'A basic and versatile form of explosive clay, molded from a single palm mouth into small animated figures that often resemble birds or insects. Their explosive yield is low, but their small size and mobility make them ideal for scouting, sabotage, and other covert operations. This technique is famously used by Deidara.'},
+  {name:'C2', skillType:'Ninjutsu', element:'Explosion', category:'Explosion Release', cost:30, desc:'An advanced explosive clay technique that requires shaping material from both palm mouths at once, forming a large, flight-capable creature such as a dragon. The construct can carry its user safely through the air while releasing smaller clay figures that home in on targets like guided missiles, as well as scattering clay mines across the battlefield. This technique is famously used by Deidara.'},
+  {name:'C3', skillType:'Ninjutsu', element:'Explosion', category:'Explosion Release', cost:60, desc:'The most powerful and destructive form of explosive clay, molded into an enormous, roughly human-shaped statue and dropped onto a target area from above. Its detonation releases devastating explosive force capable of leveling large sections of a village or fortification. This technique is famously used by Deidara.'},
+];
+
+function renderJutsuLibrary(){
+  const el = document.getElementById('jutsuLibraryList');
+  const groups = [
+    ['Fire Release','Fire Release','Techniques using the Fire Release elemental nature, generally offensive and high in destructive power.'],
+    ['Water Release','Water Release','Techniques using the Water Release elemental nature, valued for their versatility and control of the battlefield.'],
+    ['Wind Release','Wind Release','Techniques using the Wind Release elemental nature, known for cutting power and boosting other jutsu.'],
+    ['Lightning Release','Lightning Release','Techniques using the Lightning Release elemental nature, prized for speed and piercing power.'],
+    ['Earth Release','Earth Release','Techniques using the Earth Release elemental nature, focused on defense, terrain manipulation, and raw physical force.'],
+    ['Non-Elemental','Non-Elemental','Techniques that do not use a listed elemental nature.'],
+    ['Fūinjutsu','Fūinjutsu','Sealing techniques: summoning, storage seals, and forbidden sealing arts.'],
+    ['Taijutsu','Taijutsu','Close-combat, hand-to-hand fighting styles and techniques.'],
+    ['Genjutsu','Genjutsu','Illusionary techniques that trap the mind and senses.'],
+    ['Dōjutsu','Dōjutsu','Sharingan, Byakugan, Rinnegan and Mangekyō techniques.'],
+    ['Yin Release','Yin Release','Spiritual-energy techniques, including the Nara clan shadow arts.'],
+    ['Yang Release','Yang Release','Physical-energy techniques associated with vitality and bodily transformation.'],
+    ['Wood Release','Wood Release','Kekkei genkai techniques combining Earth and Water Release to generate and control wood.'],
+    ['Ice Release','Ice Release','Kekkei genkai techniques combining Water and Wind Release to generate and control ice.'],
+    ['Lava Release','Lava Release','Kekkei genkai techniques combining Earth and Fire Release to generate and control molten rock.'],
+    ['Storm Release','Storm Release','Kekkei genkai techniques combining Water and Lightning Release to generate concentrated, high-speed water beams.'],
+    ['Magnet Release','Magnet Release','Kekkei genkai techniques combining Earth and Wind Release to attract, repel, and control magnetic particles.'],
+    ['Boil Release','Boil Release','Kekkei genkai techniques combining Fire and Water Release to generate corrosive, high-temperature steam and mist.'],
+    ['Explosion Release','Explosion Release','Kekkei genkai techniques using the Explosion Release, most notably to animate and detonate explosive clay.']
+  ];
+  el.innerHTML = groups.map(([title,cat,note]) => {
+    const items = jutsuPresets.filter(p => p.category === cat);
+    if(!items.length) return '';
+    const colorClass = ({'Fire Release':'category-fire','Water Release':'category-water','Wind Release':'category-wind','Lightning Release':'category-lightning','Earth Release':'category-earth','Dōjutsu':'category-doujutsu','Taijutsu':'category-taijutsu','Fūinjutsu':'category-fuin','Yin Release':'category-yin','Yang Release':'category-yang','Wood Release':'category-wood','Ice Release':'category-ice','Lava Release':'category-lava','Storm Release':'category-storm','Magnet Release':'category-magnet','Boil Release':'category-boil','Explosion Release':'category-none','Non-Elemental':'category-none'}[cat] || 'category-none');
+    return `<details class="jutsu-library-group"><summary><span class="cat-title ${colorClass}">${title}</span></summary><div class="group-body">${note?`<div class="group-note">${note}</div>`:''}${items.map(p => {
+      const i = jutsuPresets.indexOf(p);
+      return `<div class="library-card">
+        <div class="lib-top"><div class="lib-name">${p.name}</div><div class="lib-tags">${p.skillType} · ${p.cost} chakra</div></div>
+        <div class="lib-desc">${p.desc}</div><button class="lib-add" onclick="addPresetJutsu(${i})">+ Add Jutsu</button>
+      </div>`;
+    }).join('')}</div></details>`;
+  }).join('');
+}
+
+function addPresetJutsu(i){
+  const p = jutsuPresets[i];
+  state.jutsu.push({id:nextJutsuId++, name:p.name, skillType:p.skillType, element:p.element||'Non-Elemental', cost:p.cost, desc:p.desc});
+  renderJutsu();
+  logEntry(`<b>${p.name}</b> added to your Jutsu list.`);
+}
+
+const weaponPresets = [
+  {name:'Kunai', desc:'A kunai held in the hand for close combat, not to be thrown, although it may still be thrown, as of right now you\'re using it as a weapon.', type:'weapon'},
+  {name:'Karasu', desc:'One of Kankurō’s signature puppets, built for concealed weapons, blades, and deceptive close-range attacks.', type:'puppet'},
+  {name:'Kuroari', desc:'A capture-oriented puppet used to trap opponents and set up Kankurō’s puppet techniques.', type:'puppet'},
+  {name:'Sanshōuo', desc:'A heavily built defensive puppet used for protection, shielding, and battlefield control.', type:'puppet'},
+  {name:'Samehada', desc:'A sentient sword of the Seven Ninja Swordsmen of the Mist. Its scale-covered blade shreds targets and absorbs chakra, which it can later transfer to its wielder.', type:'weapon'},
+  {name:'Kubikiribōchō (Sword of the Executioner)', desc:'Zabuza Momochi’s massive sword, one of the Seven Ninja Swordsmen’s blades. It can be used to brutally cleave targets and is famous for its ability to repair itself using iron from blood.', type:'weapon'},
+  {name:'Kusanagi Sword', desc:'A legendary blade associated with Orochimaru and Sasuke. Its extraordinary sharpness and chakra manipulation make it especially dangerous in the hands of a skilled shinobi.', type:'weapon'},
+  {name:'Hiramekarei', desc:'A massive twin-handled sword of the Seven Ninja Swordsmen of the Mist that stores chakra and releases it into powerful hammer- or blade-like forms.', type:'weapon'},
+  {name:'Shibuki (Explosive Sword)', desc:'A sword of the Seven Ninja Swordsmen of the Mist lined with explosive tags, allowing its wielder to combine kenjutsu with chained explosions.', type:'weapon'},
+];
+
+function renderWeaponLibrary(){
+  const el = document.getElementById('weaponLibraryList');
+  const groups = [
+    ['Conventional Weapons', 'weapon'],
+    ['Puppets', 'puppet'],
+  ];
+  el.innerHTML = groups.map(([title, type]) => {
+    const items = weaponPresets.filter(p => (p.type||'weapon') === type);
+    if(!items.length) return '';
+    return `<details class="jutsu-library-group"><summary><span class="cat-title">${title}</span></summary><div class="group-body">${items.map(p => {
+      const i = weaponPresets.indexOf(p);
+      return `<div class="library-card"><div class="lib-top"><div class="lib-name">${p.name}</div><div class="lib-tags">${p.type==='puppet'?'Puppet':'Weapon'}</div></div><div class="lib-desc">${p.desc}</div><button class="lib-add" onclick="addPresetWeapon(${i})">+ Add Weapon</button></div>`;
+    }).join('')}</div></details>`;
+  }).join('');
+}
+
+function addPresetWeapon(i){
+  const p = weaponPresets[i];
+  state.weapons.push({id:nextWeaponId++, name:p.name, desc:p.desc, type:p.type||'weapon'});
+  renderWeapons();
+  logEntry(`<b>${p.name}</b> added to your Weapons.`);
+}
+
+const itemPresets = [
+  {name:'Kunai', category:'tools', desc:'A multi-purpose bladed tool used for both close combat and throwing, often paired with wire or explosive tags for traps and combination attacks.'},
+  {name:'Shuriken', category:'tools', desc:'Flat, bladed throwing stars used at range to wound, distract, or finish off a fleeing target, usually thrown in fanned volleys.'},
+  {name:'Senbon', category:'tools', desc:'Thin, needle-like spikes used for precise, lower-lethality strikes, favored for hitting pressure points or delivering poison with minimal force.'},
+  {name:'Smoke Bomb', category:'tools', desc:'A small pellet that bursts into a thick cloud of smoke on impact, used to cover a retreat, break line of sight, or set up a surprise attack.'},
+  {name:'Explosive Tag', category:'tools', desc:'A paper tag inscribed with an explosive seal, triggered by chakra or a lit fuse, capable of leveling structures or arming traps when attached to objects.'},
+  {name:'Kunai with Explosive Tag', category:'tools', desc:'A kunai with an explosive tag attached to the ring, meant to be thrown so the tag detonates on impact or after a short fuse, combining a thrown weapon with an explosive.'},
+  {name:'Wire Strings', category:'tools', desc:'A thin, nearly invisible ninja wire used to set traps, bind or trip opponents, guide thrown weapons with precision, or manipulate objects from a distance.'},
+  {name:'Summoning Scroll', category:'scrolls', desc:'A scroll inscribed with a summoning contract, allowing whoever has signed it in blood to call forth the animal or creature bound to that pact.'},
+  {name:'Empty Scroll', category:'scrolls', desc:'A blank scroll ready to be filled with sealing formulas, storage jutsu, coded messages, or notes meant to be deciphered by allies.'},
+  {name:'Filled Scroll', category:'scrolls', desc:'A scroll that has already been sealed, whether it holds a sealing formula, a stored item, or a coded message. Roll Fūinjutsu to open or otherwise use the seal, and Investigation if it needs to be deciphered.'},
+  {name:'Ninja Food Pills', category:'misc', desc:'Small, highly nutritious pills that restore chakra and stave off hunger for a while, ideal for the battlefield when there is no time to eat.'},
+  {name:'Canned Food', category:'misc', desc:'Preserved, shelf-stable food that is always safe to eat, useful for long missions away from villages.'},
+  {name:'Tent Kit', category:'misc', desc:'A compact kit for setting up shelter on the road, useful for camping during long missions.'},
+  {name:'Firestarter Materials', category:'misc', desc:'Flint, tinder, and other tools for reliably starting a fire in the field.'},
+  {name:'Gourd', category:'misc', desc:'A simple gourd for carrying and drinking water on long journeys.'},
+  {name:'Clay', category:'misc', desc:'A malleable, earthy material that can be used to make pottery, for artistic purposes, or simply you can use it to mix Explosion chakra in it and execute explosive clay techniques.'},
+];
+
+function renderItemLibrary(){
+  const el = document.getElementById('itemLibraryList');
+  const groups = [
+    ['Ninja Tools', 'tools', ''],
+    ['Scrolls', 'scrolls', ''],
+    ['Miscellaneous', 'misc', ''],
+  ];
+  el.innerHTML = groups.map(([title, cat]) => {
+    const items = itemPresets.filter(p => p.category === cat);
+    if(!items.length) return '';
+    return `<details class="jutsu-library-group"><summary><span class="cat-title">${title}</span></summary><div class="group-body">${items.map(p => {
+      const i = itemPresets.indexOf(p);
+      return `<div class="library-card">
+        <div class="lib-top">
+          <div class="lib-name">${p.name}</div>
+        </div>
+        <div class="lib-desc">${p.desc}</div>
+        <button class="lib-add" onclick="addPresetItem(${i})">+ Add Item</button>
+      </div>`;
+    }).join('')}</div></details>`;
+  }).join('');
+}
+
+function addPresetItem(i){
+  const p = itemPresets[i];
+  state.inventory.push({id:nextItemId++, name:p.name, qty:1, desc:p.desc, type:p.category||'tools', fuinChecked:false, investigationChecked:false});
+  renderInventory();
+  logEntry(`<b>${p.name}</b> added to your Inventory.`);
+}
+
+function createDefaultState(){ return {
+  name:'', village:'', title:'', className:'', level:1, clan:'', element:'',
+  profBonus:2,
+  cp:0, cpMax:0, chakraPerLevel:5,
+  ryo:0,
+  abilities: [
+    {key:'str', name:'Strength', score:8, saveProf:false},
+    {key:'dex', name:'Dexterity', score:8, saveProf:false},
+    {key:'con', name:'Constitution', score:8, saveProf:false},
+    {key:'int', name:'Intelligence', score:8, saveProf:false},
+    {key:'wis', name:'Wisdom', score:8, saveProf:false},
+    {key:'cha', name:'Charisma', score:8, saveProf:false},
+  ],
+  skills: [
+    {name:'Acrobatics', desc:'Balance and controlled falls', ability:'dex', prof:false},
+    {name:'Animal Handling', desc:'Calming or directing a beast', ability:'wis', prof:false},
+    {name:'Chakra Arcana', desc:'Theoretical knowledge of chakra theory, jutsu concepts, jinchūriki, forbidden jutsu, and supernatural phenomena', ability:'int', prof:false},
+    {name:'Athletics', desc:'Swimming, climbing, forcing objects', ability:'str', prof:false},
+    {name:'Deception', desc:'Lying convincingly', ability:'cha', prof:false},
+    {name:'History', desc:'Past events, villages, shinobi wars', ability:'int', prof:false},
+    {name:'Insight', desc:'Reading others\' true intentions', ability:'wis', prof:false},
+    {name:'Intimidation', desc:'Instilling fear', ability:'cha', prof:false},
+    {name:'Investigation', desc:'Finding clues, deducing details, deciphering messages', ability:'int', prof:false},
+    {name:'Tactics', desc:'Battle IQ, battlefield strategy, and the ability to command a shinobi team toward victory through planning, adaptation, and clever combat tactics.', ability:'int', prof:false},
+    {name:'Medicine', desc:'Stabilizing and diagnosing wounds', ability:'wis', prof:false},
+    {name:'Nature', desc:'Terrain, animals, natural phenomena', ability:'int', prof:false},
+    {name:'Perception', desc:'Spotting enemies and ambushes. With Sharingan, predicts enemy movements; with Byakugan, grants X-ray vision and other Byakugan abilities', ability:'wis', prof:false},
+    {name:'Performance', desc:'Performing, distracting an audience', ability:'cha', prof:false},
+    {name:'Persuasion', desc:'Convincing through honest argument', ability:'cha', prof:false},
+    {name:'Religion', desc:'Cults, deities, rites', ability:'int', prof:false},
+    {name:'Sleight of Hand', desc:'Pickpocketing, manipulating small objects', ability:'dex', prof:false},
+    {name:'Stealth', desc:'Moving without being noticed', ability:'dex', prof:false},
+    {name:'Survival', desc:'Tracking, navigating, enduring the elements', ability:'wis', prof:false},
+    {name:'Ninjutsu', desc:'Knowledge to perform ranged jutsu, determines if it lands and how effective it is', ability:'int', prof:false},
+    {name:'Taijutsu', desc:'Knowledge to perform close-combat techniques, determines if it lands and how effective it is, includes reading an opponent\'s movements', ability:'str', finesse:true, prof:false},
+    {name:'Genjutsu', desc:'Knowledge to cast illusions, determines if it takes hold and how effective it is', ability:'wis', prof:false},
+    {name:'Fūinjutsu', desc:'Knowledge of seals, seal arrays, and summoning jutsu', ability:'int', prof:false},
+    {name:'Chakra Control', desc:'Ability to mold chakra, walking on water, climbing trees, precise manipulation', ability:'wis', prof:false},
+    {name:'Traps', desc:'Setting, spotting, and disarming explosive or wire traps', ability:'int', prof:false},
+    {name:'Shurikenjutsu', desc:'Precision throwing kunai and shuriken, for attacks, contests, or checks', ability:'dex', prof:false},
+    {name:'Weapons', desc:'Kenjutsu, bow, and other weapon styles such as Puppets, for attacks, contests, or checks', ability:'dex', prof:false},
+  ],
+  weapons: [
+    {id:1, name:'', desc:'', type:'weapon'},
+  ],
+  elements: [
+    {name:'Fire', color:'#b3383f', active:false, custom:false},
+    {name:'Water', color:'#3a7ea6', active:false, custom:false},
+    {name:'Wind', color:'#6fae7f', active:false, custom:false},
+    {name:'Lightning', color:'#d4af37', active:false, custom:false},
+    {name:'Earth', color:'#8b5e34', active:false, custom:false},
+    {name:'Wood', color:'#4a7c4e', active:false, custom:false},
+    {name:'Ice', color:'#8fd9e0', active:false, custom:false},
+    {name:'Lava', color:'#d1603d', active:false, custom:false},
+    {name:'Storm', color:'#6a5acd', active:false, custom:false},
+    {name:'Magnet', color:'#8a7ca8', active:false, custom:false},
+    {name:'Boil', color:'#c97bb0', active:false, custom:false},
+    {name:'Explosion', color:'#d96c2b', active:false, custom:false},
+    {name:'Yin', color:'#555860', active:false, custom:false},
+    {name:'Yang', color:'#ffffff', active:false, custom:false},
+  ],
+  jutsu: [
+    {id:1, name:'Transformation Jutsu (Henge no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', cost:3, desc:'Transforms the user into the appearance of another person, creature, or object of similar size.'},
+    {id:2, name:'Clone Jutsu (Bunshin no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', cost:3, desc:'Creates intangible illusory duplicates of the user to deceive or distract enemies.'},
+    {id:3, name:'Substitution Jutsu (Kawarimi no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', cost:5, desc:'Reaction: swaps the user with a nearby object an instant before taking a hit.'},
+  ],
+  inventory: [],
+  details: {age:'', role:'', description:'', backstory:'', nindo:''},
+}; }
+
+let state = createDefaultState();
+let nextJutsuId = 4, nextItemId = 1, nextWeaponId = 2;
+
+function d(sides){ return Math.floor(Math.random()*sides)+1; }
+function logEntry(html){
+  const log = document.getElementById('log');
+  if(log.querySelector('.empty')) log.innerHTML = '';
+  const div = document.createElement('div'); div.className = 'entry'; div.innerHTML = html;
+  log.prepend(div);
+}
+function flash(text){
+  const f = document.getElementById('flash'); f.textContent = text;
+  f.classList.remove('show'); void f.offsetWidth; f.classList.add('show');
+}
+
+function renderHeader(){
+  document.getElementById('f_name').value = state.name;
+  document.getElementById('f_village').value = state.village;
+  document.getElementById('f_title').value = state.title;
+  document.getElementById('f_class').value = state.className;
+  document.getElementById('f_level').value = state.level;
+  document.getElementById('f_clan').value = state.clan;
+  document.getElementById('f_prof').value = state.profBonus;
+  document.getElementById('f_cpmax').value = state.cpMax;
+  state.chakraPerLevel = state.chakraPerLevel || 5;
+  document.getElementById('f_cpl').value = state.chakraPerLevel;
+  document.getElementById('f_ryo').value = state.ryo||0;
+  document.getElementById('d_age').value = state.details.age;
+  document.getElementById('d_role').value = state.details.role;
+  document.getElementById('d_desc').value = state.details.description;
+  document.getElementById('d_backstory').value = state.details.backstory;
+  document.getElementById('d_nindo').value = state.details.nindo;
+  updateBars();
+}
+
+function updateBars(){
+  document.getElementById('cpVal').textContent = state.cp;
+  const slider = document.getElementById('cpSlider');
+  slider.max = state.cpMax;
+  slider.value = state.cp;
+  const pct = state.cpMax>0 ? (state.cp/state.cpMax*100) : 0;
+  slider.style.background = `linear-gradient(to right, var(--mist-light) ${pct}%, rgba(var(--line-rgb),0.15) ${pct}%)`;
+}
+
+function setChakraFromSlider(val){
+  state.cp = Math.max(0, Math.min(state.cpMax, parseInt(val)||0));
+  updateBars(); renderJutsu();
+}
+
+function adjust(type, delta){
+  if(type==='cp') state.cp = Math.max(0, Math.min(state.cpMax, state.cp+delta));
+  updateBars(); renderJutsu();
+}
+
+function chakraBudget(){
+  return (state.level || 1) * (state.chakraPerLevel || 5);
+}
+
+function renderChakraPoints(){
+  const budget = chakraBudget();
+  const remaining = budget - state.cpMax;
+  const el = document.getElementById('chakraPointsDisplay');
+  el.textContent = `— ${remaining} / ${budget} points remaining`;
+  el.className = 'points-remaining' + (remaining < 0 ? ' negative' : '');
+}
+
+function pointBuyTotal(){
+  const level = state.level || 1;
+  const bonus = Math.floor(level/4) * 2;
+  return 27 + bonus;
+}
+function pointsSpent(){
+  return state.abilities.reduce((sum,a) => sum + (a.score - 8), 0);
+}
+
+function renderAbilities(){
+  const total = pointBuyTotal();
+  const spent = pointsSpent();
+  const remaining = total - spent;
+  const pd = document.getElementById('pointsDisplay');
+  pd.textContent = `— ${remaining} / ${total} points remaining`;
+  pd.className = 'points-remaining' + (remaining < 0 ? ' negative' : '');
+
+  const el = document.getElementById('abilities');
+  el.innerHTML = state.abilities.map((a,i) => `
+    <div class="ability">
+      <div class="name">${a.name}</div>
+      <input class="score-input" type="number" value="${a.score}" onchange="state.abilities[${i}].score=parseInt(this.value)||8; renderAbilities(); renderSkills()">
+      <div class="mod">${fmt(abilityMod(a.score))}</div>
+      <label class="save-row"><input type="checkbox" ${a.saveProf?'checked':''} onchange="state.abilities[${i}].saveProf=this.checked; renderAbilities()"> Save Proficient (${fmt(abilityMod(a.score) + (a.saveProf?state.profBonus:0))})</label>
+      <div class="roll-btns">
+        <button onclick="rollGeneric('${a.name} Check', ${abilityMod(a.score)})">Roll Check</button>
+        <button onclick="rollGeneric('${a.name} Save', ${abilityMod(a.score) + (a.saveProf?state.profBonus:0)})">Roll Save</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function abilityLabel(key){ return state.abilities.find(a=>a.key===key).name; }
+
+function renderSkills(){
+  const el = document.getElementById('skills');
+  el.innerHTML = state.skills.map((s,i) => {
+    let abScore, abLabel;
+    if(s.finesse){
+      const str = state.abilities.find(a=>a.key==='str');
+      const dex = state.abilities.find(a=>a.key==='dex');
+      if(abilityMod(str.score) >= abilityMod(dex.score)){ abScore = str.score; abLabel = 'STR/DEX'; }
+      else { abScore = dex.score; abLabel = 'STR/DEX'; }
+    } else {
+      abScore = state.abilities.find(a=>a.key===s.ability).score;
+      abLabel = abilityLabel(s.ability);
+    }
+    const mod = abilityMod(abScore) + (s.prof ? state.profBonus : 0);
+    return `
+    <div class="row-card">
+      <div class="name-field">${s.name}</div>
+      <div class="desc-field">${s.desc}</div>
+      <div class="ability-tag">${abLabel}</div>
+      <label class="prof-check"><input type="checkbox" ${s.prof?'checked':''} onchange="state.skills[${i}].prof=this.checked; renderSkills()">Prof</label>
+      <div class="mod-display">${fmt(mod)}</div>
+      <button class="roll-btn" onclick="rollGeneric('${s.name.replace(/'/g,"\\'")}', ${mod})">Roll</button>
+    </div>`;
+  }).join('');
+}
+
+function renderJutsu(){
+  const el = document.getElementById('jutsu');
+  el.innerHTML = state.jutsu.map((j,i) => {
+    const isNinjutsu = (j.skillType === 'Ninjutsu' || !j.skillType);
+    const currentElement = j.element || 'Non-Elemental';
+    const elementOptions = availableElementOptions();
+    if(!elementOptions.includes(currentElement)) elementOptions.push(currentElement);
+    return `
+    <div class="jutsu-card">
+      <div class="jutsu-top">
+        <input class="jname" value="${j.name}" onchange="state.jutsu[${i}].name=this.value">
+        <select class="jroll" onchange="state.jutsu[${i}].skillType=this.value; renderJutsu()">
+          <option value="Ninjutsu" ${j.skillType==='Ninjutsu'?'selected':''}>Ninjutsu</option>
+          <option value="Taijutsu" ${j.skillType==='Taijutsu'?'selected':''}>Taijutsu</option>
+          <option value="Genjutsu" ${j.skillType==='Genjutsu'?'selected':''}>Genjutsu</option>
+          <option value="Fūinjutsu" ${j.skillType==='Fūinjutsu'?'selected':''}>Fūinjutsu</option>
+          <option value="Perception" ${j.skillType==='Perception'?'selected':''}>Perception</option>
+          <option value="Chakra Control" ${j.skillType==='Chakra Control'?'selected':''}>Chakra Control</option>
+        </select>
+        ${isNinjutsu ? `<select class="jroll" onchange="state.jutsu[${i}].element=this.value; renderJutsu()">
+          ${elementOptions.map(name => `<option value="${name}" ${currentElement===name?'selected':''} style="color:${getElementColor(name)}">${name}</option>`).join('')}
+        </select>` : ''}
+        <input class="jcost" type="number" min="0" value="${j.cost||0}" title="Chakra cost" onchange="state.jutsu[${i}].cost=parseInt(this.value)||0; renderJutsu()">
+      </div>
+      <textarea class="jutsu-desc" onchange="state.jutsu[${i}].desc=this.value">${j.desc}</textarea>
+      <div class="jutsu-actions">
+        <button class="cast-btn" onclick="rollJutsu(${i})">Roll ${j.skillType || 'Ninjutsu'}</button>
+        <button class="cast-btn" ${state.cp < (j.cost||0) ? 'disabled' : ''} onclick="castJutsu(${i})">Cast Jutsu (${j.cost||0} chakra)</button>
+        <button class="del-btn" onclick="state.jutsu.splice(${i},1); renderJutsu()">Delete</button>
+      </div>
+    </div>
+  `;
+  }).join('');
+}
+
+function addJutsu(){
+  state.jutsu.push({id:nextJutsuId++, name:'New Jutsu', skillType:'Ninjutsu', element:'Non-Elemental', cost:0, desc:''});
+  renderJutsu();
+}
+
+function skillMod(skillName){
+  const s = state.skills.find(sk => sk.name === skillName);
+  if(!s) return 0;
+  let abScore;
+  if(s.finesse){
+    const str = state.abilities.find(a=>a.key==='str');
+    const dex = state.abilities.find(a=>a.key==='dex');
+    abScore = abilityMod(str.score) >= abilityMod(dex.score) ? str.score : dex.score;
+  } else {
+    abScore = state.abilities.find(a=>a.key===s.ability).score;
+  }
+  return abilityMod(abScore) + (s.prof ? state.profBonus : 0);
+}
+
+function rollJutsu(i){
+  const j = state.jutsu[i];
+  const type = j.skillType || 'Ninjutsu';
+  const mod = skillMod(type);
+  const raw = d(20); const total = raw + mod;
+  flash(total);
+  const crit = raw===20?' — CRITICAL!':(raw===1?' — critical failure':'');
+  logEntry(`<b>${j.name}</b> (${type}) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
+}
+
+function castJutsu(i){
+  const j = state.jutsu[i];
+  const cost = j.cost || 0;
+  if(state.cp < cost) return;
+  state.cp -= cost;
+  updateBars(); renderJutsu();
+  logEntry(`<b>${j.name}</b> cast (−${cost} chakra, ${state.cp}/${state.cpMax} remaining)`);
+}
+
+function renderInventory(){
+  const el = document.getElementById('inventory');
+  el.innerHTML = state.inventory.map((item,i) => `
+    <div class="item-card">
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <input class="iname" style="flex:2; min-width:140px" value="${item.name}" placeholder="e.g. Kunai" onchange="state.inventory[${i}].name=this.value">
+        <select style="flex:1; min-width:150px" onchange="state.inventory[${i}].type=this.value; renderInventory()">
+          <option value="tools" ${item.type!=='misc' && item.type!=='scrolls' ?'selected':''}>Ninja Tool</option>
+          <option value="misc" ${item.type==='misc'?'selected':''}>Miscellaneous</option>
+          <option value="scrolls" ${item.type==='scrolls'?'selected':''}>Scroll</option>
+        </select>
+      </div>
+      <div style="display:flex; align-items:center; gap:2px">
+        <input class="small" type="number" value="${item.qty}" placeholder="Qty" style="max-width:60px" onchange="state.inventory[${i}].qty=parseInt(this.value)||0">
+        <div style="display:flex; flex-direction:column; gap:1px">
+          <button onclick="adjustItemQty(${i},1)" style="width:20px; height:15px; padding:0; font-size:0.6rem; line-height:1; background:transparent; border:1px solid var(--mist-light); color:var(--foam); cursor:pointer">▲</button>
+          <button onclick="adjustItemQty(${i},-1)" style="width:20px; height:15px; padding:0; font-size:0.6rem; line-height:1; background:transparent; border:1px solid var(--mist-light); color:var(--foam); cursor:pointer">▼</button>
+        </div>
+      </div>
+      <textarea class="idesc" placeholder="Description" onchange="state.inventory[${i}].desc=this.value">${item.desc}</textarea>
+      ${item.type==='scrolls' ? `<div class="jutsu-actions" style="margin-top:6px">
+        <button class="cast-btn" onclick="rollItemFuinjutsu(${i})">Roll Fūinjutsu</button>
+        <button class="cast-btn" onclick="rollItemInvestigation(${i})">Roll Investigation</button>
+      </div>` : ''}
+      <button class="del-btn" onclick="state.inventory.splice(${i},1); renderInventory()">×</button>
+    </div>
+  `).join('');
+}
+function addItem(){
+  state.inventory.push({id:nextItemId++, name:'', qty:1, desc:'', type:'tools'});
+  renderInventory();
+}
+function adjustItemQty(i, delta){
+  state.inventory[i].qty = Math.max(0, (state.inventory[i].qty||0) + delta);
+  renderInventory();
+}
+function adjustRyo(delta){
+  state.ryo = Math.max(0, (parseInt(state.ryo)||0) + delta);
+  document.getElementById('f_ryo').value = state.ryo;
+}
+function rollItemFuinjutsu(i){
+  const item = state.inventory[i];
+  const mod = skillMod('Fūinjutsu');
+  const raw = d(20); const total = raw + mod;
+  flash(total);
+  const crit = raw===20?' — CRITICAL!':(raw===1?' — critical failure':'');
+  logEntry(`<b>${item.name||'Scroll'}</b> (Fūinjutsu) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
+}
+function rollItemInvestigation(i){
+  const item = state.inventory[i];
+  const mod = skillMod('Investigation');
+  const raw = d(20); const total = raw + mod;
+  flash(total);
+  const crit = raw===20?' — CRITICAL!':(raw===1?' — critical failure':'');
+  logEntry(`<b>${item.name||'Scroll'}</b> (Investigation) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
+}
+
+function rollGeneric(label, mod){
+  const raw = d(20); const total = raw + mod;
+  flash(total);
+  const crit = raw===20?' — CRITICAL!':(raw===1?' — critical failure':'');
+  logEntry(`<b>${label}</b> — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
+}
+
+function renderWeapons(){
+  const el = document.getElementById('weapons');
+  el.innerHTML = state.weapons.map((w,i) => `
+    <div class="weapon-card" style="margin-bottom:10px">
+      <div class="weapon-row" style="display:flex; gap:8px; flex-wrap:wrap">
+        <input placeholder="Weapon name" style="flex:2; min-width:160px" value="${w.name}" onchange="state.weapons[${i}].name=this.value">
+        <select style="flex:1; min-width:150px" onchange="state.weapons[${i}].type=this.value; renderWeapons()">
+          <option value="weapon" ${w.type!=='puppet'?'selected':''}>Conventional Weapon</option>
+          <option value="puppet" ${w.type==='puppet'?'selected':''}>Puppet</option>
+        </select>
+      </div>
+      <textarea placeholder="Notes / fighting style" rows="2" style="width:100%" onchange="state.weapons[${i}].desc=this.value">${w.desc}</textarea>
+      <div class="jutsu-actions" style="margin-top:10px">
+        <button class="cast-btn" onclick="rollWeaponSkill(${i})">Roll Weapons</button>
+        ${w.type==='puppet' ? `<button class="cast-btn" onclick="rollWeaponChakraControl(${i})">Roll Chakra Control</button>` : ''}
+        <button class="del-btn" onclick="state.weapons.splice(${i},1); renderWeapons()">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addWeapon(){
+  state.weapons.push({id:nextWeaponId++, name:'', desc:'', type:'weapon'});
+  renderWeapons();
+}
+
+function rollWeaponSkill(i){
+  const w = state.weapons[i];
+  const mod = skillMod('Weapons');
+  const raw = d(20); const total = raw + mod;
+  flash(total);
+  const crit = raw===20?' — CRITICAL!':(raw===1?' — critical failure':'');
+  logEntry(`<b>${w.name||'Weapon'}</b> (Weapons) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
+}
+
+function rollWeaponChakraControl(i){
+  const w = state.weapons[i];
+  const mod = skillMod('Chakra Control');
+  const raw = d(20); const total = raw + mod;
+  flash(total);
+  const crit = raw===20?' — CRITICAL!':(raw===1?' — critical failure':'');
+  logEntry(`<b>${w.name||'Puppet'}</b> (Chakra Control) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
+}
+
+function renderAll(){ renderHeader(); renderAbilities(); renderSkills(); renderJutsu(); renderInventory(); renderWeapons(); renderChakraPoints(); renderJutsuLibrary(); renderWeaponLibrary(); renderItemLibrary(); renderElements(); }
+
+function exportChar(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = (state.name || 'character').replace(/\s+/g,'_') + '.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importChar(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const data = JSON.parse(e.target.result);
+      const importedSkills = data.skills;
+      data.skills = state.skills.map(s => {
+        const match = importedSkills && importedSkills.find(is => is.name === s.name);
+        return match ? Object.assign({}, s, {prof: match.prof}) : s;
+      });
+      state = Object.assign({}, state, data);
+      state.ryo = parseInt(state.ryo)||0;
+      state.details = Object.assign({age:'',role:'',description:'',backstory:'',nindo:''}, data.details||{});
+      if(!data.elements){ state.elements = createDefaultState().elements; }
+      state.jutsu = (state.jutsu||[]).map(j => ({id:j.id, name:j.name||'', skillType:j.skillType||'Ninjutsu', element:(j.name||'').includes('Shadow Imitation') ? 'Yin' : (j.element||'Non-Elemental'), cost:j.cost||0, desc:j.desc||''}));
+      state.elements = (state.elements||[]);
+      if(!state.elements.some(e=>e.name==='Yin')) state.elements.push({name:'Yin',color:'#555860',active:false,custom:false});
+      if(!state.elements.some(e=>e.name==='Yang')) state.elements.push({name:'Yang',color:'#f4d35e',active:false,custom:false});
+      state.weapons = (state.weapons||[]).map(w => ({id:w.id, name:w.name||'', desc:w.desc||'', type:w.type==='puppet'?'puppet':'weapon'}));
+      nextJutsuId = Math.max(1, ...(state.jutsu||[]).map(j=>j.id||0)) + 1;
+      state.inventory = (state.inventory||[]).map(it => ({id:it.id, name:it.name||'', qty:it.qty||0, desc:it.desc||'', type:(it.type==='misc'||it.type==='scrolls')?it.type:'tools'}));
+      nextItemId = Math.max(1, ...(state.inventory||[]).map(it=>it.id||0)) + 1;
+      nextWeaponId = Math.max(1, ...(state.weapons||[]).map(w=>w.id||0)) + 1;
+      if(!state.weapons || !state.weapons.length) state.weapons = [{id:nextWeaponId++, name:'', desc:'', type:'weapon'}];
+      renderAll();
+      logEntry(`<b>Character imported</b> — ${state.name || 'unnamed'}`);
+    }catch(err){ logEntry('<b>Invalid character file.</b> Could not import.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+let resetConfirmPending = false;
+function handleResetClick(){
+  const btn = document.getElementById('resetBtn');
+  if(!resetConfirmPending){
+    resetConfirmPending = true;
+    btn.textContent = 'Click again to confirm';
+    setTimeout(() => { resetConfirmPending = false; btn.textContent = '✕ Reset to Blank'; }, 3000);
+  } else {
+    resetConfirmPending = false;
+    btn.textContent = '✕ Reset to Blank';
+    resetChar();
+  }
+}
+
+function resetChar(){
+  state = createDefaultState();
+  nextJutsuId = 4; nextItemId = 1; nextWeaponId = 2;
+  renderAll();
+  logEntry('<b>Character reset to blank.</b>');
+}
+
+renderAll();
+</script>
+
+</body>
+</html>
