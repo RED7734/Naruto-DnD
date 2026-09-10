@@ -29,7 +29,7 @@ The Character Creator allows you to customize:
 
 ### Character Creator
 
-> **[Launch the Character Creator](#)**
+**[Launch the Character Creator](https://red7734.github.io/Naruto-DnD/Character_Creator.html)**
 
 *Replace the link above with the URL to your Character Creator.*
 
