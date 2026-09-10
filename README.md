@@ -1,113 +1,206 @@
-Naruto D&D RPG
+# Naruto D&D RPG
 
-by RED7734
+**A fan-made tabletop RPG system inspired by Naruto.**
 
-Naruto D&D RPG is a fan-made tabletop RPG system that brings the world of Naruto into a D&D-style framework.
+**Created by RED7734**
 
-Instead of relying on traditional RPG mechanics like Hit Points and Armor Class, the system focuses on imagination, creativity, narrative decisions, and the player's ability to describe how their shinobi fights and uses jutsu.
+Naruto D&D RPG brings the world of **Naruto** into a D&D-style tabletop RPG framework, focusing on creativity, imagination, narrative decision-making, and the unique abilities of each shinobi.
 
-The DM determines the outcome of actions based on the dice roll, the situation, and how creatively and plausibly the player uses their abilities.
+Rather than relying heavily on traditional RPG mechanics such as **Hit Points** and **Armor Class**, the system encourages players to describe what their characters are doing and rewards creative, believable uses of their abilities.
 
-Character Creator
+The DM determines the outcome of actions based on the dice roll, the situation, the player's description, and how creatively and plausibly an ability is used.
 
-The project includes a custom Naruto D&D Character Creator for building and managing shinobi characters.
+---
 
-The creator lets you customize things such as:
+## Character Creator
 
-Ability Scores
-Chakra reserves
-Level
-Clan and character information
-Jutsu and abilities
-Equipment
-Other character details
+The project includes a custom **Naruto D&D Character Creator** for creating and managing shinobi characters.
 
-Launch the Character Creator
+The Character Creator allows you to customize:
 
-Core Philosophy
+* Ability Scores
+* Chakra Reserves
+* Level
+* Clan
+* Character Information
+* Jutsu & Abilities
+* Equipment
+* Other Character Details
 
-The system is designed around one simple idea:
+### Character Creator
 
-If you can imagine it, and the DM considers it plausible, you can try it.
+> **[Launch the Character Creator](#)**
 
-Players aren't restricted to a rigid list of actions. Chakra Control can be used to reshape existing techniques, Fūinjutsu can be used creatively outside combat, and players can invent new techniques when the situation calls for them.
+*Replace the link above with the URL to your Character Creator.*
 
-The rules provide a framework, but the DM and players ultimately decide what works for their campaign.
+---
 
-Combat
+## Core Philosophy
 
-Combat uses skill-based rolls rather than traditional D&D attack rolls, Armor Class, and Hit Points.
+The system is built around one simple idea:
+
+> **If you can imagine it, and the DM considers it plausible, you can try it.**
+
+Players aren't restricted to a rigid list of actions.
+
+**Chakra Control** can be used to modify existing techniques, **Fūinjutsu** can be used creatively outside of combat, and players can even develop new techniques when the situation calls for them.
+
+The rules provide a framework, but the **DM and players ultimately decide what works for their campaign.**
+
+---
+
+## Combat
+
+Combat uses **skill-based rolls** rather than traditional D&D attack rolls, Armor Class, and Hit Points.
 
 Depending on what the character is attempting, players may roll:
 
-Taijutsu
-Ninjutsu
-Genjutsu
-Fūinjutsu
-Shurikenjutsu
-Weapons
-Chakra Control
-Other appropriate abilities when relevant
+* **Taijutsu**
+* **Ninjutsu**
+* **Genjutsu**
+* **Fūinjutsu**
+* **Shurikenjutsu**
+* **Weapons**
+* **Chakra Control**
+* Other appropriate abilities when relevant
 
-The result of an action depends on the roll, the player's description, the circumstances, and the DM's judgment.
+The outcome of an action depends on:
 
-There are no traditional Hit Points. A fight ends when the DM determines that one side has been defeated, incapacitated, forced to retreat, surrendered, or otherwise unable to continue.
+1. The dice roll
+2. The player's description
+3. The circumstances
+4. The DM's judgment
 
-This makes combat less about reducing an HP bar to zero and more about outsmarting your opponent and creatively using your character's abilities.
+### No Traditional Hit Points
 
-Character Progression
+Characters do not have traditional Hit Points.
 
-Characters begin with 27 points to distribute among their Ability Scores, with each score starting at 8.
+Instead, combat ends when the DM determines that one side has been:
 
-Every 4 levels, characters gain 2 additional Ability Score points.
+* Defeated
+* Incapacitated
+* Forced to retreat
+* Surrendered
+* Otherwise unable to continue
 
-Level progression uses a Milestone system. The DM decides when characters level up based on the progression of the story rather than accumulated experience points.
+This makes combat less about reducing an HP bar to zero and more about **outsmarting your opponent, exploiting weaknesses, and creatively using your shinobi's abilities.**
 
-Chakra
+---
 
-The default recommendation is 5 Chakra Points per level.
+## Character Progression
 
-This value is configurable in the Character Creator, allowing different characters and campaigns to have different chakra reserves.
+Characters begin with **27 points** to distribute among their Ability Scores.
+
+Each Ability Score starts at **8**.
+
+Every **4 levels**, characters gain an additional **2 Ability Score points**.
+
+### Leveling
+
+Character progression uses a **Milestone system**.
+
+Instead of gaining experience points, the DM decides when characters level up based on the progression of the story.
+
+This allows character progression to follow the narrative rather than requiring players to track traditional XP.
+
+---
+
+## Chakra
+
+The default recommendation is:
+
+> **5 Chakra Points per level**
+
+This value can be configured in the Character Creator, allowing different characters and campaigns to use different Chakra reserves.
 
 For example:
 
-Standard shinobi: 5 Chakra/level
-Uzumaki: 15 Chakra/level
-Jinchūriki or exceptionally powerful characters: potentially more
-Chakra-poor characters: potentially less
+| Character Type                    |   Suggested Chakra |
+| --------------------------------- | -----------------: |
+| Standard Shinobi                  |   5 Chakra / Level |
+| Uzumaki                           |  15 Chakra / Level |
+| Jinchūriki                        | Potentially higher |
+| Exceptionally Powerful Characters | Potentially higher |
+| Chakra-Poor Characters            |  Potentially lower |
 
-Jutsu chakra costs are also suggestions rather than immutable rules. The DM can adjust them to fit the campaign's desired power level and pacing.
+These values are **guidelines, not hard rules**.
 
-Your game, your rules.
+Jutsu Chakra costs can also be adjusted by the DM to fit the campaign's desired power level, pacing, and balance.
 
-Creativity Over Restriction
+> **Your game, your rules.**
 
-Many of the system's mechanics are intentionally designed to reward creative thinking.
+---
 
-For example, a player might use Chakra Control to modify an existing jutsu into a completely new technique, or use Fūinjutsu to seal equipment into a scroll for later use.
+## Creativity Over Restriction
 
-The system doesn't attempt to define every possible action a shinobi can take. Instead, it gives the DM and players tools for deciding what happens when someone tries something unconventional.
+Many of the system's mechanics are intentionally designed to reward **creative thinking**.
 
-Project Status
+For example, a player might:
 
-This is an ongoing fan-made project and is actively being developed.
+* Use Chakra Control to modify an existing jutsu into a completely new technique.
+* Use Fūinjutsu to seal equipment into a scroll for later use.
+* Create a new technique to solve an unusual problem.
+* Combine different abilities in unexpected ways.
+* Attempt actions that aren't explicitly covered by the rules.
 
-Rules, mechanics, jutsu, character options, and the Character Creator may change over time as the system evolves.
+The system does not attempt to define every possible action a shinobi can take.
 
-Disclaimer
+Instead, it gives the **DM and players a framework for deciding what happens when someone tries something unconventional.**
 
-Naruto D&D RPG is an unofficial fan-made project.
+The goal is to encourage players to think like shinobi rather than simply selecting actions from a predefined list.
+
+---
+
+## Project Status
+
+**Naruto D&D RPG is an ongoing fan-made project and is actively being developed.**
+
+As the project evolves, the following may change:
+
+* Rules
+* Game mechanics
+* Jutsu
+* Character options
+* Chakra costs
+* Character Creator features
+* Balance and progression
+
+Expect the system to evolve over time as new ideas and mechanics are tested.
+
+---
+
+## Disclaimer
+
+**Naruto D&D RPG is an unofficial, fan-made project.**
 
 Naruto and its associated characters, names, artwork, and other intellectual property belong to their respective rights holders.
 
-Dungeons & Dragons and its associated intellectual property belong to Wizards of the Coast and/or their respective rights holders.
+Dungeons & Dragons and its associated intellectual property belong to **Wizards of the Coast** and/or their respective rights holders.
 
-This project is not affiliated with, sponsored by, or endorsed by the respective rights holders.
+This project is **not affiliated with, sponsored by, or endorsed by** the respective rights holders.
 
-License
+---
 
-The original code of this project is released under the MIT License.
+## License
 
-You are free to use, modify, and redistribute the code, provided the original copyright and license notice are retained.
+The original code of this project is released under the **MIT License**.
 
-See the LICENSE file for the full license.
+You are free to:
+
+* Use the code
+* Modify the code
+* Distribute the code
+* Include the code in other projects
+
+provided that the original copyright and license notice are retained.
+
+See the [`LICENSE`](LICENSE) file for the full license.
+
+---
+
+## Credits
+
+**Naruto D&D RPG**
+Created by **RED7734**
+
+A fan-made tabletop RPG inspired by the world of Naruto.
