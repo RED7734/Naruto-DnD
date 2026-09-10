@@ -31,8 +31,6 @@ The Character Creator allows you to customize:
 
 **[Launch the Character Creator](https://red7734.github.io/Naruto-DnD/index.html)**
 
-*Replace the link above with the URL to your Character Creator.*
-
 ---
 
 ## Core Philosophy
