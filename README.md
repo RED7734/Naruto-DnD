@@ -1,12 +1,14 @@
-# Naruto D&D RPG
+# Naruto D&D-style RPG by RED7734
 
-**A fan-made tabletop RPG system inspired by Naruto.**
+**A fan-made tabletop RPG system inspired by Naruto and D&D-style tabletop games.**
 
 **Created by RED7734**
 
-Naruto D&D RPG brings the world of **Naruto** into a D&D-style tabletop RPG framework, focusing on creativity, imagination, narrative decision-making, and the unique abilities of each shinobi.
+Naruto D&D-style RPG brings the world of **Naruto** into a D&D-style tabletop RPG framework, focusing on creativity, imagination, narrative decision-making, and the unique abilities of each shinobi.
 
-Rather than relying heavily on traditional RPG mechanics such as **Hit Points** and **Armor Class**, the system encourages players to describe what their characters are doing and rewards creative, believable uses of their abilities.
+While inspired by the structure and spirit of tabletop games like D&D, this system does **not** follow traditional D&D mechanics such as Hit Points, Armor Class, or standard attack rolls.
+
+Instead, the system encourages players to describe what their characters are doing and rewards creative, believable uses of their abilities.
 
 The DM determines the outcome of actions based on the dice roll, the situation, the player's description, and how creatively and plausibly an ability is used.
 
@@ -14,7 +16,7 @@ The DM determines the outcome of actions based on the dice roll, the situation, 
 
 ## Character Creator
 
-The project includes a custom **Naruto D&D Character Creator** for creating and managing shinobi characters.
+The project includes a custom **Naruto D&D-style Character Creator** for creating and managing shinobi characters.
 
 The Character Creator allows you to customize:
 
@@ -151,7 +153,7 @@ The goal is to encourage players to think like shinobi rather than simply select
 
 ## Project Status
 
-**Naruto D&D RPG is an ongoing fan-made project and is actively being developed.**
+**Naruto D&D-style RPG is an ongoing fan-made project and is actively being developed.**
 
 As the project evolves, the following may change:
 
@@ -169,7 +171,7 @@ Expect the system to evolve over time as new ideas and mechanics are tested.
 
 ## Disclaimer
 
-**Naruto D&D RPG is an unofficial, fan-made project.**
+**Naruto D&D-style RPG is an unofficial, fan-made project.**
 
 Naruto and its associated characters, names, artwork, and other intellectual property belong to their respective rights holders.
 
@@ -198,7 +200,7 @@ See the [`LICENSE`](LICENSE) file for the full license.
 
 ## Credits
 
-**Naruto D&D RPG**
+**Naruto D&D-style RPG**
 Created by **RED7734**
 
-A fan-made tabletop RPG inspired by the world of Naruto.
+A fan-made tabletop RPG inspired by the world of Naruto and DND.
