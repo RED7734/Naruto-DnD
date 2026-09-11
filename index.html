@@ -447,16 +447,16 @@
   <div id="log"><div class="empty">Roll results will appear here...</div></div>
 
   <!-- Footer -->
-  <div class="footer">Naruto D&D Character Sheet by RED7734</div>
+  <div class="footer">Naruto D&D-style RPG by RED7734</div>
 </div>
 
 <div class="overlay-backdrop" id="rulesOverlay" onclick="if(event.target===this) closeOverlay('rules')">
   <div class="overlay-panel">
     <button class="overlay-close" onclick="closeOverlay('rules')">✕</button>
-    <h2 class="overlay-title">Naruto D&D RPG</h2>
+    <h2 class="overlay-title">Naruto D&D-style RPG</h2>
     <div class="overlay-subtitle">by RED7734</div>
 
-    <p>Naruto D&D RPG is a D&D-style experience set in the Naruto universe. Its goal is to bring the feel of a D&D campaign into the shinobi world, while removing mechanics like Hit Points and Armor Class, rewarding imagination over pure combat math.</p>
+    <p>Naruto D&D-style RPG is a D&D-style experience set in the Naruto universe. Its goal is to bring the feel of a D&D campaign into the shinobi world, while removing mechanics like Hit Points and Armor Class, rewarding imagination over pure combat math.</p>
 
     <h3>Character Creation</h3>
     <ul>
@@ -636,9 +636,9 @@ const jutsuPresets = [
   {name:'Mangekyō Sharingan: Amaterasu', skillType:'Chakra Control', category:'Dōjutsu', cost:60, desc:'Conjures inextinguishable black flames at the user’s focal point of vision, burning anything caught in their path until it is consumed entirely.'},
   {name:'Mangekyō Sharingan: Kotoamatsukami', skillType:'Genjutsu', category:'Dōjutsu', cost:100, desc:'An extraordinarily rare genjutsu unique to certain Uchiha that subtly rewrites a target’s will and decisions, leaving them unaware they were ever manipulated.'},
   {name:'Susanoo', skillType:'Chakra Control', category:'Dōjutsu', cost:100, desc:'A gigantic humanoid avatar formed from the user’s chakra, surrounding and defending them while fighting as an extension of their will. Reserved for awakened Mangekyō Sharingan users.'},
+  {name:'Izanagi', skillType:'Chakra Control', category:'Dōjutsu', cost:80, desc:'A forbidden dōjutsu cast on the user rather than on an opponent. It briefly erases the boundary between reality and illusion within the user\'s personal space, letting them treat anything that happens to them, including a fatal injury, as a mere illusion that can be undone. The effect only lasts a moment, and using it costs the sight of the eye it\'s cast with, which loses its light for good.'},
+  {name:'Izanami', skillType:'Genjutsu', category:'Dōjutsu', cost:80, desc:'A forbidden dōjutsu created as a check on Izanagi\'s misuse, cast as a genjutsu on a target rather than the user. The caster uses the Sharingan to memorize a physical sensation at a chosen moment, then deliberately recreates a matching sensation, trapping the target in a loop that repeats the same sequence of events endlessly until they consciously accept the outcome they\'re trying to avoid. As with Izanagi, casting it permanently blinds the eye used.'},
   {name:'Blaze Release: Kagutsuchi', skillType:'Chakra Control', category:'Dōjutsu', cost:40, desc:'A technique which applies shape transformation to the black flames of Amaterasu, allowing the user to manipulate them at will. In Sasuke\'s case, while Amaterasu is cast from his left eye, he uses his right eye to manipulate the flames. Can form a defensive barrier of spike-shaped flames, shape the flames into weapons such as swords or arrows, or enhance other techniques like Chidori.'},
-  {name:'Demonic Illusion: Shackling Stakes Technique', skillType:'Genjutsu', element:'Non-Elemental', category:'Dōjutsu', cost:15, desc:'Demonic Illusion: Shackling Stakes Technique is a genjutsu that traps the target within an illusion created by the user\'s Sharingan. Within the illusion, the victim experiences the sensation of enormous stakes being driven through their body, rendering them unable to move. Although the stakes themselves are purely illusory, the pain and paralysis inflicted by the genjutsu are perceived as real by the victim, leaving them vulnerable to the user\'s will. The technique requires the use of the Genjutsu: Sharingan and direct eye contact with the target.'},
-
   // Taijutsu
   {name:'Gentle Fist (Jūken)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:0, desc:'The Hyūga clan’s signature taijutsu style. Strikes are aimed precisely at the tenketsu, damaging a target’s chakra network and internal organs directly rather than harming them on the surface.'},
   {name:'Eight Trigrams Sixty-Four Palms (Hakke Rokujūyon Shō)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:20, desc:'An advanced Gentle Fist sequence that unleashes a rapid, escalating chain of chakra-point strikes, sealing off more and more of the target’s tenketsu with each successive hit.'},
@@ -686,6 +686,11 @@ const jutsuPresets = [
   // Yin / Yang
   {name:'Shadow Imitation Technique (Kagemane no Jutsu)', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:10, desc:'The Nara clan’s signature technique extends the user’s shadow until it connects with a target, forcing the target to mirror the user’s movements while the link holds.'},
   {name:'Shadow Imitation Shadow Bind Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:16, desc:'A more tactical shadow technique that links a target’s shadow to the user’s, allowing the Nara to establish bindings and connect multiple shadows across the battlefield.'},
+  {name:'Shadow Imitation Shuriken Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:12, desc:'The user channels shadow chakra into a set of bladed weapons beforehand, then throws them so they pierce a target\'s shadow rather than their body. Once a blade is lodged in the shadow, the target is paralysed in place, and the effect extends the shadow technique\'s normal reach since it no longer depends on a direct shadow-to-shadow connection. The paralysis ends if the blade is removed or if the target\'s shadow disappears.'},
+  {name:'Shadow Sewing Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:18, desc:'A more aggressive shadow technique that reshapes the user\'s shadow into several sharp needle-like threads, each controlled independently. It can strike multiple targets at once, pinning them in place by physically sewing through their shadows rather than merely linking to them. Because it causes real physical harm it cannot restrain a target cleanly, but it activates quickly and can transition directly into a standard shadow-bind afterward.'},
+  {name:'Shadow–Neck Binding Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:14, desc:'An offensive variant of the shadow-bind techniques. The user extends their shadow along a target\'s body, where it takes on physical properties, and can shape it into a hand-like grip around the target\'s throat to choke them. The closer the user stands to the target, the stronger the grip becomes, though the technique drains chakra quickly and weakens the longer it is sustained.'},
+  {name:'Shadow Stabbing Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:16, desc:'The user forces their shadow to rise up off the ground and split into many needle-like points, then launches them at a target, stabbing into them and knocking them down.'},
+  {name:'Shadow Barrage Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:20, desc:'[Homebrew] The user first immobilizes the target with a standard shadow technique, then shapes the restraining shadow into a barrage of fist-like projections that rise up and pummel the trapped target with a flurry of shadow punches.'},
   {name:'Multi-Size Technique', skillType:'Ninjutsu', element:'Yang', category:'Yang Release', cost:12, desc:'Uses Yang Release to increase the body’s size dramatically, turning the user into a much larger and stronger combatant.'},
 
   // Non-elemental
@@ -695,7 +700,7 @@ const jutsuPresets = [
   {name:'Substitution Jutsu (Kawarimi no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:4, desc:'A defensive escape technique that lets the user replace themselves with a nearby object at the critical moment, evading an incoming attack.'},
   {name:'Body Flicker Technique (Shunshin no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:6, desc:'Uses chakra to move at extremely high speed, creating the impression of teleportation over short distances.'},
   {name:'Area Scanning Technique', skillType:'Perception', element:'Non-Elemental', category:'Non-Elemental', cost:0, desc:'By making direct physical contact with a solid surface, the user can channel their chakra through the area, allowing them to accurately scan it. From this a person can roughly map out entire structures and surroundings, as well as determine the presence and location of targets in the surrounding area. Doing so allows to detect for threats, traps, and hidden rooms. It is also possible to determine the weak points and fine details in a single structure.'},
-  {name:'Hawk Eye', skillType:'Perception', element:'Non-Elemental', category:'Non-Elemental', cost:2, desc:'[Homebrew] The user focuses chakra into their pupils, sharply extending their visual range. While active, the eyes function like a pair of binoculars, letting the user pick out distant details, read movement far across a battlefield, or spot a target well beyond normal eyesight. A purely utility technique with no offensive application.'},
+  {name:'Hawk Eye Technique', skillType:'Perception', element:'Non-Elemental', category:'Non-Elemental', cost:2, desc:'[Homebrew] The user focuses chakra into their pupils, sharply extending their visual range. While active, the eyes function like a pair of binoculars, letting the user pick out distant details, read movement far across a battlefield, or spot a target well beyond normal eyesight. A purely utility technique with no offensive application.'},
   {name:'Sexy Technique', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:3, desc:'A variant of the Transformation Technique, the Sexy Technique transforms the user into a very sexy woman, usually nude or in a bikini. Naruto uses this technique to distract or win over men, with all successful attempts causing an exaggerated nosebleed by the victim. It is a joke jutsu but could be used as a distraction.'},
   {name:'Rope Escape Technique', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:0, desc:'This is the first jutsu taught in Konohagakure\'s Ninja Academy. When the user is bound, they do what they can to escape, such as by finding a way to untie the knot or dislocating their joints in order to get free of the bindings.'},
 
@@ -784,6 +789,7 @@ function addPresetJutsu(i){
 
 const weaponPresets = [
   {name:'Kunai', desc:'A kunai held in the hand for close combat, not to be thrown, although it may still be thrown, as of right now you\'re using it as a weapon.', type:'weapon'},
+  {name:'Hiruko', desc:'A puppet that doubles as armour, letting the user hide inside it while it protects them from close-range attacks. It fights with an extendable iron tail for stabbing and defensive spinning, a heavy back shell, rapid senbon launched from the mouth, and a torpedo-shaped arm that scatters senbon shrapnel. Every weapon it carries is coated in a slow-acting poison that leaves the victim in painful paralysis for days.', type:'puppet'},
   {name:'Karasu', desc:'One of Kankurō’s signature puppets, built for concealed weapons, blades, and deceptive close-range attacks.', type:'puppet'},
   {name:'Kuroari', desc:'A capture-oriented puppet used to trap opponents and set up Kankurō’s puppet techniques.', type:'puppet'},
   {name:'Sanshōuo', desc:'A heavily built defensive puppet used for protection, shielding, and battlefield control.', type:'puppet'},
