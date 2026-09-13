@@ -241,6 +241,7 @@
   .overlay-panel h2.overlay-title::after{ content:none; }
   .overlay-subtitle{ color:var(--mist-light); font-size:0.85rem; margin-bottom:18px; font-style:italic; }
   .overlay-panel h3{ font-family:'Shippori Mincho', serif; color:var(--gold); margin:20px 0 6px; font-size:1rem; }
+  .overlay-panel h4{ font-family:'Zen Kaku Gothic New', sans-serif; font-style:italic; color:var(--mist-light); margin:14px 0 4px; font-size:0.8rem; letter-spacing:0.03em; }
   .overlay-panel p, .overlay-panel li{ font-size:0.87rem; line-height:1.65; color:var(--foam); }
   .overlay-panel ul{ padding-left:20px; margin:6px 0; }
   .overlay-close{
@@ -248,6 +249,32 @@
     color:var(--foam); width:30px; height:30px; cursor:pointer; font-size:1rem; line-height:1;
   }
   .overlay-close:hover{ border-color:var(--blood-bright); color:var(--blood-bright); }
+  .clan-panel{ background:rgba(var(--panel-rgb),0.4); border:1px solid rgba(var(--border-rgb),0.18); padding:16px; }
+  .clan-quote{ font-style:italic; color:var(--mist-light); font-size:0.85rem; line-height:1.65; margin:0 0 16px; padding-bottom:14px; border-bottom:1px solid rgba(var(--border-rgb),0.18); }
+  .clan-filter-bar{ display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .clan-filter-btn{ background:rgba(var(--panel-rgb),0.6); border:1px solid rgba(var(--border-rgb),0.3); color:var(--mist-light); padding:6px 16px; font-size:0.72rem; letter-spacing:0.06em; cursor:pointer; text-transform:uppercase; font-family:'Zen Kaku Gothic New', sans-serif; }
+  .clan-filter-btn:hover{ border-color:var(--blood-bright); color:var(--foam); }
+  .clan-filter-btn.active{ background:var(--blood-bright); border-color:var(--blood-bright); color:#fff; }
+  .clan-section-title{ font-family:'Shippori Mincho', serif; color:var(--blood-bright); font-size:0.85rem; letter-spacing:0.07em; text-transform:uppercase; border-bottom:1px solid rgba(var(--border-rgb),0.25); padding-bottom:8px; margin:20px 0 14px; }
+  .clan-section-title:first-child{ margin-top:0; }
+  .clan-access-details{ margin-top:20px; }
+  .clan-access-details > summary{ cursor:pointer; list-style:none; margin:0 0 14px; }
+  .clan-access-details > summary::-webkit-details-marker{ display:none; }
+  .clan-access-details > summary::before{ content:'▸'; display:inline-block; margin-right:8px; transition:transform .15s ease; }
+  .clan-access-details[open] > summary::before{ transform:rotate(90deg); }
+  .clan-access-details > summary.clan-section-title{ margin-top:0; }
+  .clan-trait{ margin-bottom:16px; }
+  .clan-trait .ct-name{ font-weight:700; color:var(--foam); }
+  .clan-trait .ct-desc{ font-size:0.87rem; color:var(--foam); opacity:0.92; line-height:1.6; margin-top:3px; }
+  .clan-choice{ border-left:3px solid var(--blood-bright); padding:8px 0 8px 12px; margin-top:10px; }
+  .clan-choice .cc-label{ font-size:0.72rem; color:var(--mist-light); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:5px; }
+  .clan-choice select, .clan-choice input[type=text], .clan-choice textarea{ width:100%; max-width:420px; }
+  .clan-access-item{ display:flex; align-items:flex-start; gap:8px; margin-bottom:12px; }
+  .clan-access-item input[type=checkbox]{ margin-top:3px; }
+  .clan-access-item .ca-name{ font-weight:700; color:var(--foam); }
+  .clan-access-item .ca-desc{ font-size:0.83rem; color:var(--mist-light); line-height:1.55; margin-top:2px; }
+  .clan-access-item .ca-own{ color:var(--blood-bright); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.04em; margin-left:6px; }
+  .lib-lock{ font-size:0.76rem; color:var(--blood-bright); font-style:italic; margin-top:6px; }
   .library-card{ background:rgba(var(--panel-rgb),0.5); border:1px solid rgba(var(--border-rgb),0.25); padding:14px 16px; margin-bottom:12px; }
   .library-card .lib-top{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
   .library-card .lib-name{ font-family:'Shippori Mincho', serif; font-weight:700; color:var(--foam); font-size:1.05rem; }
@@ -319,7 +346,7 @@
       </div>
       <div class="details-row">
         <div><label>Village</label><input id="f_village" placeholder="Village" oninput="state.village=this.value"></div>
-        <div><label>Clan</label><input id="f_clan" placeholder="Clan" oninput="state.clan=this.value"></div>
+        <div><label>Clan</label><select id="f_clan" onchange="onClanChange(this.value)"></select></div>
         <div><label>Title / Nickname</label><input id="f_title" placeholder="Title / Nickname" oninput="state.title=this.value"></div>
         <div><label>Class</label><input id="f_class" placeholder="Class" oninput="state.className=this.value"></div>
         <div><label>Level</label>
@@ -332,35 +359,43 @@
           </div>
         </div>
       </div>
+      <div class="details-row" id="clanCustomRow" style="display:none">
+        <div><label>Custom Clan Name</label><input id="f_clanCustom" placeholder="e.g. Sarutobi, Kazama." oninput="state.clanCustomName=this.value"></div>
+      </div>
       <div class="details-row">
         <div><label>Age</label><input id="d_age" oninput="state.details.age=this.value"></div>
-        <div><label>Role</label><input id="d_role" placeholder="e.g. Genin, Nukenin, Jonin" oninput="state.details.role=this.value"></div>
+        <div><label>Role</label><input id="d_role" placeholder="Example: Genin, Nukenin, Jonin" oninput="state.details.role=this.value"></div>
       </div>
       <div>
-        <label>Description</label>
-        <textarea id="d_desc" oninput="state.details.description=this.value"></textarea>
+        <label>Description (physical appearance &amp; general description)</label>
+        <textarea id="d_desc" placeholder="Example: build, hair, eyes, clothing, mannerisms, general vibe." oninput="state.details.description=this.value"></textarea>
       </div>
       <div>
         <label>Backstory</label>
-        <textarea id="d_backstory" oninput="state.details.backstory=this.value"></textarea>
+        <textarea id="d_backstory" placeholder="Example: where they grew up, key events that shaped them, why they became a shinobi." oninput="state.details.backstory=this.value"></textarea>
       </div>
       <div>
-        <label>Nindo (Personal Way / Creed)</label>
-        <textarea id="d_nindo" oninput="state.details.nindo=this.value"></textarea>
+        <label>Nindo (Ninja Way / Personal Way)</label>
+        <select id="d_nindoPreset" onchange="applyNindoPreset(this.value)" style="margin-bottom:8px"></select>
+        <textarea id="d_nindo" placeholder="Example: write your own creed here, as short or as long as you like." oninput="state.details.nindo=this.value"></textarea>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Class Preset <span style="font-weight:400; font-size:0.8rem">(auto-assigns ability points &amp; recommended proficiencies — overwrites current allocation)</span></h2>
-    <div class="io-bar" style="margin-bottom:0">
-      <button onclick="applyClassPreset('Ninjutsu Specialist')">Ninjutsu Specialist</button>
-      <button onclick="applyClassPreset('Genjutsu Specialist')">Genjutsu Specialist</button>
-      <button onclick="applyClassPreset('Taijutsu Specialist')">Taijutsu Specialist</button>
-      <button onclick="applyClassPreset('Medical-Nin')">Medical-Nin</button>
-      <button onclick="applyClassPreset('Scout-Nin')">Scout-Nin</button>
-      <button onclick="applyClassPreset('Puppet-Master')">Puppet-Master</button>
-    </div>
+    <details class="jutsu-library-group" open>
+      <summary><span class="cat-title" style="color:var(--blood-bright)">Clan</span></summary>
+      <div class="group-body">
+        <div class="clan-panel">
+          <p class="clan-quote" id="clanQuote"></p>
+          <div class="io-bar" style="margin-bottom:16px">
+            <button onclick="applyClanTraits()">✓ Apply Clan Traits (Ability Scores &amp; Clan Features)</button>
+          </div>
+          <div class="clan-filter-bar" id="clanFilterBar"></div>
+          <div id="clanPanelBody"></div>
+        </div>
+      </div>
+    </details>
   </section>
 
   <section>
@@ -383,6 +418,19 @@
           <input class="max-input" type="number" id="f_cpl" value="5" min="1" oninput="state.chakraPerLevel=Math.max(1,parseInt(this.value)||1); renderChakraPoints()">
         </div>
       </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Class Preset <span style="font-weight:400; font-size:0.8rem">(auto-assigns ability points and 3 class proficiencies, and sets your Class field; overwrites current allocation)</span></h2>
+    <div class="io-bar" style="margin-bottom:0">
+      <button onclick="applyClassPreset('Ninjutsu Specialist')">Ninjutsu Specialist</button>
+      <button onclick="applyClassPreset('Genjutsu Specialist')">Genjutsu Specialist</button>
+      <button onclick="applyClassPreset('Taijutsu Specialist')">Taijutsu Specialist</button>
+      <button onclick="applyClassPreset('Medical-Nin')">Medical-Nin</button>
+      <button onclick="applyClassPreset('Scout-Nin')">Scout-Nin</button>
+      <button onclick="applyClassPreset('Puppet-Master')">Puppet-Master</button>
+      <button onclick="applyClassPreset('Sensory-Ninja')">Sensory-Ninja</button>
     </div>
   </section>
 
@@ -444,7 +492,7 @@
     </div>
   </section>
 
-  <div id="log"><div class="empty">Roll results will appear here...</div></div>
+  <div id="log"><div class="empty">Roll results will appear here.</div></div>
 
   <!-- Footer -->
   <div class="footer">Naruto D&D-style RPG by RED7734</div>
@@ -489,18 +537,42 @@
     <p>Some techniques don't just have a flat chakra cost, they scale with how much you use them. The Multiple Shadow Clone Technique, for example, costs chakra <b>per clone</b>: if the technique is set at 10 chakra, then every single clone made costs another 10 chakra, so making three clones costs 30. That kind of drain adds up fast, which is why the technique is usually best suited to shinobi with unusually large chakra reserves, like a Jinchūriki or a member of the Uzumaki clan.</p>
     <p><b>Chakra:</b> Every character receives <b>5 Chakra Points per level</b> as the standard, suggested amount built into the character creator. This is the default baseline and the recommended playstyle for most campaigns.<br><br>This default is not a hard restriction. The Chakra section now has its own <b>Chakra per Level</b> field, set to 5 by default, that you can freely change to fit your character or story. Raise it to 15 for an <b>Uzumaki</b> to represent the clan's naturally enormous reserves, give a <b>Jinchūriki</b> or another exceptionally powerful shinobi an even larger pool, or lower it for a chakra-poor character, whatever fits your playstyle.<br><br>In short: <b>5 Chakra Points per level is the suggested default, not an absolute rule.</b> Change the rate to match your character concept, your campaign, and your table. Your game, your rules.<br><br>More generally, every chakra cost shown in the Jutsu Library is just a <b>suggested example</b>. Nothing stops a player or DM from freely rebalancing how much chakra any technique costs to better fit their own campaign's pace and power level. Example: Susanoo costs 100 Chakra because it's an extremely powerful technique meant to require a high level to use, but if you still find it too broken, raise it to 200. Or maybe you want a less punitive campaign where players get to enjoy strong jutsu more often, then lower it. Your game, your choices, as long as every player and the DM at your table agree on it.</p>
 
+    <h3>Chakra Knowledge</h3>
+    <p><b>Chakra Knowledge</b> is the theoretical side of chakra: not shaping or spending it yourself, like Chakra Control does, but understanding it. It covers how jutsu are built and how they work under the hood, how jinchūriki and tailed beasts function, how forbidden jutsu came to exist, and chakra-related phenomena in general.</p>
+    <p>In practice, roll <b>Chakra Knowledge</b> whenever a character is trying to understand a technique rather than perform one: studying a jutsu they've witnessed well enough to copy it (this replaces using Chakra Control for that purpose), reverse-engineering how an unfamiliar or forbidden technique functions, or researching and developing a brand-new jutsu of their own from first principles. It's also the right roll for characters built around research rather than combat, an Orochimaru-style or Kabuto-style character piecing together a new forbidden jutsu, studying an existing one they've gotten their hands on, or investigating something like a jinchūriki's seal or a Kekkei Genkai they don't personally have, are all Chakra Knowledge in action.</p>
+
 <h3>Fūinjutsu</h3>
     <p><b>Fūinjutsu</b> isn't limited to casting sealing jutsu in combat. It's a broadly creative skill that can be used to imprint a jutsu onto a scroll for later use, or to imprint a seal onto a scroll that, once opened, summons an item or even a person. This is also a great way to manage inventory space if you and your DM are playing with realistic carry limits: a tent kit, a cooking kit, or anything else that would otherwise eat up a lot of inventory space can be compressed into a seal on a scroll by rolling Fūinjutsu with an empty scroll. Later, breaking the seal releases the stored object. There are many clever ways to use Fūinjutsu beyond direct combat, limited only by your imagination.</p>
     <p>A filled scroll can also hold a coded message instead of an object or jutsu. In that case, <b>Fūinjutsu</b> is rolled to open or otherwise use the seal itself, while <b>Investigation</b> is rolled separately to actually decipher what the message says.</p>
     <p><b>Summoning Jutsu:</b> after establishing a bond with a summon animal through roleplay, roll Fūinjutsu to summon it. To direct or control it in combat, roll Animal Handling.</p>
 
+    <h3>Perception</h3>
+    <p>Perception covers the ordinary stuff, spotting an ambush, noticing something's off, catching a detail in a crowded room, using either your eyes or plain ninja instinct. But it scales further than that: at high levels, a character built around Perception should start to feel like a proper sensory-type shinobi, someone who reads a fight through chakra, sound, or scent instead of (or alongside) sight. Canonically, the Second Hokage, Tobirama Senju, could place a hand on the ground and sense precise chakra signatures, counts, and locations from vast distances, that's the kind of thing a high Perception roll can represent for a sensory-focused character. Depending on the character, a Perception roll might mean listening for footsteps, sensing raw chakra the way a dedicated sensor-nin does, or smelling out a hidden or approaching person the way an Inuzuka would: smell is simply the sense responsible for perceiving odor-based stimuli, so tracking someone by scent, picking their trail out of a crowd, or noticing them before they're seen falls squarely under Perception too.</p>
+    <p>Perception also governs how well a character uses an active Dōjutsu: for the Byakugan, it determines how far and how precisely you see, whether that's spotting movement at range or reading a target's chakra through walls. For the Sharingan, it determines how well you predict an opponent's next move (see the Tomoe rule below). Chakra Perception, actually seeing chakra itself, whether as an aura, a flow, or a visible technique forming, also falls under this same roll; Sasuke reading Deidara's chakra mid-battle without an active Dōjutsu is a good example of Perception at work, not a dedicated dōjutsu ability.</p>
+
     <h3>Dōjutsu</h3>
     <ul>
-      <li><b>Byakugan:</b> roll Perception (Wisdom)</li>
-      <li><b>Sharingan:</b> roll Perception (Wisdom), it lets you anticipate an opponent's attacks. Optional Tomoe rule: 1 Tomoe = normal roll, 2 Tomoe = +2, 3 Tomoe = +3</li>
+      <li><b>Byakugan:</b> roll Perception (Wisdom) to use it. Active, it grants near 360° vision and lets the user see chakra flowing through a target's body, including the network of chakra pathways that carries it. Along those pathways are <i>tenketsu</i>, tiny chakra points where chakra can be released or disrupted. The Byakugan lets the user see these points with exceptional precision, even through solid matter, allowing Gentle Fist strikes to target and interfere with an opponent's chakra network rather than simply striking the body.</li>
+      <li><b>Sharingan:</b> roll Perception (Wisdom) to use it. Active, the Sharingan sharpens your ability to read an opponent's movement before it happens and lets you visually follow the flow of chakra through a technique or a body. Because it can read that chakra flow, it also gives you a narrative ability to copy a jutsu you witness and grasp how the technique is being performed. Seeing how a jutsu works is not the same as truly mastering it, however: copying it does not teach you the underlying chakra nature change the technique requires, and <b>Kekkei Genkai techniques can never be copied this way</b>, no matter how well you understand them. A freshly copied technique should also feel unfamiliar in your hands, coming out clumsy, inefficient, or exhausting to use until you actually train it, just as copying a taijutsu style on sight does not give you the physical conditioning needed to perform it cleanly. The Sharingan's tomoe represent more than a bonus to perception: <b>each Tomoe adds +1 to your Perception roll</b>, while the eye itself becomes more capable as it matures. <b>1 Tomoe:</b> You can read an opponent's telegraphed movement a beat before it happens. <b>2 Tomoe:</b> You can copy a jutsu you witness, if your DM allows a Chakra Knowledge check to pull it off. <b>3 Tomoe:</b> Your Sharingan has matured enough to cast genjutsu on its own. You can roll Genjutsu to affect a target through eye contact alone, with no hand seals needed, trapping them in an illusion or manipulating their senses. Although this basic Sharingan genjutsu is far weaker than the signature techniques of an awakened Mangekyō Sharingan, such as Itachi's Tsukuyomi, which can distort a victim's perception of time and reality on an entirely different level, it is still a dangerous ability in its own right. Any shinobi who meets your gaze risks being caught in an illusion before they even realize what happened.</li>
       <li><b>Mangekyō Sharingan:</b> depends on the ability being used, for example Kamui uses Chakra Control and Tsukuyomi uses Genjutsu, and so on.</li>
       <li><b>Rinnegan</b> (and its abilities): roll Chakra Control</li>
     </ul>
+
+    <h3>Insight</h3>
+    <p>Insight is intuition, not observation: it's for reading a person, not scanning a room. It covers sensing someone's true intentions, catching a lie, or picking up on nervous or suspicious behavior. In a fight, that same intuition scales up to reading a whole enemy squad rather than one person: which one looks like the leader, who's playing support, who's covering someone else, which techniques are being used in combination, and which member of the team is actually the dangerous one. A strong Insight roll should read like a behavioral read, not a stat block: <i>"That one isn't trying to kill you, they're keeping their distance and covering the other, they're probably playing support"</i> is the kind of thing a good roll gets you, not "that one secretly has poisoned kunai." Insight also covers predicting a specific move from someone the character actually knows, rather than reading a stranger's body language: <i>"I know this guy, I've fought him before, he always follows that combo with a Substitution,"</i> or <i>"he used that same jutsu right after this exact setup last time,"</i> is Insight drawing on personal history and familiarity with a person, as opposed to Tactics, which reads a pattern out of pure in-the-moment battlefield analysis, even against a total stranger.</p>
+    <p>A useful distinction: Insight is not Perception. "I look closely at the table for anything strange" is Perception. "I look at the table and try to work out if someone tampered with the scene" is Insight, since the question is about interpreting behavior or clues, not just spotting them. Insight also shouldn't hand out information the character couldn't reasonably deduce, a great roll doesn't mean "I know the merchant is secretly an assassin," it means the DM can give a much sharper read on how the merchant is behaving.</p>
+    <p>The same logic separates Insight from other rolls when there's something more concrete to notice. If the party might be walking into a trap: Insight is the gut feeling that something's off; Perception is actually spotting the trap, whether through plain eyesight, a Byakugan's 360° vision, or a sensor-nin's range; and a dedicated skill like Traps is recognizing it on sight because the character has personally set or disarmed dozens of shuriken and paper-bomb traps just like it, pure experience talking. All three can apply to the very same trap, they just represent different reasons for noticing it.</p>
+
+    <h3>Tactics</h3>
+    <p>Tactics is Battle IQ: not how well a character fights, but how well they read a fight, predict what's coming, and turn a bad position into a good one. Roll it whenever a character makes a meaningful tactical call, rather than just swinging at something. A few of the ways it comes up:</p>
+    <ul>
+      <li><b>Reading the battlefield:</b> roll Tactics to quickly pick out things like favorable positions, escape routes, ambush points, terrain worth exploiting, useful obstacles, weak points in an enemy formation, or how to best split up the battlefield between your team. Six shinobi in a forest: a good roll might reveal that the trees break their sightlines, and splitting into two groups would force them to fight separately instead of as a unit.</li>
+      <li><b>Reading an enemy's combat style:</b> arguably the skill's core use, and it isn't limited to before a fight starts. Tactics keeps working mid-fight: after watching an enemy use a technique two or three times, a player can ask, <i>"We've seen this technique three times now, what can I work out about it?"</i> and roll Tactics to find out. A strong result lets the DM reveal a real tactical detail, not a random fact: a repeated setup or pattern, the wind-up before the technique lands, a dependency on an ally to pull it off, its effective range, a narrative cooldown before it can be used again, a preferred position the enemy keeps returning to, a condition that has to be met before they can use it at all, or a piece of predictable behavior they keep falling back on. This isn't magically knowing the jutsu itself, it's field analysis: reading the fight in front of you, not reading a wiki page.</li>
+      <li><b>Commanding a team:</b> a character with strong Tactics can call out a plan that actually improves coordination, <i>"you keep him busy, you get the Water Release (Suiton) ready, I'll push him toward you."</i> The roll determines how well that plan holds up; a strong result might grant advantage on a follow-up roll, a situational bonus, a safe reposition, a coordinated reaction, an opening against an enemy, reduced risk on an action, or useful information for an ally.</li>
+      <li><b>Setting up jutsu combos:</b> recognizing that Wind Release (Fūton) used just before Fire Release (Katon) will fan the flames and extend their range, or that sending a Shadow Clone (Kage Bunshin) in first lets an ally react with Substitution (Kawarimi no Jutsu) while a trap triggers behind it, is Tactics predicting a sequence, the jutsu themselves aren't any stronger for it.</li>
+      <li><b>Countering a smart enemy:</b> when an opponent does something clever, a Tactics roll is the "wait, I see what they're doing, can I answer it?" moment. A strong result gives a concrete tactical read, not a flat bonus: <i>"Don't attack the two in front, they're a distraction, the real target is the one behind them about to finish a jutsu."</i> This is the Shikamaru-style use of the skill, and it works just as well one-on-one, a Shikamaru-versus-Temari style duel, as it does for a whole squad.</li>
+    </ul>
+    <p>Tactics doesn't replace other skills, it works alongside them. As a rule of thumb: noticing someone hidden is Perception, sensing that a person is nervous or lying is Insight, recognizing a jutsu you're seeing is Chakra Knowledge, and figuring out how to actually exploit that jutsu in the fight is Tactics.</p>
 
     <h3>Puppets</h3>
     <p>Fighting through a puppet is a two-part check, reflecting both the physical skill of the puppeteer and the chakra threads used to control the puppet:</p>
@@ -509,6 +581,27 @@
       <li><b>Roll Chakra Control:</b> made after the Weapons roll, this represents the precision needed to manage the chakra threads that actually move the puppet.</li>
       <li><b>Chakra cost:</b> operating a puppet drains chakra. The DM sets whether the cost is paid once per use of the puppet or once per turn it stays active, depending on the campaign's rules.</li>
     </ul>
+
+    <h3>Nindo</h3>
+    <p>Every character has a Nindo, a personal creed or way of the ninja, regardless of clan. Write yours in the <b>Nindo (Ninja Way / Personal Way)</b> field under Character Details, it can be a single line like "I never go back on my word" or a longer personal philosophy.</p>
+    <p>Nindo isn't a fixed dice bonus, it's a roleplay lever you can pull at the table. When a moment fits your creed, tell your DM: "This is my Nindo, [your creed], so I want to [get back up, push through the pain, refuse to leave them behind, etc.]," and ask for a reroll or a favorable ruling on the spot. The DM decides how much weight to give it, the same way they judge everything else in this system: by how well it fits the character and the story. This applies equally to a clan character and a Non-Clan character, nobody gets more or less Nindo for having (or not having) a bloodline.</p>
+
+    <h3>Proficiencies</h3>
+    <p>A proficiency marks a skill a character is meaningfully better at than the rest, the handful of things they've genuinely specialized in rather than just dabbled with, which is why it comes with a bonus on rolls using that skill. If a player picks Insight, Tactics, and Perception as their three proficiencies, that character reads people, battles, and their surroundings noticeably better than they do most other things, and their rolls in those three areas reflect it. Proficiencies represent specific training, areas of expertise, and general skills a character has mastered through class, background, clan, or natural aptitude. The standard recommendation is 3 proficiencies per character, but this is not hard-locked; a DM may allow more or fewer proficiencies depending on the campaign's rules. The in-roleplay reason behind a proficiency can come from anywhere: a character proficient in Taijutsu might have earned it through years of hard training, or might simply have a natural, almost genetic gift for close combat inherited from their family, either explanation works, it's just flavor for how the character got there.</p>
+
+    <h3>Clan Bloodlines</h3>
+    <h4>Clan Function</h4>
+    <p>Clans work on two levels at once, and it helps to know which is which. The first is mechanical: each clan grants a fixed Ability Score Increase in a specific area tied to what that bloodline is known for. Akimichi, for example, are built to be physically massive, so they get <b>+2 Constitution and +1 Strength (a bonus on top of the normal 27-point pool)</b>. That part is a hard number, applied automatically when you hit Apply Clan Traits.</p>
+    <p>Everything else written in a clan's section, the traits and features beyond that Ability Score Increase, is mostly <b>narrative power</b>, not programmed mechanics. It exists to give a character something concrete to lean on in the story, not a new button to press. An Akimichi player can point at their clan's size and strength to justify rolling Strength to shove a boulder off a road. A Hoshigaki player can point at their clan's "Call of the Deep" feature to justify breathing underwater or calling sharks to their side mid-fight, without needing a separate mechanical rule for it. The text is the permission slip: it tells the table what your character can plausibly attempt and why, so the DM has something concrete to say yes to. Keep an eye on your own clan's features and bring them up at the table, they're meant to be used, not just read once and forgotten.</p>
+    <p>There's another practical perk to picking a specific clan: many of them start the campaign with a chakra nature already marked as Known, an Uchiha, for instance, starts already knowing Fire Release. That's a narrative shortcut as much as a mechanical one, your character gets to walk into the story already able to say "I already know this nature," with no need to seek out training to unlock it first, unlike a character who has to earn that chakra nature over the course of play.</p>
+    <h4>Clan Hijutsu</h4>
+    <p>Each clan's traits and jutsu in the Character Sheet's Clan section are meant to represent someone born into that clan. That said, dōjutsu and other bloodline techniques have changed hands before, Kakashi famously fights with a Sharingan he wasn't born with, received from Obito. If a player wants their character to use a technique outside their own clan, work out the in-story reason together (an inherited eye, a gifted scroll, whatever fits the campaign) rather than treating Clan Techniques as strictly off-limits. The Clan section's Access tab is there to track exactly this kind of exception.</p>
+    <h4>Clan Affinity</h4>
+    <p>A clan affinity is the chakra nature a clan is known for and commonly builds its techniques around. A character born into that clan starts with that chakra nature marked as Known, applying clan traits handles this automatically when the clan defines one. What that affinity actually represents can vary from clan to clan. For some, like the Uchiha with Fire Release, Nara with Yin Release, or Akimichi with Yang Release, it's a matter of tradition: generations of the clan have trained in that nature and built a whole fighting style around it, but the nature itself isn't exclusive, any shinobi could, in theory, learn Fire Release with enough training. For others, the affinity is the bloodline itself, a true Kekkei Genkai. Bakuton's Explosion Release is the clearest example: it isn't just a tradition the clan leans on, it's a chakra nature that, per the setting's usual logic, only someone actually born with the Bakuton bloodline can use at all, no amount of outside training unlocks it.</p>
+    <h4>Clan Skill Proficiencies</h4>
+    <p>Clan skill proficiencies shown in the Character Sheet are suggested areas of expertise rather than automatic mechanical bonuses. They describe skills that naturally fit members of the clan, but they do not stack with or overwrite class proficiencies. Actual proficiencies should be chosen or assigned through the character's other sources, such as class, background, or player choice.</p>
+    <h4>Clan Appearance</h4>
+    <p>Each clan's "Clan Appearance" trait describes what members of that clan tend to look like, common features passed down within the bloodline, not a mandatory look every member must have. It's there as a starting point or a piece of flavor to lean on, not a rule: a player is always free to describe their character's appearance differently, a clan member who doesn't fit the mold is perfectly normal and doesn't need special justification.</p>
   </div>
 </div>
 
@@ -541,12 +634,304 @@
 
 <script>
 const classPresets = {
-  'Ninjutsu Specialist': { abilityPriority:['int','con','wis','dex','str','cha'], skills:['Ninjutsu','Chakra Arcana','Chakra Control'] },
+  'Ninjutsu Specialist': { abilityPriority:['int','con','wis','dex','str','cha'], skills:['Ninjutsu','Chakra Knowledge','Chakra Control'] },
   'Genjutsu Specialist': { abilityPriority:['wis','int','dex','con','str','cha'], skills:['Genjutsu','Insight','Deception'] },
   'Taijutsu Specialist': { abilityPriority:['str','con','dex','wis','int','cha'], skills:['Taijutsu','Athletics','Weapons'] },
   'Medical-Nin':         { abilityPriority:['wis','int','con','dex','str','cha'], skills:['Medicine','Chakra Control','Insight'] },
   'Scout-Nin':           { abilityPriority:['dex','wis','con','int','str','cha'], skills:['Stealth','Perception','Survival'] },
   'Puppet-Master':       { abilityPriority:['dex','wis','int','con','str','cha'], skills:['Tactics','Chakra Control','Weapons'] },
+  'Sensory-Ninja':       { abilityPriority:['wis','int','con','dex','str','cha'], skills:['Perception','Chakra Knowledge','Chakra Control'] },
+};
+
+const nindoPresets = [
+  {value:'custom', label:'Custom (write your own)…', text:''},
+  {value:'never-back-down', label:'Never Back Down', text:'Never Back Down. I fight hardest when the odds are stacked against me, the more outnumbered or outmatched I am, the harder I push. When a fight looks unwinnable, ask your DM if this is the moment to reroll an attack or a save.'},
+  {value:'never-give-up', label:'Never Give Up', text:'Never Give Up. I refuse to stay down, even when it looks like it\'s over. When you are on the verge of defeat, ask your DM about rerolling a saving throw or a check to fight through it.'},
+  {value:'never-abandon-a-friend', label:'Never Abandon a Friend', text:'Never Abandon a Friend. I will always move to protect someone I care about, whatever it costs me. When an ally is in real danger, ask your DM if it\'s worth a reroll on a check to reach or protect them in time.'},
+  {value:'never-lose', label:'Never Lose', text:'Never Lose. Losing isn\'t an option, not really, not when it matters. When you come up short in a contest of skill or strength, ask your DM about rerolling to turn it around.'},
+  {value:'never-fail', label:'Never Fail', text:'Never Fail. I find a way through, even when the moment should have ended me. When you\'d fail at something crucial, ask your DM if a reroll fits the scene.'},
+  {value:'never-give-in', label:'Never Give In', text:'Never Give In. I won\'t let someone I could still save slip away. When an ally is about to go down for good, ask your DM if this is the moment to reroll and save them.'}
+];
+
+function populateNindoSelect(){
+  const el = document.getElementById('d_nindoPreset');
+  if(!el) return;
+  el.innerHTML = nindoPresets.map(p => `<option value="${p.value}">${p.label}</option>`).join('');
+  el.value = 'custom';
+}
+
+function applyNindoPreset(value){
+  const preset = nindoPresets.find(p => p.value === value) || nindoPresets[0];
+  state.details.nindo = preset.text;
+  document.getElementById('d_nindo').value = preset.text;
+}
+
+
+const mangekyoOptions = [
+  {value:'amaterasu', label:'Amaterasu', desc:'Conjures inextinguishable black flames at your focal point of vision.'},
+  {value:'tsukuyomi', label:'Tsukuyomi', desc:'Traps a target\'s mind in a controlled genjutsu the instant your eyes meet theirs.'},
+  {value:'kamui', label:'Kamui', desc:'Warps a target, or part of your own body, to and from a pocket dimension.'},
+  {value:'kotoamatsukami', label:'Kotoamatsukami', desc:'An almost mythical genjutsu that subtly rewrites a target\'s will, leaving them unaware they were ever manipulated.'},
+  {value:'susanoo', label:'Susanoo', desc:'A gigantic avatar of chakra that surrounds and fights for you.'},
+  {value:'custom', label:'Custom Ability…', desc:''}
+];
+const mangekyoJutsuMap = {
+  amaterasu:'Mangekyō Sharingan: Amaterasu',
+  tsukuyomi:'Mangekyō Sharingan: Tsukuyomi',
+  kamui:'Mangekyō Sharingan: Kamui',
+  kotoamatsukami:'Mangekyō Sharingan: Kotoamatsukami',
+  susanoo:'Susanoo'
+};
+
+const clanAccessInfo = [
+  {key:'Uchiha', label:'Uchiha Clan Techniques (Sharingan)', desc:'Sharingan-based Dōjutsu jutsu and Uchiha-flavored fire techniques.'},
+  {key:'Hyuga', label:'Hyūga Clan Techniques (Byakugan)', desc:'Byakugan and Gentle Fist jutsu.'},
+  {key:'Nara', label:'Nara Clan Techniques (Shadow Arts)', desc:'The Nara shadow-manipulation jutsu line.'},
+  {key:'Akimichi', label:'Akimichi Clan Techniques', desc:'Akimichi body-expansion and partial-expansion jutsu.'},
+  {key:'Uzumaki', label:'Uzumaki Clan Techniques (Fūinjutsu)', desc:'Advanced Uzumaki sealing jutsu.'},
+  {key:'Aburame', label:'Aburame Clan Techniques', desc:'Insect-based Aburame jutsu.'},
+  {key:'Inuzuka', label:'Inuzuka Clan Techniques', desc:'Canine-collaboration Inuzuka jutsu.'},
+  {key:'Hoshigaki', label:'Hoshigaki Clan Techniques', desc:'Hoshigaki Water Release and shark-summoning jutsu.'},
+  {key:'Bakuton', label:'Bakuton Clan Techniques (Explosion Release)', desc:'Bakuton Explosion Release and explosive clay techniques.'},
+  {key:'Hebi', label:'Hebi Clan Techniques', desc:'[Homebrew] Hebi snake-summoning and Otogakure-flavored techniques.'}
+];
+
+const clanData = {
+  'Non-Clan': {
+    label:'Non-Clan', shortLabel:'Non-Clan',
+    quote:'Those without a recognized bloodline or founding family are simply called Non-Clan. They are the most common people in the shinobi world, and usually the ones who end up founding brand new clans for future generations. With no inherited expectations to live up to, they have unusual freedom to shape their own path.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Increase one ability score by 2 (choose below). This is a bonus on top of your normal 27-point pool, it does not cost you any point-buy points.'},
+      {name:'Skill Proficiencies', desc:'Choose any two skills to gain proficiency in, checked directly in the Skills tab.'},
+      {name:'Unwritten Potential', desc:'As someone without an inherited clan style, you\'re free to forge your own. Once per session, when you fail a roll that matters, you may narrate a flash of grit or improvisation and ask your DM for a reroll.'},
+      {name:'Jack of All Trades', desc:'Without a clan\'s specialization to lean on, you\'ve had to pick things up everywhere else, from every teacher, rival, and village you\'ve passed through. Add half your proficiency bonus (round down) to any ability check you make that doesn\'t already include your proficiency bonus.'},
+      {name:'Self-Made Style', desc:'As someone unbound by clan doctrine, you\'ve pieced together your own fighting style and quirks from everything you\'ve seen and survived, rather than inheriting them wholesale. Work with your DM to define one small signature trick, a stance, a habit, a homebrewed variant of a common jutsu, that\'s unmistakably yours and yours alone.'}
+    ],
+    asiOptions:[
+      {value:'str2', label:'+2 Strength', alloc:{str:2}}, {value:'dex2', label:'+2 Dexterity', alloc:{dex:2}},
+      {value:'con2', label:'+2 Constitution', alloc:{con:2}}, {value:'int2', label:'+2 Intelligence', alloc:{int:2}},
+      {value:'wis2', label:'+2 Wisdom', alloc:{wis:2}}, {value:'cha2', label:'+2 Charisma', alloc:{cha:2}}
+    ],
+    skillProfsFixed:[],
+    features:[]
+  },
+  'Uchiha': {
+    label:'Uchiha Clan', shortLabel:'Uchiha',
+    quote:'One of Konoha\'s four noble clans, renowned for the Sharingan and natural battle talent. The Uchiha helped found the village and have remained one of its most prominent shinobi clans, known for their powerful fire techniques, formidable combat ability, and distinctive dōjutsu.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Uchiha do not have one single area of expertise that defines every member of the clan. Some become specialists in Genjutsu, others in Ninjutsu, Taijutsu, or other fields, so your ability score increases remain flexible. Choose one combination below (you cannot pick Intelligence for both increases). This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Genjutsu is a natural fit for an Uchiha, tied to the Sharingan\'s illusions, with Ninjutsu or Weapons also fitting the clan\'s traditions (their fire techniques and their renowned skill with shuriken and other ninja tools).'},
+      {name:'Clan Affinity', desc:'You have a natural affinity for Fire Release. As an Uchiha, mastering Fire Release: Great Fireball Technique (Gōkakyū no Jutsu) is treated as a rite of passage, a child isn\'t considered a true adult in the clan\'s eyes until they can perform it, so you were drilled in Fire Release and taught the technique from a young age. Applying clan traits automatically marks Fire Release as Known and adds Fire Release: Great Fireball Technique (Gōkakyū no Jutsu) to your jutsu list.'},
+      {name:'Clan Appearance', desc:'Uchiha tend to share a similar look: jet-black or dark blue-black hair, pale skin, and dark eyes that shift to red with tomoe when the Sharingan is active.'},
+      {name:'Combat Prodigy', desc:'As an Uchiha, your clan\'s reputation for producing natural-born fighters isn\'t exaggerated, most Uchiha show real battle instinct within their first few years of training, Sharingan or not, a preview of the razor-sharp reflexes their eyes will one day sharpen further. Ask your DM for a free Perception check to catch the start of a telegraphed attack while actively studying an opponent mid-encounter, even with your Sharingan inactive or not yet awakened.'}
+    ],
+    asiOptions:[
+      {value:'dex2-int1', label:'+2 Dexterity, +1 Intelligence', alloc:{dex:2,int:1}},
+      {value:'dex2-wis1', label:'+2 Dexterity, +1 Wisdom', alloc:{dex:2,wis:1}},
+      {value:'int2-wis1', label:'+2 Intelligence, +1 Wisdom', alloc:{int:2,wis:1}}
+    ],
+    skillProfsFixed:[],
+    startingElement:'Fire',
+    startingJutsu:['Fire Release: Great Fireball Technique (Gōkakyū no Jutsu)'],
+    features:[
+      {name:'Uchiha Clan Techniques', desc:'As an Uchiha, you grow up around the clan\'s Sharingan and fire-based traditions. You have narrative access to Uchiha-exclusive jutsu in the Jutsu Library, which you may take instead of standard jutsu.'},
+      {name:'Sharingan', desc:'As an Uchiha, your Sharingan awakens and matures with training. Per the Dōjutsu house rule, activating it lets you roll Perception to anticipate attacks, with each Tomoe adding +1 (1 Tomoe = +1, 2 Tomoe = +2, 3 Tomoe = +3). Track its growth below.', choice:{key:'tomoe', label:'Sharingan maturity', jutsuMap:{'1-tomoe':'Sharingan','2-tomoe':'Sharingan','3-tomoe':'Sharingan'}, options:[
+        {value:'1-tomoe', label:'1 Tomoe', desc:'You can read an opponent\'s telegraphed movement a beat before it happens.'},
+        {value:'2-tomoe', label:'2 Tomoe', desc:'You can copy a jutsu you witness, if your DM allows a Chakra Knowledge check to pull it off.'},
+        {value:'3-tomoe', label:'3 Tomoe', desc:'Your Sharingan matures enough to cast genjutsu on its own: roll Genjutsu to affect a target through eye contact alone, no hand seals needed. Weaker than a Mangekyō-tier illusion like Tsukuyomi, but a real threat in its own right.'}
+      ]}},
+      {name:'Mangekyō Sharingan', desc:'As an Uchiha whose Mangekyō Sharingan has awakened, you gain one signature eye ability, usually paid for with real strain on your eyes and body. Leave unselected if not yet awakened.', choice:{key:'mangekyo', label:'Choose your Mangekyō ability', options: mangekyoOptions, jutsuMap: mangekyoJutsuMap}}
+    ]
+  },
+  'Hyuga': {
+    label:'Hyūga Clan', shortLabel:'Hyūga',
+    quote:'One of Konoha\'s four noble clans and arguably its most powerful. Every member is born with the Byakugan, granting extended vision, the ability to see through solid matter, and the ability to read chakra pathways, alongside an innate knack for expelling chakra through the tenketsu. They\'re distant cousins of the Uchiha, Senju, Uzumaki, and Kaguya through a shared ancestral line.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Your Wisdom score increases by 2 and your Dexterity score increases by 1. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Perception and Insight are natural fits for a Hyūga, reflecting the Byakugan, observation, and disciplined reading of people and situations.'},
+      {name:'Keen Sight', desc:'As a Hyūga, you notice details and movement others miss, even with the Byakugan inactive. Observation is drilled into your clan from early childhood alongside the Gentle Fist, so ask your DM for a free Perception check to catch a small tell, an object out of place, or a flicker of movement before it becomes relevant.'},
+      {name:'Clan Appearance', desc:'Hyūga tend to have pale, pupil-less eyes in shades of white or lavender, active Byakugan or not, often paired with long, straight dark hair.'}
+    ],
+    asiFixed:{wis:2, dex:1},
+    skillProfsFixed:[],
+    startingJutsu:['Byakugan','Gentle Fist (Jūken)'],
+    features:[
+      {name:'Hyūga Clan Techniques', desc:'You have narrative access to Hyūga-exclusive jutsu in the Jutsu Library (Byakugan, Gentle Fist), which you may take instead of standard jutsu. Some techniques are restricted to your branch of the family. Applying clan traits automatically adds the Byakugan and Gentle Fist (Jūken) techniques to your jutsu list, both trained into every Hyūga from childhood.'},
+      {name:'Branch Family', desc:'Choose the branch of the clan you come from, meant to stick for the character\'s story.', choice:{key:'branch', label:'Choose your Branch Family', options:[
+        {value:'main-house', label:'Main House', desc:'The head branch, entrusted with the clan\'s secret techniques. Most Main House members serve behind the scenes rather than in the field.'},
+        {value:'side-house', label:'Side House', desc:'The protector branch, serving the Main House. Doesn\'t get the full secret technique list, but has developed its own advanced Gentle Fist variants.'}
+      ]}},
+      {name:'Byakugan', desc:'As a Hyūga, activating your Byakugan (roll Perception, per the Dōjutsu house rule) grants you near-360° vision and lets you perceive chakra pathways and tenketsu, even through solid matter, for as long as you sustain it.'},
+      {name:'Gentle Fist Stance', desc:'As a Hyūga, you have trained in the Gentle Fist since childhood. With your Byakugan guiding your strikes, you can target the tiny tenketsu along an opponent\'s chakra pathways, sending chakra into their network and disrupting its flow. Describe your precise strikes as damaging the chakra network and the body around it, rather than simply landing ordinary blows.'}
+    ]
+  },
+  'Akimichi': {
+    label:'Akimichi Clan', shortLabel:'Akimichi',
+    quote:'A clan recognizable by the swirl markings on their cheeks and their enormous appetites. Akimichi taste-buds are famous for picking out the smallest difference in texture and seasoning, and their shared love of food and life ties the whole clan together, right alongside their reputation as physically resilient, dependable fighters.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Your Constitution score increases by 2 and your Strength score increases by 1. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Athletics and Survival are natural fits for an Akimichi, reflecting physical conditioning, endurance, and fieldcraft.'},
+      {name:'Clan Affinity', desc:'You have a natural affinity for Yang Release. Applying clan traits automatically marks Yang Release as Known and adds Multi-Size Technique to your jutsu list.'},
+      {name:'Clan Appearance', desc:'Akimichi tend to be naturally big-boned and heavyset, with a red swirl marking on each cheek passed down through the family.'},
+      {name:'Big-Boned', desc:'As an Akimichi, you are used to putting your size and strength to work. When the moment calls for it, describe yourself bulking up a limb, bracing against a crushing blow, or performing another suitably Akimichi feat of physicality, subject to your DM\'s sense of drama.'}
+    ],
+    asiFixed:{con:2, str:1},
+    skillProfsFixed:[],
+    startingElement:'Yang',
+    startingJutsu:['Multi-Size Technique'],
+    features:[
+      {name:'Akimichi Clan Techniques', desc:'You have narrative access to Akimichi-exclusive jutsu in the Jutsu Library (body-expansion techniques), which you may take instead of standard jutsu. Applying clan traits automatically marks Yang Release as Known and adds the Multi-Size Technique to your jutsu list, the clan\'s foundational body-expansion technique.'},
+      {name:'Clan Cuisine', desc:'As an Akimichi, food is part of your training as much as your culture. Your clan\'s special pills are available in the Item Library, and reaching for one in the middle of a fight is simply part of how you fight.'},
+      {name:'Bonds Over a Meal', desc:'As an Akimichi, you were raised on the belief that sharing food is the same as sharing trust, an idea your clan holds sacred enough to build entire friendships and alliances on, like the Ino–Shika–Chō partnerships your clan has kept alive for generations. Ask your DM for a free Insight check to read someone\'s true feelings or intentions while sharing a meal with them, since a Akimichi rarely misreads someone they\'ve eaten with.'}
+    ]
+  },
+  'Nara': {
+    label:'Nara Clan', shortLabel:'Nara',
+    quote:'Deer-keepers and battlefield tacticians who channel Yin Release through their shadows. Naras are known for reading a fight before it happens, and for generations have formed the "Ino–Shika–Chō" trios alongside the Yamanaka and Akimichi clans.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Your Intelligence score increases by 2 and your Charisma score increases by 1. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Investigation and Tactics are natural fits for a Nara, reflecting the clan\'s reputation for intelligence, deduction, and battlefield strategy.'},
+      {name:'Clan Appearance', desc:'Naras tend to share a lean build and a famously unbothered, sleepy-eyed look, most wear their dark hair pulled up into a high, spiky ponytail, something of a running joke within the clan.'}
+    ],
+    asiFixed:{int:2, cha:1},
+    skillProfsFixed:[],
+    startingElement:'Yin',
+    startingJutsu:['Shadow Imitation Technique (Kagemane no Jutsu)'],
+    features:[
+      {name:'Nara Clan Techniques', desc:'As a Nara, you grow up learning to treat your shadow as a weapon. You have narrative access to Nara-exclusive shadow-control techniques in the Jutsu Library, and the Shadow Imitation Technique (Kagemane no Jutsu) is the first such technique added to your jutsu list.'},
+      {name:'Clan Affinity', desc:'You have a natural affinity for Yin Release. Applying clan traits automatically marks Yin Release as Known.'},
+      {name:'Lazy Genius', desc:'As a Nara, your clan is famous for producing some of the shinobi world\'s sharpest tactical minds, reading a fight before it starts is practically a family hobby. Because that instinct runs in your blood, ask your DM for a free Investigation or Insight check to size up a scene, an opponent\'s formation, or a trap before it springs, since a Nara rarely walks into a fight blind.'}
+    ]
+  },
+  'Uzumaki': {
+    label:'Uzumaki Clan', shortLabel:'Uzumaki',
+    quote:'Formerly the ruling family of Whirlpool Country, mostly scattered to Konoha after their homeland\'s destruction, though the clan has grown active and prominent again in recent generations. Renowned for their mastery of Fūinjutsu and for chakra reserves and lifespans that dwarf those of other clans.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Your Constitution score increases by 2 and your Charisma score increases by 1. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Chakra Control and Medicine are natural fits for an Uzumaki, reflecting their Ninshō traditions, sealing arts, and exceptional vitality.'},
+      {name:'Clan Appearance', desc:'Uzumaki tend to have distinctive, vividly red hair, a trait rare enough elsewhere that it\'s treated as a clan calling card on its own.'}
+    ],
+    asiFixed:{con:2, cha:1},
+    skillProfsFixed:[],
+    features:[
+      {name:'Uzumaki Sealing Techniques', desc:'You have narrative access to Uzumaki-exclusive jutsu in the Jutsu Library (advanced sealing arts), which you may take instead of standard jutsu.'},
+      {name:'Wellspring of Chakra', desc:'As an Uzumaki, your reserves run unusually deep even by clan standards. Talk to your DM about raising your Chakra per Level above the default 5 (many tables use 10 to 15 for an Uzumaki) to reflect this.'},
+      {name:'Uzumaki Vitality', desc:'As an Uzumaki, your body recovers from wounds and exhaustion faster than most. Whenever Constitution is rolled to judge how well you\'re recovering, physically or spiritually, your DM should lean generous.'},
+      {name:'Sealer\'s Instinct', desc:'As an Uzumaki, sealing is close to instinctive for your clan, even members who never formally study Fūinjutsu tend to develop a knack for spotting it, a side effect of growing up surrounded by seals your whole life. Ask your DM for a free Investigation check to notice a nearby seal, ward, or sealing array, and whether something about it feels off, before you\'d otherwise have reason to look closely.'}
+    ]
+  },
+  'Aburame': {
+    label:'Aburame Clan', shortLabel:'Aburame',
+    quote:'A reclusive clan bonded since birth to colonies of chakra-eating insects that live just beneath their skin. The insects and their hosts share a lifelong, mutually beneficial partnership, and the clan\'s calm, methodical nature has made them some of the shinobi world\'s best trackers and infiltrators.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Your Wisdom score increases by 2 and your Intelligence score increases by 1. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Stealth and Survival are natural fits for an Aburame, reflecting patient tracking, infiltration, and their symbiotic insects.'},
+      {name:'Clan Appearance', desc:'Aburame tend to favor heavy, high-collared coats and dark glasses or goggles that hide most of the face, as much a practical habit around their insects as a clan trademark.'}
+    ],
+    asiFixed:{wis:2, int:1},
+    skillProfsFixed:[],
+    features:[
+      {name:'Aburame Clan Techniques', desc:'You have narrative access to Aburame-exclusive jutsu in the Jutsu Library (insect-based techniques), which you may take instead of standard jutsu.'},
+      {name:'Symbiotic Insects', desc:'As an Aburame, you have lived alongside a colony of chakra-eating insects since birth. They move through your body and emerge at your command, letting you send them ahead to scout, track, or quietly search places you cannot reach yourself. Because your kikaichu constantly range a short distance around you, tasting the air for chakra, ask your DM for a free Perception check to detect a hidden or approaching chakra signature nearby, even one your own senses would miss.'}
+    ]
+  },
+  'Inuzuka': {
+    label:'Inuzuka Clan', shortLabel:'Inuzuka',
+    quote:'A clan of shinobi who fight alongside loyal ninken partners raised with them since childhood. Inuzuka are known for their fierce temperament, phenomenal sense of smell, and the tight-knit bond between every clan member and their dog.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Your Dexterity score increases by 2 and your Wisdom score increases by 1. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Survival and Animal Handling are natural fits for an Inuzuka, reflecting their tracking instincts and lifelong bond with ninken.'},
+      {name:'Clan Appearance', desc:'Inuzuka tend to wear sharp, fang-shaped red markings tattooed on each cheek, and tend to take on animalistic features shared with their canine partners, sharper canine teeth, slit-like pupils, and a generally wilder look.'}
+    ],
+    asiFixed:{dex:2, wis:1},
+    skillProfsFixed:[],
+    features:[
+      {name:'Inuzuka Clan Techniques', desc:'You have narrative access to Inuzuka-exclusive jutsu in the Jutsu Library (canine-collaboration techniques), which you may take instead of standard jutsu.'},
+      {name:'Heightened Senses', desc:'As an Inuzuka, your sense of smell has been trained from childhood alongside your ninken. You can follow a scent with remarkable reliability and notice nearby creatures before ordinary senses would give you a reason to look. Ask your DM for a free Survival or Perception check to follow a scent trail, even a faint or partly cold one, or to notice a creature nearby before you\'d otherwise have reason to.'},
+      {name:'Ninken Partner', desc:'As an Inuzuka, you grow up alongside a loyal ninken partner. Your companion travels and fights at your side, sharing the instincts, trust, and training you have built together since childhood.'}
+    ]
+  },
+  'Hoshigaki': {
+    label:'Hoshigaki Clan', shortLabel:'Hoshigaki',
+    quote:'A clan from the Land of Water with a rough reputation, several of its most famous members have defected from their home village at one point or another. Hoshigaki are unmistakable on sight: broad, powerfully built, and shark-like down to the teeth, and their name carries real weight in Kirigakure, having produced some of the mist\'s most feared blade-wielders among the Seven Swordsmen, Kisame Hoshigaki chief among them.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Your Constitution score increases by 2 and your Dexterity score increases by 1. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Weapons and Animal Handling are natural fits for a Hoshigaki, reflecting a childhood spent training with a blade and an instinctive bond with sharks and other aquatic life.'},
+      {name:'Clan Affinity', desc:'You have a natural affinity for Water Release. Applying clan traits automatically marks Water Release as Known.'},
+      {name:'Clan Appearance', desc:'Hoshigaki tend to have unmistakably shark-like features: rows of sharp, jagged teeth, small dark eyes, faint gill-like markings, pale blue-grey skin, and a noticeably large, dense build.'}
+    ],
+    asiFixed:{con:2, dex:1},
+    skillProfsFixed:[],
+    startingElement:'Water',
+    features:[
+      {name:'Hoshigaki Clan Techniques', desc:'You have narrative access to Hoshigaki-exclusive jutsu in the Jutsu Library (a small but powerful set of Water Release and shark-based techniques, including the Water Shark Bullet Technique), which you may take instead of standard jutsu.'},
+      {name:'Water-Born', desc:'As a Hoshigaki, water feels like familiar territory. You can breathe underwater and swim with ease, no Athletics roll needed, and your shark-like nature gives you an instinctive connection to aquatic life, especially sharks, when the story gives you a chance to call on it.'},
+      {name:'Blade of the Mist', desc:'As a Hoshigaki, you\'ve trained with a blade since before you could properly walk, following in a lineage that has produced some of Kirigakure\'s Seven Swordsmen of the Mist, whose legendary weapons include Kisame\'s shark-skinned Samehada, a blade that shreds an opponent\'s chakra along with their skin. Work out your own signature sword and its quirks with your DM. Or use an already existing sword. You have narrative access to setting up a sword-focused character early on because of your clan\'s sword legacy: perhaps you inherited a sword once carried by one of the Seven Swordsmen of the Mist, or your Hoshigaki father taught you how to craft a blade and you made your own. The choice is yours. Ask your DM for a free Weapons check to recall a bladed technique or a swordsman\'s trick when the story calls for one.'},
+      {name:'Call of the Deep', desc:'As a Hoshigaki, you have an instinctive affinity with sharks, making them naturally receptive to you and giving you easy narrative access to forming a bond with them. Once you have established that bond through roleplay, you can create a summoning contract with a scroll and your own blood, then use Summoning Jutsu (Fūinjutsu) to call your bonded sharks when the story allows. Ask your DM for Animal Handling when you need to direct them precisely, especially in the middle of a fight.'}
+    ]
+  },
+  'Bakuton': {
+    label:'Bakuton Clan', shortLabel:'Bakuton',
+    quote:'[Homebrew] One of the clans of Iwagakure, the Village Hidden in the Rocks, the Bakuton Clan specializes in the Explosion Release (Bakuton) Kekkei Genkai. Every member of the clan is born with an innate ability to wield Explosion Release, making them highly valued by Iwagakure\'s military forces. Because of their natural talent for explosives and demolition, many Bakuton are selected to serve in the Iwagakure Explosion Corps, a specialized ninja corps dedicated to demolition, battlefield destruction, and the use of explosive ninjutsu.',
+    traits:[
+      {name:'Skill Proficiencies', desc:'Ninjutsu and Tactics are natural fits for a Bakuton, reflecting their mastery of chakra-infused clay, explosive ninjutsu, demolition, and battlefield planning.'},
+      {name:'Clan Affinity', desc:'You possess a natural affinity for Explosion Release. Explosion Release is derived from Earth Release and Lightning Release, giving you a natural affinity for both of these chakra natures as well. Applying clan traits automatically marks Earth Release, Lightning Release, and Explosion Release as Known.'},
+      {name:'Clan Appearance', desc:'Bakuton are diverse in their physical appearance, but all members are born with two additional mouths, most commonly located in the palms of their hands. In rare cases, these mouths may appear elsewhere on the body.'},
+      {name:'Two Extra Mouths', desc:'As a Bakuton, you have two extra mouths. Whether you use them to eat, chew chakra-conducting clay to mold pottery, or prepare explosive clay for your techniques is up to you.'}
+    ],
+    skillProfsFixed:[],
+    startingElements:['Earth','Lightning','Explosion'],
+    features:[
+      {name:'Bakuton Clan Techniques', desc:'You have narrative access to Bakuton-exclusive jutsu in the Jutsu Library, including clay-based Explosion Release techniques that require the clan\'s additional mouths to chew, shape, and infuse clay with chakra.'},
+      {name:'Exploding Clay', desc:'As a Bakuton, you are trained to work with Exploding Clay, a special chakra-conducting clay that readily accepts your chakra and can be shaped into explosive creatures, weapons, traps, projectiles, and other creations.'},
+      {name:'Demolition Instinct', desc:'As a Bakuton, structural weak points practically shout at you, years spent around Iwagakure\'s Explosion Corps will do that. Ask your DM for a free Investigation or Tactics check to spot a building\'s load-bearing point, a fortification\'s weak spot, or the ideal place to plant a charge for maximum effect.'}
+    ]
+  },
+  'Hebi': {
+    label:'Hebi Clan', shortLabel:'Hebi',
+    quote:'[Homebrew] A reclusive clan out of Otogakure, the Village Hidden in the Sound, said to trace back to a single shinobi whose obsessive experiments on his own body left his descendants permanently marked by snakes. Hebi are unmistakably serpentine: pale, sharp-eyed, and unnervingly calm, with a clan culture built around research, self-improvement, and the quiet accumulation of forbidden knowledge.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Your Dexterity score increases by 2 and your Intelligence score increases by 1. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Stealth, Deception, and Chakra Knowledge are natural fits for a Hebi, reflecting the clan\'s cunning, patience, taste for subterfuge, and obsession with understanding chakra itself.'},
+      {name:'Clan Appearance', desc:'Hebi tend to have very pale, almost translucent skin, golden or amber eyes with slitted, snake-like pupils, faint purple markings around the eyes, and sharp, fang-like canine teeth.'}
+    ],
+    asiFixed:{dex:2, int:1},
+    skillProfsFixed:[],
+    startingJutsu:['Hidden Shadow Snake Hands (Sen\'ei Jashu)'],
+    features:[
+      {name:'Hebi Clan Techniques', desc:'You have narrative access to Hebi-exclusive jutsu in the Jutsu Library (snake-summoning and Otogakure-flavored techniques), which you may take instead of standard jutsu. Applying clan traits automatically adds Hidden Shadow Snake Hands (Sen\'ei Jashu) to your jutsu list, the clan\'s foundational technique.'},
+      {name:'Serpent\'s Tongue', desc:'As a Hebi, your body has been shaped by snakes from birth. Unlike other shinobi, you may cast Hidden Shadow Snake Hands directly from your mouth, your tongue lashing out to deliver the snakes, letting you use the technique without hand seals.'},
+      {name:'Molting Resilience', desc:'As a Hebi, your body heals and adapts with unsettling speed, as though shedding away injury like an old skin. Whenever Constitution is rolled to judge how well you\'re recovering from a wound or a toxin, your DM should lean generous.'},
+      {name:'Watchful Coil', desc:'As a Hebi, you\'ve learned to read a room the way a snake reads warmth: waiting, watching, and striking only once you\'re certain. Ask your DM for a free Insight or Investigation check to sense that someone is lying to you or hiding something, before you\'d otherwise have reason to suspect it.'}
+    ]
+  },
+  'Other': {
+    label:'Custom Clan', shortLabel:'Custom',
+    quote:'Not every bloodline in the shinobi world has been written down yet. This slot is for a homebrew clan you and your DM are building together, whether it\'s a small family with one quirky trait or a full Kekkei Genkai clan of your own design.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Pick one of the +2/+1 combinations below to represent your homebrew clan\'s natural leanings. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Choose any two skills to gain proficiency in that fit your homebrew clan\'s theme, checked directly in the Skills tab.'},
+      {name:'Clan Affinity', desc:'If your homebrew clan is built around a specific chakra nature or Kekkei Genkai, mark it as Known directly in the Elements tab, and note the reasoning here so your table remembers why.'},
+      {name:'Clan Appearance', desc:'Work out a distinct clan look with your DM, whatever visual thread ties your bloodline together, an eye color, a marking, a build, or something stranger.'}
+    ],
+    asiOptions:[
+      {value:'str2-dex1', label:'+2 Strength, +1 Dexterity', alloc:{str:2,dex:1}},
+      {value:'str2-con1', label:'+2 Strength, +1 Constitution', alloc:{str:2,con:1}},
+      {value:'dex2-wis1', label:'+2 Dexterity, +1 Wisdom', alloc:{dex:2,wis:1}},
+      {value:'dex2-int1', label:'+2 Dexterity, +1 Intelligence', alloc:{dex:2,int:1}},
+      {value:'con2-str1', label:'+2 Constitution, +1 Strength', alloc:{con:2,str:1}},
+      {value:'con2-wis1', label:'+2 Constitution, +1 Wisdom', alloc:{con:2,wis:1}},
+      {value:'int2-wis1', label:'+2 Intelligence, +1 Wisdom', alloc:{int:2,wis:1}},
+      {value:'int2-cha1', label:'+2 Intelligence, +1 Charisma', alloc:{int:2,cha:1}},
+      {value:'wis2-cha1', label:'+2 Wisdom, +1 Charisma', alloc:{wis:2,cha:1}},
+      {value:'cha2-dex1', label:'+2 Charisma, +1 Dexterity', alloc:{cha:2,dex:1}}
+    ],
+    skillProfsFixed:[],
+    features:[
+      {name:'Homebrew Bloodline', desc:'Custom clans don\'t come with a pre-built Jutsu Library section. Talk to your DM about which existing jutsu should count as narratively exclusive to your bloodline, other players can track that exception through the Access tab, and whether your clan is worth building brand new jutsu around.'},
+      {name:'Founder\'s Mark', desc:'As the architect of a brand-new bloodline, or one of its earliest inheritors, you don\'t have generations of doctrine to fall back on the way an established clan does. Once per session, when you improvise a use for your clan\'s signature trait that isn\'t written down anywhere, ask your DM to rule on it, if they agree, write the ruling down below: it becomes canon for your clan from that point on.'}
+    ]
+  }
 };
 
 function applyClassPreset(className){
@@ -562,12 +947,209 @@ function applyClassPreset(className){
 
   state.abilities.forEach(a => { a.score = 8 + Math.max(0, allocation[a.key] || 0); });
   state.skills.forEach(s => { s.prof = preset.skills.includes(s.name); });
+  state.className = className;
 
-  renderAbilities(); renderSkills();
+  renderHeader(); renderAbilities(); renderSkills();
   logEntry(`<b>Class preset applied:</b> ${className}`);
 }
 
+function hasClanAccess(clanKey){
+  return state.clan === clanKey || !!(state.clanAccess && state.clanAccess[clanKey]);
+}
+
+function populateClanSelect(){
+  const el = document.getElementById('f_clan');
+  const order = ['Non-Clan','Uchiha','Hyuga','Akimichi','Nara','Uzumaki','Aburame','Inuzuka','Hoshigaki','Bakuton','Hebi'];
+  el.innerHTML = order.map(k => `<option value="${k}">${clanData[k].shortLabel}</option>`).join('') + `<option value="Other">Other / Custom</option>`;
+}
+
+function onClanChange(value){
+  state.clan = value;
+  document.getElementById('clanCustomRow').style.display = value==='Other' ? 'flex' : 'none';
+  renderClanPanel();
+  renderJutsuLibrary();
+  renderSkills();
+}
+
+function setClanFilter(f){ state.clanFilter = f; renderClanPanel(); }
+
+function setClanChoice(clanKey, choiceKey, value){
+  state.clanChoices[clanKey] = state.clanChoices[clanKey] || {};
+  if(value) state.clanChoices[clanKey][choiceKey] = value; else delete state.clanChoices[clanKey][choiceKey];
+  renderClanPanel();
+  renderSkills();
+}
+
+function setClanChoiceText(clanKey, field, value){
+  state.clanChoices[clanKey] = state.clanChoices[clanKey] || {};
+  state.clanChoices[clanKey][field] = value;
+}
+
+function toggleClanAccess(key, checked){
+  state.clanAccess[key] = checked;
+  renderClanPanel();
+  renderJutsuLibrary();
+  renderSkills();
+}
+
+function renderChoiceBlock(clanKey, choiceKey, label, options){
+  const current = (state.clanChoices[clanKey]||{})[choiceKey];
+  const selected = options.find(o=>o.value===current);
+  let extra = '';
+  if(current === 'custom'){
+    const c = state.clanChoices[clanKey] || {};
+    extra = `<div style="margin-top:8px">
+      <input type="text" placeholder="Custom ability name" value="${c[choiceKey+'CustomName']||''}" onchange="setClanChoiceText('${clanKey}','${choiceKey}CustomName',this.value)">
+      <textarea placeholder="Describe what it does" style="margin-top:6px; min-height:50px" onchange="setClanChoiceText('${clanKey}','${choiceKey}CustomDesc',this.value)">${c[choiceKey+'CustomDesc']||''}</textarea>
+    </div>`;
+  }
+  return `<div class="clan-choice">
+    <div class="cc-label">${label}</div>
+    <select onchange="setClanChoice('${clanKey}','${choiceKey}',this.value)">
+      <option value="">(No Choice Made)</option>
+      ${options.map(o=>`<option value="${o.value}" ${current===o.value?'selected':''}>${o.label}</option>`).join('')}
+    </select>
+    ${selected && selected.desc ? `<div class="ct-desc" style="margin-top:6px;">${selected.desc}</div>` : ''}
+    ${extra}
+  </div>`;
+}
+
+function setCustomClanText(name, value){
+  state.customClanText = state.customClanText || {};
+  state.customClanText[name] = value;
+}
+
+function renderTraitCard(item, choice, clanKey){
+  const editable = clanKey === 'Other' && item.name !== 'Ability Score Increase';
+  const text = editable ? ((state.customClanText && state.customClanText[item.name] !== undefined) ? state.customClanText[item.name] : item.desc) : item.desc;
+  let html = `<div class="clan-trait">
+    <div class="ct-name">${item.name}</div>`;
+  if(editable){
+    html += `<textarea class="ct-desc" style="width:100%; min-height:60px; resize:vertical;" onchange="setCustomClanText('${item.name.replace(/'/g,"\\'")}', this.value); renderClanPanel()">${text}</textarea>`;
+  } else {
+    html += `<div class="ct-desc">${text}</div>`;
+  }
+  if(choice) html += renderChoiceBlock(clanKey, choice.key, choice.label, choice.options);
+  html += `</div>`;
+  return html;
+}
+
+function renderClanAccessTab(){
+  return clanAccessInfo.map(info => {
+    const own = state.clan === info.key;
+    const checked = hasClanAccess(info.key);
+    return `<div class="clan-access-item">
+      <input type="checkbox" ${checked?'checked':''} ${own?'disabled':''} onchange="toggleClanAccess('${info.key}',this.checked)">
+      <div>
+        <div><span class="ca-name">${info.label}</span>${own?'<span class="ca-own">Your Clan</span>':''}</div>
+        <div class="ca-desc">${info.desc}</div>
+      </div>
+    </div>`;
+  }).join('') + `<p style="font-size:0.8rem; color:var(--mist-light); font-style:italic; margin-top:4px;">These are never hard locks, the Jutsu Library will just flag a technique as normally exclusive to another clan. Check a box, or just talk to your DM, if your character has a story reason to use them anyway. See the Rules for how a non-clan character might come by a bloodline technique.</p>`;
+}
+
+function renderClanPanel(){
+  const key = state.clan || 'Non-Clan';
+  const data = clanData[key];
+  document.getElementById('clanQuote').textContent = data ? data.quote : 'Custom clans are left up to your table, track any special traits with your DM.';
+  const filters = [['all','All'],['traits','Traits'],['access','Access']];
+  document.getElementById('clanFilterBar').innerHTML = filters.map(([f,l]) =>
+    `<button class="clan-filter-btn ${state.clanFilter===f?'active':''}" onclick="setClanFilter('${f}')">${l}</button>`
+  ).join('');
+  const body = document.getElementById('clanPanelBody');
+  let html = '';
+  if(state.clanFilter==='all' || state.clanFilter==='traits'){
+    if(data){
+      const displayLabel = (key==='Other' && state.clanCustomName) ? state.clanCustomName : data.shortLabel;
+      html += `<div class="clan-section-title">${displayLabel} Traits</div>`;
+      data.traits.forEach(t => {
+        html += renderTraitCard(t, null, key);
+        if(t.name === 'Ability Score Increase' && data.asiOptions){
+          html += renderChoiceBlock(key, 'asi', 'Ability Score Increase, Choose Allocation', data.asiOptions);
+        }
+      });
+      if(data.features && data.features.length){
+        html += data.features.map(f => renderTraitCard(f, f.choice||null, key)).join('');
+      }
+    } else {
+      html += `<p style="font-size:0.85rem; color:var(--mist-light); font-style:italic;">No official clan selected.</p>`;
+    }
+  }
+  if(state.clanFilter==='all'){
+    html += `<details class="clan-access-details"><summary class="clan-section-title clan-section-summary">Bloodline / Technique Access</summary>`;
+    html += renderClanAccessTab();
+    html += `</details>`;
+  } else if(state.clanFilter==='access'){
+    html += `<div class="clan-section-title">Bloodline / Technique Access</div>`;
+    html += renderClanAccessTab();
+  }
+  body.innerHTML = html;
+}
+
+function computeClanASI(key){
+  const data = clanData[key];
+  if(!data) return {};
+  if(data.asiFixed) return data.asiFixed;
+  if(data.asiOptions){
+    const chosen = (state.clanChoices[key]||{}).asi;
+    const opt = data.asiOptions.find(o => o.value===chosen);
+    return opt ? opt.alloc : {};
+  }
+  return {};
+}
+
+function applyClanTraits(){
+  const key = state.clan;
+  const data = clanData[key];
+  if(!data){ logEntry('<b>No official clan selected</b>, pick one, or track custom traits manually.'); return; }
+  state.clanBonus = {str:0,dex:0,con:0,int:0,wis:0,cha:0};
+  const alloc = computeClanASI(key);
+  const applied = [];
+  Object.entries(alloc).forEach(([k,v]) => {
+    state.clanBonus[k] = (state.clanBonus[k]||0) + v;
+    const a = state.abilities.find(a => a.key===k);
+    if(a) applied.push(`+${v} ${a.name}`);
+  });
+  const extras = [];
+  const startingElements = data.startingElements || (data.startingElement ? [data.startingElement] : []);
+  startingElements.forEach(elementName => {
+    const el = state.elements.find(e => e.name === elementName);
+    if(el && !el.active){ el.active = true; extras.push(`${elementName} Release known`); }
+  });
+  (data.startingJutsu||[]).forEach(jutsuName => {
+    if(state.jutsu.some(j => j.name === jutsuName)) return;
+    const preset = jutsuPresets.find(p => p.name === jutsuName);
+    if(!preset) return;
+    state.jutsu.push({id:nextJutsuId++, name:preset.name, skillType:preset.skillType, element:preset.element||'Non-Elemental', cost:preset.cost, desc:preset.desc});
+    extras.push(preset.name);
+  });
+  (data.features||[]).forEach(f => {
+    if(!f.choice || !f.choice.jutsuMap) return;
+    const choices = state.clanChoices[key] || {};
+    const chosen = choices[f.choice.key];
+    if(!chosen) return;
+    const jutsuName = f.choice.jutsuMap[chosen];
+    if(jutsuName){
+      if(state.jutsu.some(j => j.name === jutsuName)) return;
+      const preset = jutsuPresets.find(p => p.name === jutsuName);
+      if(!preset) return;
+      state.jutsu.push({id:nextJutsuId++, name:preset.name, skillType:preset.skillType, element:preset.element||'Non-Elemental', cost:preset.cost, desc:preset.desc});
+      extras.push(preset.name);
+    } else if(chosen === 'custom'){
+      const customName = choices[f.choice.key+'CustomName'];
+      if(!customName) return;
+      if(state.jutsu.some(j => j.name === customName)) return;
+      state.jutsu.push({id:nextJutsuId++, name:customName, skillType:'Genjutsu', element:'Non-Elemental', cost:0, desc:choices[f.choice.key+'CustomDesc']||''});
+      extras.push(customName);
+    }
+  });
+  const displayLabel = (key==='Other' && state.clanCustomName) ? state.clanCustomName : data.shortLabel;
+  renderAbilities(); renderSkills(); renderElements(); renderJutsu(); renderJutsuLibrary();
+  logEntry(`<b>Clan traits applied:</b> ${displayLabel}${applied.length ? ', ' + applied.join(', ') + ' (bonus points, does not touch your 27-point pool)' : ' (no Ability Score Increase chosen yet)'}${extras.length ? ', also granted: ' + extras.join(', ') : ''}`);
+}
+
 function abilityMod(score){ return Math.floor((score-10)/2); }
+function effScore(a){ return a.score + ((state.clanBonus && state.clanBonus[a.key]) || 0); }
 function fmt(n){ return (n>=0?'+':'') + n; }
 
 function adjustLevel(delta){
@@ -598,7 +1180,7 @@ function getElementColor(name){
 }
 
 function availableElementOptions(){
-  return ['Non-Elemental', ...state.elements.filter(e => e.active).map(e => e.name)];
+  return ['Non-Elemental', state.elements.filter(e => e.active).map(e => e.name)];
 }
 
 function renderElements(){
@@ -616,7 +1198,7 @@ function renderElements(){
       <div class="element-row ${e.name==='Yin'?'yin-element':''}">
         <div class="element-swatch" style="background:${e.color}"></div>
         <div class="el-name">${e.name}</div>
-        <label class="prof-check"><input type="checkbox" ${e.active?'checked':''} onchange="state.elements[${i}].active=this.checked; renderElements(); renderJutsu()"> Known</label>
+        <label class="prof-check"><input type="checkbox" ${e.active?'checked':''} onchange="state.elements[${i}].active=this.checked; renderElements(); renderJutsu(); renderJutsuLibrary()"> Known</label>
       </div>`;
   }).join('');
 }
@@ -628,20 +1210,20 @@ function addCustomElement(){
 
 const jutsuPresets = [
   // Dōjutsu
-  {name:'Sharingan', skillType:'Perception', category:'Dōjutsu', cost:0, desc:'A heightened ocular ability that sharpens perception, helps anticipate movement, and can see through many illusions. Its power develops through its tomoe.'},
-  {name:'Byakugan', skillType:'Perception', category:'Dōjutsu', cost:0, desc:'Grants near-360° vision and lets the user perceive chakra pathways and tenketsu with extraordinary precision, even through many solid objects.'},
+  {name:'Sharingan', clan:'Uchiha', skillType:'Perception', category:'Dōjutsu', cost:0, desc:'A heightened ocular ability that sharpens perception, helps anticipate movement, and can see through many illusions. Its power develops through its tomoe.'},
+  {name:'Byakugan', clan:'Hyuga', skillType:'Perception', category:'Dōjutsu', cost:0, desc:'Grants near-360° vision and lets the user see chakra flowing through the body, including the chakra pathways and the tiny tenketsu along them where chakra can be released or disrupted. This makes it possible to target an opponent\'s chakra network with exceptional precision, even through many solid objects.'},
   {name:'Rinnegan', skillType:'Chakra Control', category:'Dōjutsu', cost:25, desc:'A legendary dōjutsu associated with the Six Paths. It grants immense perception and access to powerful abilities such as the Six Paths techniques, depending on the wielder.'},
-  {name:'Mangekyō Sharingan: Kamui', skillType:'Chakra Control', category:'Dōjutsu', cost:40, desc:'A Mangekyō Sharingan space-time technique that warps targets to or from the Kamui dimension. Its applications include teleportation and intangibility.'},
-  {name:'Mangekyō Sharingan: Tsukuyomi', skillType:'Genjutsu', category:'Dōjutsu', cost:90, desc:'An extremely powerful ocular genjutsu that traps the target in a controlled illusion, distorting their perception of time, pain, and experience.'},
-  {name:'Mangekyō Sharingan: Amaterasu', skillType:'Chakra Control', category:'Dōjutsu', cost:60, desc:'Conjures inextinguishable black flames at the user’s focal point of vision, burning anything caught in their path until it is consumed entirely.'},
-  {name:'Mangekyō Sharingan: Kotoamatsukami', skillType:'Genjutsu', category:'Dōjutsu', cost:100, desc:'An extraordinarily rare genjutsu unique to certain Uchiha that subtly rewrites a target’s will and decisions, leaving them unaware they were ever manipulated.'},
-  {name:'Susanoo', skillType:'Chakra Control', category:'Dōjutsu', cost:100, desc:'A gigantic humanoid avatar formed from the user’s chakra, surrounding and defending them while fighting as an extension of their will. Reserved for awakened Mangekyō Sharingan users.'},
-  {name:'Izanagi', skillType:'Chakra Control', category:'Dōjutsu', cost:80, desc:'A forbidden dōjutsu cast on the user rather than on an opponent. It briefly erases the boundary between reality and illusion within the user\'s personal space, letting them treat anything that happens to them, including a fatal injury, as a mere illusion that can be undone. The effect only lasts a moment, and using it costs the sight of the eye it\'s cast with, which loses its light for good.'},
-  {name:'Izanami', skillType:'Genjutsu', category:'Dōjutsu', cost:80, desc:'A forbidden dōjutsu created as a check on Izanagi\'s misuse, cast as a genjutsu on a target rather than the user. The caster uses the Sharingan to memorize a physical sensation at a chosen moment, then deliberately recreates a matching sensation, trapping the target in a loop that repeats the same sequence of events endlessly until they consciously accept the outcome they\'re trying to avoid. As with Izanagi, casting it permanently blinds the eye used.'},
-  {name:'Blaze Release: Kagutsuchi', skillType:'Chakra Control', category:'Dōjutsu', cost:40, desc:'A technique which applies shape transformation to the black flames of Amaterasu, allowing the user to manipulate them at will. In Sasuke\'s case, while Amaterasu is cast from his left eye, he uses his right eye to manipulate the flames. Can form a defensive barrier of spike-shaped flames, shape the flames into weapons such as swords or arrows, or enhance other techniques like Chidori.'},
+  {name:'Mangekyō Sharingan: Kamui', clan:'Uchiha', skillType:'Chakra Control', category:'Dōjutsu', cost:40, desc:'A Mangekyō Sharingan space-time technique that warps targets to or from the Kamui dimension. Its applications include teleportation and intangibility.'},
+  {name:'Mangekyō Sharingan: Tsukuyomi', clan:'Uchiha', skillType:'Genjutsu', category:'Dōjutsu', cost:90, desc:'An extremely powerful ocular genjutsu that traps the target in a controlled illusion, distorting their perception of time, pain, and experience.'},
+  {name:'Mangekyō Sharingan: Amaterasu', clan:'Uchiha', skillType:'Chakra Control', category:'Dōjutsu', cost:60, desc:'Conjures inextinguishable black flames at the user’s focal point of vision, burning anything caught in their path until it is consumed entirely.'},
+  {name:'Mangekyō Sharingan: Kotoamatsukami', clan:'Uchiha', skillType:'Genjutsu', category:'Dōjutsu', cost:100, desc:'An extraordinarily rare genjutsu unique to certain Uchiha that subtly rewrites a target’s will and decisions, leaving them unaware they were ever manipulated.'},
+  {name:'Susanoo', clan:'Uchiha', skillType:'Chakra Control', category:'Dōjutsu', cost:100, desc:'A gigantic humanoid avatar formed from the user’s chakra, surrounding and defending them while fighting as an extension of their will. Reserved for awakened Mangekyō Sharingan users.'},
+  {name:'Izanagi', clan:'Uchiha', skillType:'Chakra Control', category:'Dōjutsu', cost:80, desc:'A forbidden dōjutsu cast on the user rather than on an opponent. It briefly erases the boundary between reality and illusion within the user\'s personal space, letting them treat anything that happens to them, including a fatal injury, as a mere illusion that can be undone. The effect only lasts a moment, and using it costs the sight of the eye it\'s cast with, which loses its light for good.'},
+  {name:'Izanami', clan:'Uchiha', skillType:'Genjutsu', category:'Dōjutsu', cost:80, desc:'A forbidden dōjutsu created as a check on Izanagi\'s misuse, cast as a genjutsu on a target rather than the user. The caster uses the Sharingan to memorize a physical sensation at a chosen moment, then deliberately recreates a matching sensation, trapping the target in a loop that repeats the same sequence of events endlessly until they consciously accept the outcome they\'re trying to avoid. As with Izanagi, casting it permanently blinds the eye used.'},
+  {name:'Blaze Release: Kagutsuchi', clan:'Uchiha', skillType:'Chakra Control', category:'Dōjutsu', cost:40, desc:'A technique which applies shape transformation to the black flames of Amaterasu, allowing the user to manipulate them at will. In Sasuke\'s case, while Amaterasu is cast from his left eye, he uses his right eye to manipulate the flames. Can form a defensive barrier of spike-shaped flames, shape the flames into weapons such as swords or arrows, or enhance other techniques like Chidori.'},
   // Taijutsu
-  {name:'Gentle Fist (Jūken)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:0, desc:'The Hyūga clan’s signature taijutsu style. Strikes are aimed precisely at the tenketsu, damaging a target’s chakra network and internal organs directly rather than harming them on the surface.'},
-  {name:'Eight Trigrams Sixty-Four Palms (Hakke Rokujūyon Shō)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:20, desc:'An advanced Gentle Fist sequence that unleashes a rapid, escalating chain of chakra-point strikes, sealing off more and more of the target’s tenketsu with each successive hit.'},
+  {name:'Gentle Fist (Jūken)', clan:'Hyuga', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:0, desc:'The Hyūga clan’s signature taijutsu style. Strikes are aimed precisely at the tenketsu, damaging a target’s chakra network and internal organs directly rather than harming them on the surface.'},
+  {name:'Eight Trigrams Sixty-Four Palms (Hakke Rokujūyon Shō)', clan:'Hyuga', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:20, desc:'An advanced Gentle Fist sequence that unleashes a rapid, escalating chain of chakra-point strikes, sealing off more and more of the target’s tenketsu with each successive hit.'},
   {name:'Primary Lotus (Konoha Senpū)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:15, desc:'A devastating close-combat technique that relies purely on raw taijutsu skill: the user closes in, strikes the target skyward, and drives them into the ground with tremendous force. Famously used by Rock Lee.'},
   {name:'Front Lotus (Omote Renge)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:15, desc:'Requires the opening of the first of the Eight Chakra Gates, giving the user five times their normal strength. The user launches the opponent into the air and then uses Shadow of the Dancing Leaf. Now behind his opponent, the user restrains them and pile-drives them into the ground headfirst. Because it uses one of the chakra gates, the user is left extremely fatigued, making this jutsu a "double-edged sword."'},
   {name:'Eight Gates Released Formation (Hachimon Tonkō no Jin)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:100, desc:'The state assumed by a user who has opened all Eight Gates. Entering this state uses up all of the body\'s energy while making the heart pump at maximum power, temporarily gaining powers a hundred times greater than their normal self, far beyond that of the five Kage. Releasing all Eight Gates will lead the user to inevitably die because of the damage done to their body.'},
@@ -649,7 +1231,7 @@ const jutsuPresets = [
   {name:'Night Guy', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:100, desc:'The Night Guy is a high-level, forbidden taijutsu that can be performed by those users who have opened all Eight Gates. After gathering all of his chakra around his body in a flickering dragon-like shape, Guy dashes forward at immense speed, which distorts space to bypass his targets defence, dealing a powerful kick. Even though this is an extremely powerful technique, it leaves Guy on the brink of death.'},
 
   // Fire Release
-  {name:'Fire Release: Great Fireball Technique (Gōkakyū no Jutsu)', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:8, desc:'The user kneads chakra into fire and expels it from the mouth, usually as a large blazing sphere. More chakra produces a larger, more destructive flame.'},
+  {name:'Fire Release: Great Fireball Technique (Gōkakyū no Jutsu)', clan:'Uchiha', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:8, desc:'The user kneads chakra into fire and expels it from the mouth, usually as a large blazing sphere. More chakra produces a larger, more destructive flame.'},
   {name:'Fire Release: Phoenix Sage Fire Technique', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:8, desc:'A volley of small fireballs is launched from the mouth, allowing the user to attack from several angles and conceal weapons within the flames.'},
   {name:'Fire Release: Dragon Flame Release', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:12, desc:'Fire is sent along a surface or through a prepared path before erupting toward the target as a concentrated flame attack.'},
   {name:'Fire Release: Flamethrower Technique', skillType:'Ninjutsu', element:'Fire', category:'Fire Release', cost:15, desc:'[Homebrew] A continuous stream of fire is expelled from the mouth like a flamethrower, letting the user sweep flame across an area rather than launching a single blast.'},
@@ -659,6 +1241,7 @@ const jutsuPresets = [
   {name:'Water Release: Water Bullet Technique', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:6, desc:'The user converts chakra into water and expels it as a forceful torrent toward the target. Its shape and volume can be varied with skill.'},
   {name:'Water Release: Water Clone Jutsu', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:12, desc:'Creates a physical clone from water. The clone can fight and use techniques, but is far less durable than the original and collapses when destroyed.'},
   {name:'Water Release: Water Dragon Bullet Technique', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:18, desc:'Shapes water into a dragon and directs it at a target. Existing water makes the technique easier to perform, while skilled shinobi can create the water themselves.'},
+  {name:'Water Release: Water Shark Bullet Technique (Suiton: Suikōdan no Jutsu)', clan:'Hoshigaki', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:14, desc:'Shapes a body of water into the form of a huge shark, then drives it at the target with tremendous speed and force, delivering a crushing blow on impact. A signature technique of the Hoshigaki clan.'},
   {name:'Water Release: Amoeba Drop Technique', skillType:'Fūinjutsu', element:'Water', category:'Water Release', cost:10, desc:'[Homebrew] After capturing specimens of the brain-eating amoeba Naegleria fowleri in a dropper, the user seals the dropper into a scroll via Fūinjutsu, each amoeba held inside a single drop of water. On release, the user summons the dropper, then uses Water Release to wrap a chakra envelope directly around each amoeba (not the drop itself), freezing it inside in a harmless, dormant state kept in check by the user\'s own water-natured chakra. In this sealed form the drop is safe to touch, drink, or inhale. With a Kai, the user can release the chakra envelope around a chosen amoeba, unfreezing it; if the drop containing it was already ingested or inhaled by a target, the amoeba becomes active and lethal inside them. Best used for blackmail or coercion: an opponent forced to swallow or breathe in a sealed drop can be threatened into submission, since the user alone controls whether the seal is ever released.'},
 
   // Wind Release
@@ -684,14 +1267,14 @@ const jutsuPresets = [
   {name:'Earth Release Barrier: Earth Prison Dome of Magnificent Nothingness', skillType:'Ninjutsu', element:'Earth', category:'Earth Release', cost:20, desc:'This jutsu traps the victims inside a self-repairing dome of earth. Jirobo is able to absorb the chakra of anyone trapped inside. Jirobo\'s chakra is distributed throughout the dome, but not equally; near the back, his chakra is much weaker, making the dome weaker in that spot.'},
 
   // Yin / Yang
-  {name:'Shadow Imitation Technique (Kagemane no Jutsu)', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:10, desc:'The Nara clan’s signature technique extends the user’s shadow until it connects with a target, forcing the target to mirror the user’s movements while the link holds.'},
-  {name:'Shadow Imitation Shadow Bind Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:16, desc:'A more tactical shadow technique that links a target’s shadow to the user’s, allowing the Nara to establish bindings and connect multiple shadows across the battlefield.'},
-  {name:'Shadow Imitation Shuriken Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:12, desc:'The user channels shadow chakra into a set of bladed weapons beforehand, then throws them so they pierce a target\'s shadow rather than their body. Once a blade is lodged in the shadow, the target is paralysed in place, and the effect extends the shadow technique\'s normal reach since it no longer depends on a direct shadow-to-shadow connection. The paralysis ends if the blade is removed or if the target\'s shadow disappears.'},
-  {name:'Shadow Sewing Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:18, desc:'A more aggressive shadow technique that reshapes the user\'s shadow into several sharp needle-like threads, each controlled independently. It can strike multiple targets at once, pinning them in place by physically sewing through their shadows rather than merely linking to them. Because it causes real physical harm it cannot restrain a target cleanly, but it activates quickly and can transition directly into a standard shadow-bind afterward.'},
-  {name:'Shadow–Neck Binding Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:14, desc:'An offensive variant of the shadow-bind techniques. The user extends their shadow along a target\'s body, where it takes on physical properties, and can shape it into a hand-like grip around the target\'s throat to choke them. The closer the user stands to the target, the stronger the grip becomes, though the technique drains chakra quickly and weakens the longer it is sustained.'},
-  {name:'Shadow Stabbing Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:16, desc:'The user forces their shadow to rise up off the ground and split into many needle-like points, then launches them at a target, stabbing into them and knocking them down.'},
-  {name:'Shadow Barrage Technique', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:20, desc:'[Homebrew] The user first immobilizes the target with a standard shadow technique, then shapes the restraining shadow into a barrage of fist-like projections that rise up and pummel the trapped target with a flurry of shadow punches.'},
-  {name:'Multi-Size Technique', skillType:'Ninjutsu', element:'Yang', category:'Yang Release', cost:12, desc:'Uses Yang Release to increase the body’s size dramatically, turning the user into a much larger and stronger combatant.'},
+  {name:'Shadow Imitation Technique (Kagemane no Jutsu)', clan:'Nara', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:10, desc:'The Nara clan’s signature technique extends the user’s shadow until it connects with a target, forcing the target to mirror the user’s movements while the link holds.'},
+  {name:'Shadow Imitation Shadow Bind Technique', clan:'Nara', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:16, desc:'A more tactical shadow technique that links a target’s shadow to the user’s, allowing the Nara to establish bindings and connect multiple shadows across the battlefield.'},
+  {name:'Shadow Imitation Shuriken Technique', clan:'Nara', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:12, desc:'The user channels shadow chakra into a set of bladed weapons beforehand, then throws them so they pierce a target\'s shadow rather than their body. Once a blade is lodged in the shadow, the target is paralysed in place, and the effect extends the shadow technique\'s normal reach since it no longer depends on a direct shadow-to-shadow connection. The paralysis ends if the blade is removed or if the target\'s shadow disappears.'},
+  {name:'Shadow Sewing Technique', clan:'Nara', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:18, desc:'A more aggressive shadow technique that reshapes the user\'s shadow into several sharp needle-like threads, each controlled independently. It can strike multiple targets at once, pinning them in place by physically sewing through their shadows rather than merely linking to them. Because it causes real physical harm it cannot restrain a target cleanly, but it activates quickly and can transition directly into a standard shadow-bind afterward.'},
+  {name:'Shadow–Neck Binding Technique', clan:'Nara', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:14, desc:'An offensive variant of the shadow-bind techniques. The user extends their shadow along a target\'s body, where it takes on physical properties, and can shape it into a hand-like grip around the target\'s throat to choke them. The closer the user stands to the target, the stronger the grip becomes, though the technique drains chakra quickly and weakens the longer it is sustained.'},
+  {name:'Shadow Stabbing Technique', clan:'Nara', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:16, desc:'The user forces their shadow to rise up off the ground and split into many needle-like points, then launches them at a target, stabbing into them and knocking them down.'},
+  {name:'Shadow Barrage Technique', clan:'Nara', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:20, desc:'[Homebrew] The user first immobilizes the target with a standard shadow technique, then shapes the restraining shadow into a barrage of fist-like projections that rise up and pummel the trapped target with a flurry of shadow punches.'},
+  {name:'Multi-Size Technique', clan:'Akimichi', skillType:'Ninjutsu', element:'Yang', category:'Yang Release', cost:12, desc:'Uses Yang Release to increase the body’s size dramatically, turning the user into a much larger and stronger combatant.'},
 
   // Non-elemental
   {name:'Transformation Jutsu (Henge no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:3, desc:'Transforms the user’s appearance into another person, creature, or object of similar size. The disguise changes form rather than creating a true duplicate.'},
@@ -703,6 +1286,7 @@ const jutsuPresets = [
   {name:'Hawk Eye Technique', skillType:'Perception', element:'Non-Elemental', category:'Non-Elemental', cost:2, desc:'[Homebrew] The user focuses chakra into their pupils, sharply extending their visual range. While active, the eyes function like a pair of binoculars, letting the user pick out distant details, read movement far across a battlefield, or spot a target well beyond normal eyesight. A purely utility technique with no offensive application.'},
   {name:'Sexy Technique', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:3, desc:'A variant of the Transformation Technique, the Sexy Technique transforms the user into a very sexy woman, usually nude or in a bikini. Naruto uses this technique to distract or win over men, with all successful attempts causing an exaggerated nosebleed by the victim. It is a joke jutsu but could be used as a distraction.'},
   {name:'Rope Escape Technique', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:0, desc:'This is the first jutsu taught in Konohagakure\'s Ninja Academy. When the user is bound, they do what they can to escape, such as by finding a way to untie the knot or dislocating their joints in order to get free of the bindings.'},
+  {name:'Hidden Shadow Snake Hands (Sen\'ei Jashu)', clan:'Hebi', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:10, desc:'The user calls forth several live snakes from their sleeve, usually after a punching motion, sending them to bite or constrict a target from a short distance. A variant of the Summoning Technique, it can also be used to latch onto surroundings and pull the user toward a destination.'},
 
   // Fūinjutsu
   {name:'Summoning Technique (Kuchiyose no Jutsu)', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:12, desc:'After forming a contract, the user can summon a bonded creature by using chakra and a blood-marked summoning seal.'},
@@ -743,6 +1327,18 @@ const jutsuPresets = [
   {name:'C3', skillType:'Ninjutsu', element:'Explosion', category:'Explosion Release', cost:60, desc:'The most powerful and destructive form of explosive clay, molded into an enormous, roughly human-shaped statue and dropped onto a target area from above. Its detonation releases devastating explosive force capable of leveling large sections of a village or fortification. This technique is famously used by Deidara.'},
 ];
 
+const kekkeiGenkaiElements = ['Wood','Ice','Lava','Storm','Magnet','Boil','Explosion'];
+
+function elementLockNote(elementName){
+  if(!elementName || elementName === 'Non-Elemental') return '';
+  const el = state.elements.find(e => e.name === elementName);
+  if(!el || el.active) return '';
+  if(kekkeiGenkaiElements.includes(elementName)){
+    return `<div class="lib-lock">🔒 ${elementName} Release is a Kekkei Genkai. It's free to add, but it's supposed to be something your character is born with, not learned, only add it if your character has this Kekkei Genkai from birth and there's a narrative reason (backstory) behind it.</div>`;
+  }
+  return `<div class="lib-lock">🔒 Normally exclusive to whoever has mastered the ${elementName} change in chakra nature. This isn't hardlocked, to leave freedom for different table rules, but through roleplay your character should be learning this change in chakra nature to use it freely, check it off as Known in the Elements tab once they have.</div>`;
+}
+
 function renderJutsuLibrary(){
   const el = document.getElementById('jutsuLibraryList');
   const groups = [
@@ -772,9 +1368,13 @@ function renderJutsuLibrary(){
     const colorClass = ({'Fire Release':'category-fire','Water Release':'category-water','Wind Release':'category-wind','Lightning Release':'category-lightning','Earth Release':'category-earth','Dōjutsu':'category-doujutsu','Taijutsu':'category-taijutsu','Fūinjutsu':'category-fuin','Yin Release':'category-yin','Yang Release':'category-yang','Wood Release':'category-wood','Ice Release':'category-ice','Lava Release':'category-lava','Storm Release':'category-storm','Magnet Release':'category-magnet','Boil Release':'category-boil','Explosion Release':'category-none','Non-Elemental':'category-none'}[cat] || 'category-none');
     return `<details class="jutsu-library-group"><summary><span class="cat-title ${colorClass}">${title}</span></summary><div class="group-body">${note?`<div class="group-note">${note}</div>`:''}${items.map(p => {
       const i = jutsuPresets.indexOf(p);
+      const locked = p.clan && !hasClanAccess(p.clan);
       return `<div class="library-card">
         <div class="lib-top"><div class="lib-name">${p.name}</div><div class="lib-tags">${p.skillType} · ${p.cost} chakra</div></div>
-        <div class="lib-desc">${p.desc}</div><button class="lib-add" onclick="addPresetJutsu(${i})">+ Add Jutsu</button>
+        <div class="lib-desc">${p.desc}</div>
+        ${locked ? `<div class="lib-lock">🔒 Normally exclusive to the ${p.clan} clan, you can still add it, just make sure it's justified in-story (see Clan → Access).</div>` : ''}
+        ${elementLockNote(p.element)}
+        <button class="lib-add" onclick="addPresetJutsu(${i})">+ Add Jutsu</button>
       </div>`;
     }).join('')}</div></details>`;
   }).join('');
@@ -835,12 +1435,15 @@ const itemPresets = [
   {name:'Summoning Scroll', category:'scrolls', desc:'A scroll inscribed with a summoning contract, allowing whoever has signed it in blood to call forth the animal or creature bound to that pact.'},
   {name:'Empty Scroll', category:'scrolls', desc:'A blank scroll ready to be filled with sealing formulas, storage jutsu, coded messages, or notes meant to be deciphered by allies.'},
   {name:'Filled Scroll', category:'scrolls', desc:'A scroll that has already been sealed, whether it holds a sealing formula, a stored item, or a coded message. Roll Fūinjutsu to open or otherwise use the seal, and Investigation if it needs to be deciphered.'},
-  {name:'Ninja Food Pills', category:'misc', desc:'Small, highly nutritious pills that restore chakra and stave off hunger for a while, ideal for the battlefield when there is no time to eat.'},
-  {name:'Canned Food', category:'misc', desc:'Preserved, shelf-stable food that is always safe to eat, useful for long missions away from villages.'},
   {name:'Tent Kit', category:'misc', desc:'A compact kit for setting up shelter on the road, useful for camping during long missions.'},
   {name:'Firestarter Materials', category:'misc', desc:'Flint, tinder, and other tools for reliably starting a fire in the field.'},
   {name:'Gourd', category:'misc', desc:'A simple gourd for carrying and drinking water on long journeys.'},
-  {name:'Clay', category:'misc', desc:'A malleable, earthy material that can be used to make pottery, for artistic purposes, or simply you can use it to mix Explosion chakra in it and execute explosive clay techniques.'},
+  {name:'Exploding Clay', category:'clan-items', clan:'Bakuton', desc:'A special type of clay that is able to conduct chakra, making it perfect for being infused with Explosion Release chakra and shaped into explosive creations.'},
+  {name:'Ninja Food Pills', category:'consumables', desc:'Small, highly nutritious pills that restore chakra and stave off hunger for a while, ideal for the battlefield when there is no time to eat.'},
+  {name:'Canned Food', category:'consumables', desc:'Preserved, shelf-stable food that is always safe to eat, useful for long missions away from villages.'},
+  {name:'Akimichi Green Pill', category:'clan-items', clan:'Akimichi', desc:'A mild, spinach-based clan pill. Eating one floods the body with usable energy, giving a temporary burst of strength and stamina, safe in normal doses, but a second one eaten too soon starts to strain the body.'},
+  {name:'Akimichi Yellow Pill', category:'clan-items', clan:'Akimichi', desc:'A stronger curry-based clan pill that sharpens reflexes and hits harder for a short while. Riskier than the Green Pill if stacked, and best saved for when a fight really calls for it.'},
+  {name:'Akimichi Red Pill', category:'clan-items', clan:'Akimichi', desc:'The most potent of the clan\'s food pills, capable of pushing the body far past its normal limits for a short burst. Extremely effective, but eating it on top of the others in the same fight is dangerous and should be narrated as a real risk, not a free win.'},
 ];
 
 function renderItemLibrary(){
@@ -848,18 +1451,24 @@ function renderItemLibrary(){
   const groups = [
     ['Ninja Tools', 'tools', ''],
     ['Scrolls', 'scrolls', ''],
+    ['Consumables', 'consumables', ''],
+    ['Clan Items', 'clan-items', ''],
     ['Miscellaneous', 'misc', ''],
   ];
-  el.innerHTML = groups.map(([title, cat]) => {
+  el.innerHTML = groups.map(([title, cat, noteText]) => {
     const items = itemPresets.filter(p => p.category === cat);
     if(!items.length) return '';
-    return `<details class="jutsu-library-group"><summary><span class="cat-title">${title}</span></summary><div class="group-body">${items.map(p => {
+    const note = noteText ? `<div class="library-group-note" style="padding:0.6rem 0.8rem; opacity:.8; font-size:.9rem;">${noteText}</div>` : '';
+    return `<details class="jutsu-library-group"><summary><span class="cat-title">${title}</span></summary>${note}<div class="group-body">${items.map(p => {
       const i = itemPresets.indexOf(p);
+      const outsider = p.clan && !hasClanAccess(p.clan);
+      const outsiderNote = outsider ? `<div class="lib-lock">🔒 Normally exclusive to the ${p.clan} clan, you can still add it, just make sure it's justified in-story (see Clan → Access).</div>` : '';
       return `<div class="library-card">
         <div class="lib-top">
           <div class="lib-name">${p.name}</div>
         </div>
         <div class="lib-desc">${p.desc}</div>
+        ${outsiderNote}
         <button class="lib-add" onclick="addPresetItem(${i})">+ Add Item</button>
       </div>`;
     }).join('')}</div></details>`;
@@ -874,7 +1483,10 @@ function addPresetItem(i){
 }
 
 function createDefaultState(){ return {
-  name:'', village:'', title:'', className:'', level:1, clan:'', element:'',
+  name:'', village:'', title:'', className:'', level:1, clan:'Non-Clan', clanCustomName:'',
+  clanBonus:{str:0,dex:0,con:0,int:0,wis:0,cha:0}, clanChoices:{}, clanFilter:'all',
+  clanAccess:{Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Bakuton:false,Hebi:false}, element:'',
+  customClanText:{},
   profBonus:2,
   cp:0, cpMax:0, chakraPerLevel:5,
   ryo:0,
@@ -889,17 +1501,17 @@ function createDefaultState(){ return {
   skills: [
     {name:'Acrobatics', desc:'Balance and controlled falls', ability:'dex', prof:false},
     {name:'Animal Handling', desc:'Calming or directing a beast', ability:'wis', prof:false},
-    {name:'Chakra Arcana', desc:'Theoretical knowledge of chakra theory, jutsu concepts, jinchūriki, forbidden jutsu, and supernatural phenomena', ability:'int', prof:false},
+    {name:'Chakra Knowledge', desc:'Theoretical understanding of chakra: jutsu, jinchūriki, forbidden techniques, and how it all works. See the Rules tab for details.', ability:'int', prof:false},
     {name:'Athletics', desc:'Swimming, climbing, forcing objects', ability:'str', prof:false},
     {name:'Deception', desc:'Lying convincingly', ability:'cha', prof:false},
     {name:'History', desc:'Past events, villages, shinobi wars', ability:'int', prof:false},
-    {name:'Insight', desc:'Reading others\' true intentions', ability:'wis', prof:false},
+    {name:'Insight', desc:'Reading people: sensing someone\'s true intentions, catching a lie, or noticing nervous, suspicious behavior.', ability:'wis', prof:false},
     {name:'Intimidation', desc:'Instilling fear', ability:'cha', prof:false},
     {name:'Investigation', desc:'Finding clues, deducing details, deciphering messages', ability:'int', prof:false},
     {name:'Tactics', desc:'Battle IQ, battlefield strategy, and the ability to command a shinobi team toward victory through planning, adaptation, and clever combat tactics.', ability:'int', prof:false},
     {name:'Medicine', desc:'Stabilizing and diagnosing wounds', ability:'wis', prof:false},
     {name:'Nature', desc:'Terrain, animals, natural phenomena', ability:'int', prof:false},
-    {name:'Perception', desc:'Spotting enemies and ambushes. With Sharingan, predicts enemy movements; with Byakugan, grants X-ray vision and other Byakugan abilities', ability:'wis', prof:false},
+    {name:'Perception', desc:'Spotting enemies, ambushes, and hidden things, whether with your eyes or your ninja instincts. At high levels it starts to work like a sensory ninja\'s range: picking up chakra signatures, sounds, or scents. With a Dōjutsu active it also governs how well you use it (Byakugan\'s sight, Sharingan\'s prediction). See Rules for details.', ability:'wis', prof:false},
     {name:'Performance', desc:'Performing, distracting an audience', ability:'cha', prof:false},
     {name:'Persuasion', desc:'Convincing through honest argument', ability:'cha', prof:false},
     {name:'Religion', desc:'Cults, deities, rites', ability:'int', prof:false},
@@ -965,6 +1577,8 @@ function renderHeader(){
   document.getElementById('f_class').value = state.className;
   document.getElementById('f_level').value = state.level;
   document.getElementById('f_clan').value = state.clan;
+  document.getElementById('clanCustomRow').style.display = state.clan==='Other' ? 'flex' : 'none';
+  document.getElementById('f_clanCustom').value = state.clanCustomName||'';
   document.getElementById('f_prof').value = state.profBonus;
   document.getElementById('f_cpmax').value = state.cpMax;
   state.chakraPerLevel = state.chakraPerLevel || 5;
@@ -1027,18 +1641,22 @@ function renderAbilities(){
   pd.className = 'points-remaining' + (remaining < 0 ? ' negative' : '');
 
   const el = document.getElementById('abilities');
-  el.innerHTML = state.abilities.map((a,i) => `
+  el.innerHTML = state.abilities.map((a,i) => {
+    const bonus = (state.clanBonus && state.clanBonus[a.key]) || 0;
+    const es = effScore(a);
+    return `
     <div class="ability">
-      <div class="name">${a.name}</div>
+      <div class="name">${a.name}${bonus ? ` <span style="color:var(--blood-bright); font-size:0.72rem;">(+${bonus} clan)</span>` : ''}</div>
       <input class="score-input" type="number" value="${a.score}" onchange="state.abilities[${i}].score=parseInt(this.value)||8; renderAbilities(); renderSkills()">
-      <div class="mod">${fmt(abilityMod(a.score))}</div>
-      <label class="save-row"><input type="checkbox" ${a.saveProf?'checked':''} onchange="state.abilities[${i}].saveProf=this.checked; renderAbilities()"> Save Proficient (${fmt(abilityMod(a.score) + (a.saveProf?state.profBonus:0))})</label>
+      <div class="mod">${fmt(abilityMod(es))}</div>
+      <label class="save-row"><input type="checkbox" ${a.saveProf?'checked':''} onchange="state.abilities[${i}].saveProf=this.checked; renderAbilities()"> Save Proficient (${fmt(abilityMod(es) + (a.saveProf?state.profBonus:0))})</label>
       <div class="roll-btns">
-        <button onclick="rollGeneric('${a.name} Check', ${abilityMod(a.score)})">Roll Check</button>
-        <button onclick="rollGeneric('${a.name} Save', ${abilityMod(a.score) + (a.saveProf?state.profBonus:0)})">Roll Save</button>
+        <button onclick="rollGeneric('${a.name} Check', ${abilityMod(es)})">Roll Check</button>
+        <button onclick="rollGeneric('${a.name} Save', ${abilityMod(es) + (a.saveProf?state.profBonus:0)})">Roll Save</button>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function abilityLabel(key){ return state.abilities.find(a=>a.key===key).name; }
@@ -1050,21 +1668,22 @@ function renderSkills(){
     if(s.finesse){
       const str = state.abilities.find(a=>a.key==='str');
       const dex = state.abilities.find(a=>a.key==='dex');
-      if(abilityMod(str.score) >= abilityMod(dex.score)){ abScore = str.score; abLabel = 'STR/DEX'; }
-      else { abScore = dex.score; abLabel = 'STR/DEX'; }
+      if(abilityMod(effScore(str)) >= abilityMod(effScore(dex))){ abScore = effScore(str); abLabel = 'STR/DEX'; }
+      else { abScore = effScore(dex); abLabel = 'STR/DEX'; }
     } else {
-      abScore = state.abilities.find(a=>a.key===s.ability).score;
+      abScore = effScore(state.abilities.find(a=>a.key===s.ability));
       abLabel = abilityLabel(s.ability);
     }
-    const mod = abilityMod(abScore) + (s.prof ? state.profBonus : 0);
+    const tomoe = s.name === 'Perception' ? tomoeBonus() : 0;
+    const mod = abilityMod(abScore) + (s.prof ? state.profBonus : 0) + tomoe;
     return `
     <div class="row-card">
-      <div class="name-field">${s.name}</div>
+      <div class="name-field">${s.name}${tomoe ? ` <span style="color:var(--blood-bright); font-size:0.72rem;">(+${tomoe} Sharingan)</span>` : ''}</div>
       <div class="desc-field">${s.desc}</div>
       <div class="ability-tag">${abLabel}</div>
       <label class="prof-check"><input type="checkbox" ${s.prof?'checked':''} onchange="state.skills[${i}].prof=this.checked; renderSkills()">Prof</label>
       <div class="mod-display">${fmt(mod)}</div>
-      <button class="roll-btn" onclick="rollGeneric('${s.name.replace(/'/g,"\\'")}', ${mod})">Roll</button>
+      <button class="roll-btn" onclick="rollGeneric('${s.name.replace(/'/g,"\'")}', ${mod})">Roll</button>
     </div>`;
   }).join('');
 }
@@ -1109,6 +1728,15 @@ function addJutsu(){
   renderJutsu();
 }
 
+function tomoeBonus(){
+  if(!hasClanAccess('Uchiha')) return 0;
+  const t = (state.clanChoices.Uchiha || {}).tomoe;
+  if(t === '1-tomoe') return 1;
+  if(t === '2-tomoe') return 2;
+  if(t === '3-tomoe') return 3;
+  return 0;
+}
+
 function skillMod(skillName){
   const s = state.skills.find(sk => sk.name === skillName);
   if(!s) return 0;
@@ -1116,11 +1744,11 @@ function skillMod(skillName){
   if(s.finesse){
     const str = state.abilities.find(a=>a.key==='str');
     const dex = state.abilities.find(a=>a.key==='dex');
-    abScore = abilityMod(str.score) >= abilityMod(dex.score) ? str.score : dex.score;
+    abScore = abilityMod(effScore(str)) >= abilityMod(effScore(dex)) ? effScore(str) : effScore(dex);
   } else {
-    abScore = state.abilities.find(a=>a.key===s.ability).score;
+    abScore = effScore(state.abilities.find(a=>a.key===s.ability));
   }
-  return abilityMod(abScore) + (s.prof ? state.profBonus : 0);
+  return abilityMod(abScore) + (s.prof ? state.profBonus : 0) + (skillName === 'Perception' ? tomoeBonus() : 0);
 }
 
 function rollJutsu(i){
@@ -1149,7 +1777,8 @@ function renderInventory(){
       <div style="display:flex; gap:8px; flex-wrap:wrap">
         <input class="iname" style="flex:2; min-width:140px" value="${item.name}" placeholder="e.g. Kunai" onchange="state.inventory[${i}].name=this.value">
         <select style="flex:1; min-width:150px" onchange="state.inventory[${i}].type=this.value; renderInventory()">
-          <option value="tools" ${item.type!=='misc' && item.type!=='scrolls' ?'selected':''}>Ninja Tool</option>
+          <option value="tools" ${item.type!=='misc' && item.type!=='scrolls' && item.type!=='consumables' ?'selected':''}>Ninja Tool</option>
+          <option value="consumables" ${item.type==='consumables'?'selected':''}>Consumable</option>
           <option value="misc" ${item.type==='misc'?'selected':''}>Miscellaneous</option>
           <option value="scrolls" ${item.type==='scrolls'?'selected':''}>Scroll</option>
         </select>
@@ -1250,7 +1879,7 @@ function rollWeaponChakraControl(i){
   logEntry(`<b>${w.name||'Puppet'}</b> (Chakra Control) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
 }
 
-function renderAll(){ renderHeader(); renderAbilities(); renderSkills(); renderJutsu(); renderInventory(); renderWeapons(); renderChakraPoints(); renderJutsuLibrary(); renderWeaponLibrary(); renderItemLibrary(); renderElements(); }
+function renderAll(){ renderHeader(); renderAbilities(); renderSkills(); renderJutsu(); renderInventory(); renderWeapons(); renderChakraPoints(); renderJutsuLibrary(); renderWeaponLibrary(); renderItemLibrary(); renderElements(); renderClanPanel(); }
 
 function exportChar(){
   const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
@@ -1276,6 +1905,13 @@ function importChar(event){
       state = Object.assign({}, state, data);
       state.ryo = parseInt(state.ryo)||0;
       state.details = Object.assign({age:'',role:'',description:'',backstory:'',nindo:''}, data.details||{});
+      state.clan = data.clan || 'Non-Clan';
+      state.clanCustomName = data.clanCustomName || '';
+      state.clanBonus = Object.assign({str:0,dex:0,con:0,int:0,wis:0,cha:0}, data.clanBonus || {});
+      state.clanChoices = data.clanChoices || {};
+      state.clanAccess = Object.assign({Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Bakuton:false,Hebi:false}, data.clanAccess || {});
+      state.customClanText = data.customClanText || {};
+      state.clanFilter = 'all';
       if(!data.elements){ state.elements = createDefaultState().elements; }
       state.jutsu = (state.jutsu||[]).map(j => ({id:j.id, name:j.name||'', skillType:j.skillType||'Ninjutsu', element:(j.name||'').includes('Shadow Imitation') ? 'Yin' : (j.element||'Non-Elemental'), cost:j.cost||0, desc:j.desc||''}));
       state.elements = (state.elements||[]);
@@ -1283,12 +1919,13 @@ function importChar(event){
       if(!state.elements.some(e=>e.name==='Yang')) state.elements.push({name:'Yang',color:'#f4d35e',active:false,custom:false});
       state.weapons = (state.weapons||[]).map(w => ({id:w.id, name:w.name||'', desc:w.desc||'', type:w.type==='puppet'?'puppet':'weapon'}));
       nextJutsuId = Math.max(1, ...(state.jutsu||[]).map(j=>j.id||0)) + 1;
-      state.inventory = (state.inventory||[]).map(it => ({id:it.id, name:it.name||'', qty:it.qty||0, desc:it.desc||'', type:(it.type==='misc'||it.type==='scrolls')?it.type:'tools'}));
+      state.inventory = (state.inventory||[]).map(it => ({id:it.id, name:it.name==='Clay'?'Exploding Clay':(it.name||''), qty:it.qty||0, desc:it.name==='Clay'?'A special type of clay that is able to conduct chakra, making it perfect for being infused with Explosion Release chakra and shaped into explosive creations.':(it.desc||''), type:(it.type==='misc'||it.type==='scrolls'||it.type==='consumables')?it.type:'tools'}));
       nextItemId = Math.max(1, ...(state.inventory||[]).map(it=>it.id||0)) + 1;
       nextWeaponId = Math.max(1, ...(state.weapons||[]).map(w=>w.id||0)) + 1;
       if(!state.weapons || !state.weapons.length) state.weapons = [{id:nextWeaponId++, name:'', desc:'', type:'weapon'}];
       renderAll();
-      logEntry(`<b>Character imported</b> — ${state.name || 'unnamed'}`);
+      populateNindoSelect();
+      logEntry(`<b>Character imported</b>, ${state.name || 'unnamed'}`);
     }catch(err){ logEntry('<b>Invalid character file.</b> Could not import.'); }
   };
   reader.readAsText(file);
@@ -1313,9 +1950,12 @@ function resetChar(){
   state = createDefaultState();
   nextJutsuId = 4; nextItemId = 1; nextWeaponId = 2;
   renderAll();
+  populateNindoSelect();
   logEntry('<b>Character reset to blank.</b>');
 }
 
+populateClanSelect();
+populateNindoSelect();
 renderAll();
 </script>
 
