@@ -105,6 +105,9 @@
   .item-card{ background:rgba(var(--panel-rgb),0.4); border:1px solid rgba(var(--border-rgb),0.18); padding:10px 14px; margin-bottom:6px; display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap; }
   .item-card input.iname{ flex:1; min-width:140px; font-weight:500; }
   .item-card textarea.idesc{ flex:2; min-width:200px; font-size:0.82rem; color:var(--mist-light); resize:vertical; min-height:38px; }
+  .item-use-btn{ background:transparent; border:1px solid var(--gold); color:var(--gold); padding:5px 12px; font-size:0.75rem; cursor:pointer; white-space:nowrap; }
+  .item-use-btn:hover{ background:var(--gold); color:var(--ink); }
+  .item-use-btn:disabled{ opacity:0.3; cursor:not-allowed; background:transparent; color:var(--mist-light); border-color:var(--mist-light); }
 
   .details-card{ background:rgba(var(--panel-rgb),0.4); border:1px solid rgba(var(--border-rgb),0.18); padding:16px; display:flex; flex-direction:column; gap:12px; }
   .details-row{ display:flex; gap:12px; flex-wrap:wrap; }
@@ -472,6 +475,17 @@
   </section>
 
   <section>
+    <h2>Companion Animals <span style="font-weight:400; font-size:0.8rem">(summoning bonds &amp; ninken partners)</span></h2>
+    <details class="elements-shell" open>
+      <summary>Bonded Animals <span style="font-size:.75rem;color:var(--mist-light);font-family:'Zen Kaku Gothic New',sans-serif">click to collapse / expand</span></summary>
+      <div class="elements-body">
+        <div id="companions"></div>
+        <button class="add-btn" onclick="addCompanion()">+ Add Companion Animal</button>
+      </div>
+    </details>
+  </section>
+
+  <section>
     <h2>Inventory</h2>
     <div class="vitals" style="margin-bottom:14px">
       <div class="vital-box">
@@ -542,9 +556,39 @@
     <p>In practice, roll <b>Chakra Knowledge</b> whenever a character is trying to understand a technique rather than perform one: studying a jutsu they've witnessed well enough to copy it (this replaces using Chakra Control for that purpose), reverse-engineering how an unfamiliar or forbidden technique functions, or researching and developing a brand-new jutsu of their own from first principles. It's also the right roll for characters built around research rather than combat, an Orochimaru-style or Kabuto-style character piecing together a new forbidden jutsu, studying an existing one they've gotten their hands on, or investigating something like a jinchūriki's seal or a Kekkei Genkai they don't personally have, are all Chakra Knowledge in action.</p>
 
 <h3>Fūinjutsu</h3>
+    <h4>Fūinjutsu usage</h4>
     <p><b>Fūinjutsu</b> isn't limited to casting sealing jutsu in combat. It's a broadly creative skill that can be used to imprint a jutsu onto a scroll for later use, or to imprint a seal onto a scroll that, once opened, summons an item or even a person. This is also a great way to manage inventory space if you and your DM are playing with realistic carry limits: a tent kit, a cooking kit, or anything else that would otherwise eat up a lot of inventory space can be compressed into a seal on a scroll by rolling Fūinjutsu with an empty scroll. Later, breaking the seal releases the stored object. There are many clever ways to use Fūinjutsu beyond direct combat, limited only by your imagination.</p>
     <p>A filled scroll can also hold a coded message instead of an object or jutsu. In that case, <b>Fūinjutsu</b> is rolled to open or otherwise use the seal itself, while <b>Investigation</b> is rolled separately to actually decipher what the message says.</p>
-    <p><b>Summoning Jutsu:</b> after establishing a bond with a summon animal through roleplay, roll Fūinjutsu to summon it. To direct or control it in combat, roll Animal Handling.</p>
+
+    <h4>Summoning Jutsu &amp; Animal bond</h4>
+    <p>To use a <b>Summoning Jutsu</b>, first find an animal or group of animals with which your ninja can establish a bond. This can be a giant, intelligent summon such as a giant frog, slug, or snake capable of speaking or meaningfully relating to the character, or an ordinary realistic animal such as a real snake or crow. It can even be a group of animals, such as many dogs, many crows, or many sharks. There is no requirement that the bond be with a single giant summon.</p>
+    <p>Once the animal or animals have been found, roll <b>Animal Handling</b> during roleplay to see how successfully the ninja relates to them. The dice result determines the outcome of that bonding attempt. If the bonding succeeds, establish the relationship in roleplay. Then take an <b>Empty Scroll</b> and use <b>Fūinjutsu</b> to write the summoning seal for that animal or group, and finally sign the contract with your blood.</p>
+    <p>When the contract is successfully completed, remove the <b>Empty Scroll</b> from the Inventory and add a <b>Summoning Scroll</b>. This represents the blank scroll having been successfully turned into a completed summoning contract. The Summoning Scroll then works passively from your Inventory whenever you perform the corresponding Summoning Jutsu.</p>
+    <p>You can then add <b>Summoning Technique (Kuchiyose no Jutsu)</b> to your Jutsu Library, but establish through roleplay how your character learned it, whether from a master, another shinobi, the summon itself, or another appropriate source. When you perform the jutsu, roll <b>Ninjutsu</b>. The Summoning Scroll containing your blood contract acts passively and determines which specific animal or group of animals you summon. You do not need to roll Fūinjutsu every time you summon once the contract has already been successfully created.</p>
+    <p>After the summon appears, you can command it with <b>Animal Handling</b>. The higher the roll, the better your control and coordination with the animal or group, and the better you command them, the more effectively they can fight alongside you.</p>
+    <p>Use the <b>Companion Animals</b> section (below Weapons, above Inventory) to keep track of any animal or group your character is bonded to, whether or not it's tied to a Summoning Jutsu contract: a single giant summon, an ordinary animal, a whole pack, or a ninken, a ninja dog. Ninken aren't exclusive to the Inuzuka (Kakashi Hatake famously has his own), but an <b>Inuzuka</b>'s ninken is raised alongside them since childhood, growing up together rather than being trained separately. Each entry has a name, a type (Ninken, Summoning Animal/Group, or Other Bonded Animal), and a free-text description, and can be rolled against <b>Animal Handling</b> directly from that section. Note that a ninken is not summoned the way a Summoning Jutsu bond is, it simply travels and fights at its ninja's side, but it's tracked in the same section for convenience. An Inuzuka character can also pick a personal ninken straight from the <b>Ninken Partner</b> feature in their Clan section; hitting <b>Apply Clan Traits</b> adds the chosen (or custom-named) ninken directly to Companion Animals.</p>
+    <p>Once <b>Summoning Technique (Kuchiyose no Jutsu)</b> has been added to your Jutsu list, each <b>Summoning Animal/Group</b> or <b>Other Bonded Animal</b> entry in Companion Animals also unlocks a quick <b>Roll Summoning Technique</b> button right there in the section, a shortcut so you don't have to jump back to the Jutsu list every time you want to summon that companion. It rolls <b>Ninjutsu</b>, exactly like using the jutsu normally, it's just a faster way to get there. This shortcut is not available on <b>Ninken</b> entries, since a ninken partner isn't called through Summoning Jutsu in the first place, it's simply already there.</p>
+
+    <h4>Flying Thunder God Technique (Hiraishin)</h4>
+    <p>The Flying Thunder God Technique works in two separate steps, marking and teleporting, backed by two separate jutsu in the Jutsu Library.</p>
+    <ul>
+      <li><b>1. The mark:</b> after adding <b>Flying Thunder God Formula</b> to your Jutsu list, roll <b>Fūinjutsu</b> to apply the seal to a person, object, or surface. This creates a permanent teleport marker at that point.</li>
+      <li><b>2. Throwing a marked kunai:</b> if the formula was inscribed onto a kunai meant to be thrown, such as a <b>Flying Thunder God Kunai</b>, roll <b>Shurikenjutsu</b> to see whether the throw successfully plants it where intended.</li>
+      <li><b>3. Multiple marks:</b> a user can maintain many marks at once, not just one, and can freely choose among them as teleport destinations.</li>
+      <li><b>4. Marks on people:</b> if a target is marked, the user can reach them at any time by warping straight to the mark.</li>
+      <li><b>5. No physical path:</b> the technique doesn't cross the space between the two points, it instantly transfers the user through space-time to the mark. This isn't a technique that moves fast, it displaces.</li>
+      <li><b>6. Transferring others:</b> the same principle can move other people or objects to a marked point, not just the user.</li>
+      <li><b>7. Fundamental limit:</b> a mark must already be in place. This is not free teleportation to any arbitrarily chosen coordinate, only to an existing seal.</li>
+      <li><b>8. The teleport:</b> once a mark exists, add <b>Flying Thunder God Technique (Hiraishin)</b> to your Jutsu list and roll <b>Ninjutsu</b> to actually perform the warp to that mark.</li>
+      <li><b>9. What it doesn't do:</b> the technique only teleports you. Any attack, jutsu, or action performed immediately after arriving is a separate roll from the Flying Thunder God Technique itself, the jutsu just gets you there.</li>
+    </ul>
+    <p><b>Recap, with a kunai:</b> Fūinjutsu (apply the formula) → Shurikenjutsu (throw the kunai) → Ninjutsu (perform the teleport).<br><b>Recap, without a kunai</b> (marking a surface or person directly by touch): Fūinjutsu (apply the formula) → Ninjutsu (perform the teleport).</p>
+
+    <h3>Inventory &amp; Item Usage</h3>
+    <p>Your Inventory represents the items your character actually has available in the story. If a technique or action requires a physical item, you must have that item in your Inventory before you can use it. For example, to use <b>Shurikenjutsu</b> to throw a kunai, shuriken, senbon, or another thrown weapon, the appropriate item must be present in your Inventory. Roll <b>Shurikenjutsu</b> to determine how well the projectile is thrown, with the final outcome judged by the DM according to the normal rules.</p>
+    <p>After using a ninja tool or consumable, click <b>Use</b> on that item in the Inventory. This consumes exactly one unit. For example, if you have 2 Shuriken, using one reduces the quantity to 1. The <b>Use</b> button appears only for <b>Ninja Tools</b> and <b>Consumables</b>; Scrolls and Miscellaneous items are not consumed this way.</p>
+    <p>This tracking is intentionally simple, but it is also optional as a table preference. If counting every individual kunai, shuriken, senbon, or similar tool becomes too tedious, the DM and players can instead treat the character as carrying a large narrative stockpile of that item. In that style, keep one inventory entry to represent the supply rather than tracking every individual piece, and occasionally handle resupply in roleplay by having the ninja visit a ninja tool shop or otherwise replenish their stock. Choose whichever approach keeps the game fun without turning the character sheet into an accounting ledger.</p>
+    <p><b>Scrolls work differently:</b> a Summoning Scroll does not need to be consumed when you use the Summoning Jutsu. Once the contract has been successfully created, the scroll remains in your Inventory and functions passively whenever you perform that corresponding Summoning Jutsu.</p>
 
     <h3>Perception</h3>
     <p>Perception covers the ordinary stuff, spotting an ambush, noticing something's off, catching a detail in a crowded room, using either your eyes or plain ninja instinct. But it scales further than that: at high levels, a character built around Perception should start to feel like a proper sensory-type shinobi, someone who reads a fight through chakra, sound, or scent instead of (or alongside) sight. Canonically, the Second Hokage, Tobirama Senju, could place a hand on the ground and sense precise chakra signatures, counts, and locations from vast distances, that's the kind of thing a high Perception roll can represent for a sensory-focused character. Depending on the character, a Perception roll might mean listening for footsteps, sensing raw chakra the way a dedicated sensor-nin does, or smelling out a hidden or approaching person the way an Inuzuka would: smell is simply the sense responsible for perceiving odor-based stimuli, so tracking someone by scent, picking their trail out of a crowd, or noticing them before they're seen falls squarely under Perception too.</p>
@@ -599,7 +643,7 @@
     <h4>Clan Affinity</h4>
     <p>A clan affinity is the chakra nature a clan is known for and commonly builds its techniques around. A character born into that clan starts with that chakra nature marked as Known, applying clan traits handles this automatically when the clan defines one. What that affinity actually represents can vary from clan to clan. For some, like the Uchiha with Fire Release, Nara with Yin Release, or Akimichi with Yang Release, it's a matter of tradition: generations of the clan have trained in that nature and built a whole fighting style around it, but the nature itself isn't exclusive, any shinobi could, in theory, learn Fire Release with enough training. For others, the affinity is the bloodline itself, a true Kekkei Genkai. Bakuton's Explosion Release is the clearest example: it isn't just a tradition the clan leans on, it's a chakra nature that, per the setting's usual logic, only someone actually born with the Bakuton bloodline can use at all, no amount of outside training unlocks it.</p>
     <h4>Clan Skill Proficiencies</h4>
-    <p>Clan skill proficiencies shown in the Character Sheet are suggested areas of expertise rather than automatic mechanical bonuses. They describe skills that naturally fit members of the clan, but they do not stack with or overwrite class proficiencies. Actual proficiencies should be chosen or assigned through the character's other sources, such as class, background, or player choice.</p>
+    <p>Clan skill proficiencies shown in the Character Sheet are <b>suggestions only</b>, not automatic mechanical bonuses. They describe skills that naturally fit members of the clan, but applying Clan Traits must never mark those skills as proficient, and clan suggestions do not stack with or overwrite class, background, or player-chosen proficiencies. Actual proficiencies should be chosen or assigned through the character's other sources, such as class, background, or player choice. For example, Animal Handling is a natural recommendation for an Inuzuka or Aburame, but it only becomes a real proficiency if another rule or the player actually assigns it.</p>
     <h4>Clan Appearance</h4>
     <p>Each clan's "Clan Appearance" trait describes what members of that clan tend to look like, common features passed down within the bloodline, not a mandatory look every member must have. It's there as a starting point or a piece of flavor to lean on, not a rule: a player is always free to describe their character's appearance differently, a clan member who doesn't fit the mold is perfectly normal and doesn't need special justification.</p>
   </div>
@@ -683,6 +727,27 @@ const mangekyoJutsuMap = {
   susanoo:'Susanoo'
 };
 
+const hoshigakiBladeOptions = [
+  {value:'samehada', label:'Samehada', desc:'A sentient, scale-covered blade that shreds targets and absorbs chakra, later releasing it back to its wielder. Traditionally passed down among the Seven Swordsmen of the Mist.'},
+  {value:'kubikiribocho', label:'Kubikiribōchō (Sword of the Executioner)', desc:'A massive cleaving blade, one of the Seven Swordsmen\'s legendary weapons, famous for repairing itself using iron drawn from spilled blood.'},
+  {value:'hiramekarei', label:'Hiramekarei', desc:'A twin-handled blade that stores chakra and releases it in powerful hammer- or blade-like forms.'},
+  {value:'shibuki', label:'Shibuki (Explosive Sword)', desc:'A blade lined with explosive tags, letting its wielder mix kenjutsu with chained explosions.'},
+  {value:'custom', label:'Forge Your Own Blade…', desc:''}
+];
+const hoshigakiBladeMap = {
+  samehada:'Samehada',
+  kubikiribocho:'Kubikiribōchō (Sword of the Executioner)',
+  hiramekarei:'Hiramekarei',
+  shibuki:'Shibuki (Explosive Sword)'
+};
+
+const inuzukaNinkenOptions = [
+  {value:'loyal_hound', label:'Loyal Hound (Akamaru-style)', desc:'A single large, powerfully built ninken raised alongside you since childhood, capable of tremendous growth when the fight calls for it, fighting fang and claw at your side and lending itself to combination techniques like Fang Passing Fang and Beast Human Clone.'},
+  {value:'pack', label:'Ninken Pack', desc:'A smaller pack of several ninken raised together, favoring coordinated pack tactics, flanking, and scent-tracking over the raw size of a single partner.'},
+  {value:'tracker', label:'Tracking Hound', desc:'A lean, sharp-nosed ninken bred and trained above all for tracking, scentwork, and reconnaissance rather than head-on combat.'},
+  {value:'custom', label:'Name Your Own Ninken…', desc:''}
+];
+
 const clanAccessInfo = [
   {key:'Uchiha', label:'Uchiha Clan Techniques (Sharingan)', desc:'Sharingan-based Dōjutsu jutsu and Uchiha-flavored fire techniques.'},
   {key:'Hyuga', label:'Hyūga Clan Techniques (Byakugan)', desc:'Byakugan and Gentle Fist jutsu.'},
@@ -693,7 +758,8 @@ const clanAccessInfo = [
   {key:'Inuzuka', label:'Inuzuka Clan Techniques', desc:'Canine-collaboration Inuzuka jutsu.'},
   {key:'Hoshigaki', label:'Hoshigaki Clan Techniques', desc:'Hoshigaki Water Release and shark-summoning jutsu.'},
   {key:'Bakuton', label:'Bakuton Clan Techniques (Explosion Release)', desc:'Bakuton Explosion Release and explosive clay techniques.'},
-  {key:'Hebi', label:'Hebi Clan Techniques', desc:'[Homebrew] Hebi snake-summoning and Otogakure-flavored techniques.'}
+  {key:'Hebi', label:'Hebi Clan Techniques', desc:'[Homebrew] Hebi snake-summoning and Otogakure-flavored techniques.'},
+  {key:'Senju', label:'Senju Clan Techniques', desc:'Senju Ninjutsu/Taijutsu/Genjutsu versatility, plus narrative access to the Wood Release bloodline.'}
 ];
 
 const clanData = {
@@ -757,10 +823,10 @@ const clanData = {
     startingJutsu:['Byakugan','Gentle Fist (Jūken)'],
     features:[
       {name:'Hyūga Clan Techniques', desc:'You have narrative access to Hyūga-exclusive jutsu in the Jutsu Library (Byakugan, Gentle Fist), which you may take instead of standard jutsu. Some techniques are restricted to your branch of the family. Applying clan traits automatically adds the Byakugan and Gentle Fist (Jūken) techniques to your jutsu list, both trained into every Hyūga from childhood.'},
-      {name:'Branch Family', desc:'Choose the branch of the clan you come from, meant to stick for the character\'s story.', choice:{key:'branch', label:'Choose your Branch Family', options:[
-        {value:'main-house', label:'Main House', desc:'The head branch, entrusted with the clan\'s secret techniques. Most Main House members serve behind the scenes rather than in the field.'},
-        {value:'side-house', label:'Side House', desc:'The protector branch, serving the Main House. Doesn\'t get the full secret technique list, but has developed its own advanced Gentle Fist variants.'}
-      ]}},
+      {name:'House', desc:'Choose which house of the clan you come from, meant to stick for the character\'s story.', choice:{key:'branch', label:'Choose your House', options:[
+        {value:'main-house', label:'Main House (Sōke)', desc:'The head house, holding clan leadership and the full breadth of its secret techniques. Main House members are never branded with any seal.'},
+        {value:'branch-house', label:'Branch House (Bunke)', desc:'The protector house, sworn to guard the Main House with their lives. Around age three or four, every Branch House member is branded on the forehead with the Caged Bird Seal (Jūinjutsu), a cursed mark the Main House can trigger with a single hand seal to inflict crippling pain, or worse, and which permanently seals away the Byakugan the moment its bearer dies, so the clan\'s secrets can never be stolen by an enemy. It never fades until death. In exchange, the Branch House has developed its own advanced Gentle Fist variants the Main House doesn\'t bother teaching.'}
+      ], noteMap:{'branch-house':'Caged Bird Seal (branded on the forehead, per the Branch House)'}}},
       {name:'Byakugan', desc:'As a Hyūga, activating your Byakugan (roll Perception, per the Dōjutsu house rule) grants you near-360° vision and lets you perceive chakra pathways and tenketsu, even through solid matter, for as long as you sustain it.'},
       {name:'Gentle Fist Stance', desc:'As a Hyūga, you have trained in the Gentle Fist since childhood. With your Byakugan guiding your strikes, you can target the tiny tenketsu along an opponent\'s chakra pathways, sending chakra into their network and disrupting its flow. Describe your precise strikes as damaging the chakra network and the body around it, rather than simply landing ordinary blows.'}
     ]
@@ -825,7 +891,7 @@ const clanData = {
     quote:'A reclusive clan bonded since birth to colonies of chakra-eating insects that live just beneath their skin. The insects and their hosts share a lifelong, mutually beneficial partnership, and the clan\'s calm, methodical nature has made them some of the shinobi world\'s best trackers and infiltrators.',
     traits:[
       {name:'Ability Score Increase', desc:'Your Wisdom score increases by 2 and your Intelligence score increases by 1. This is a bonus on top of your normal 27-point pool.'},
-      {name:'Skill Proficiencies', desc:'Stealth and Survival are natural fits for an Aburame, reflecting patient tracking, infiltration, and their symbiotic insects.'},
+      {name:'Skill Proficiencies', desc:'Stealth and Survival are natural fits for an Aburame, reflecting patient tracking and infiltration. Animal Handling is also a natural fit for the clan, but this is only a recommendation, not an automatic proficiency.'},
       {name:'Clan Appearance', desc:'Aburame tend to favor heavy, high-collared coats and dark glasses or goggles that hide most of the face, as much a practical habit around their insects as a clan trademark.'}
     ],
     asiFixed:{wis:2, int:1},
@@ -840,7 +906,7 @@ const clanData = {
     quote:'A clan of shinobi who fight alongside loyal ninken partners raised with them since childhood. Inuzuka are known for their fierce temperament, phenomenal sense of smell, and the tight-knit bond between every clan member and their dog.',
     traits:[
       {name:'Ability Score Increase', desc:'Your Dexterity score increases by 2 and your Wisdom score increases by 1. This is a bonus on top of your normal 27-point pool.'},
-      {name:'Skill Proficiencies', desc:'Survival and Animal Handling are natural fits for an Inuzuka, reflecting their tracking instincts and lifelong bond with ninken.'},
+      {name:'Skill Proficiencies', desc:'Survival is a natural fit for an Inuzuka, reflecting tracking instincts honed since childhood. Animal Handling is a natural fit for an Inuzuka, reflecting their lifelong bond with animals. This is a recommendation only, not an automatic proficiency.'},
       {name:'Clan Appearance', desc:'Inuzuka tend to wear sharp, fang-shaped red markings tattooed on each cheek, and tend to take on animalistic features shared with their canine partners, sharper canine teeth, slit-like pupils, and a generally wilder look.'}
     ],
     asiFixed:{dex:2, wis:1},
@@ -848,7 +914,7 @@ const clanData = {
     features:[
       {name:'Inuzuka Clan Techniques', desc:'You have narrative access to Inuzuka-exclusive jutsu in the Jutsu Library (canine-collaboration techniques), which you may take instead of standard jutsu.'},
       {name:'Heightened Senses', desc:'As an Inuzuka, your sense of smell has been trained from childhood alongside your ninken. You can follow a scent with remarkable reliability and notice nearby creatures before ordinary senses would give you a reason to look. Ask your DM for a free Survival or Perception check to follow a scent trail, even a faint or partly cold one, or to notice a creature nearby before you\'d otherwise have reason to.'},
-      {name:'Ninken Partner', desc:'As an Inuzuka, you grow up alongside a loyal ninken partner. Your companion travels and fights at your side, sharing the instincts, trust, and training you have built together since childhood.'}
+      {name:'Ninken Partner', desc:'As an Inuzuka, you grow up alongside a loyal ninken partner. Your companion travels and fights at your side, sharing the instincts, trust, and training you have built together since childhood. Picking an option below (e.g. Loyal Hound or Tracking Hound) just sets that as your ninken\'s placeholder name/archetype, describing how it fights, not a fixed identity: rename it to whatever you like once it\'s in your Companion Animals, a personal name such as Akamaru, for example. Or skip the presets entirely and name your own ninken from the start. Either way, it\'s added straight to your Companion Animals the moment you hit Apply Clan Traits.', choice:{key:'ninken', label:'Choose your ninken partner', options: inuzukaNinkenOptions, isCompanion:true, companionType:'ninken'}}
     ]
   },
   'Hoshigaki': {
@@ -866,8 +932,8 @@ const clanData = {
     features:[
       {name:'Hoshigaki Clan Techniques', desc:'You have narrative access to Hoshigaki-exclusive jutsu in the Jutsu Library (a small but powerful set of Water Release and shark-based techniques, including the Water Shark Bullet Technique), which you may take instead of standard jutsu.'},
       {name:'Water-Born', desc:'As a Hoshigaki, water feels like familiar territory. You can breathe underwater and swim with ease, no Athletics roll needed, and your shark-like nature gives you an instinctive connection to aquatic life, especially sharks, when the story gives you a chance to call on it.'},
-      {name:'Blade of the Mist', desc:'As a Hoshigaki, you\'ve trained with a blade since before you could properly walk, following in a lineage that has produced some of Kirigakure\'s Seven Swordsmen of the Mist, whose legendary weapons include Kisame\'s shark-skinned Samehada, a blade that shreds an opponent\'s chakra along with their skin. Work out your own signature sword and its quirks with your DM. Or use an already existing sword. You have narrative access to setting up a sword-focused character early on because of your clan\'s sword legacy: perhaps you inherited a sword once carried by one of the Seven Swordsmen of the Mist, or your Hoshigaki father taught you how to craft a blade and you made your own. The choice is yours. Ask your DM for a free Weapons check to recall a bladed technique or a swordsman\'s trick when the story calls for one.'},
-      {name:'Call of the Deep', desc:'As a Hoshigaki, you have an instinctive affinity with sharks, making them naturally receptive to you and giving you easy narrative access to forming a bond with them. Once you have established that bond through roleplay, you can create a summoning contract with a scroll and your own blood, then use Summoning Jutsu (Fūinjutsu) to call your bonded sharks when the story allows. Ask your DM for Animal Handling when you need to direct them precisely, especially in the middle of a fight.'}
+      {name:'Blade of the Mist', desc:'As a Hoshigaki, you\'ve trained with a blade since before you could properly walk, following in a lineage that has produced some of Kirigakure\'s Seven Swordsmen of the Mist, whose legendary weapons include Kisame\'s shark-skinned Samehada, a blade that shreds an opponent\'s chakra along with their skin. You have narrative access to setting up a sword-focused character early on because of your clan\'s sword legacy: perhaps you inherited a sword once carried by one of the Seven Swordsmen of the Mist, or your Hoshigaki father taught you how to craft a blade and you made your own. Pick your blade below, an existing legendary sword, or forge a brand-new one with your own name and description, and it\'s added straight to your Weapons the moment you hit Apply Clan Traits.', choice:{key:'blade', label:'Choose your signature blade', options: hoshigakiBladeOptions, weaponMap: hoshigakiBladeMap}},
+      {name:'Call of the Deep', desc:'As a Hoshigaki, you have an instinctive affinity with sharks, making them naturally receptive to you and giving you easy narrative access to forming a bond with them. Once you have established that bond through roleplay, you can create a summoning contract with a scroll and your own blood, then use Summoning Jutsu (Fūinjutsu) to call your bonded sharks when the story allows, whether that\'s a single shark for a precise, personal task or a whole pack of them when the moment calls for something bigger. Ask your DM for Animal Handling when you need to direct them precisely, especially in the middle of a fight.'}
     ]
   },
   'Bakuton': {
@@ -889,20 +955,47 @@ const clanData = {
   },
   'Hebi': {
     label:'Hebi Clan', shortLabel:'Hebi',
-    quote:'[Homebrew] A reclusive clan out of Otogakure, the Village Hidden in the Sound, said to trace back to a single shinobi whose obsessive experiments on his own body left his descendants permanently marked by snakes. Hebi are unmistakably serpentine: pale, sharp-eyed, and unnervingly calm, with a clan culture built around research, self-improvement, and the quiet accumulation of forbidden knowledge.',
+    quote:'[Homebrew] A reclusive clan out of Otogakure, the Village Hidden in the Sound, said to trace back to a single shinobi whose obsessive experiments on his own body left his descendants permanently marked by snakes, unnervingly serpentine in body as much as in temperament. Hebi are unmistakably snake-like: pale, sharp-eyed, and unnervingly calm, with a clan culture built around research, self-improvement, and the quiet accumulation of forbidden knowledge, following in the footsteps of Orochimaru himself.',
     traits:[
       {name:'Ability Score Increase', desc:'Your Dexterity score increases by 2 and your Intelligence score increases by 1. This is a bonus on top of your normal 27-point pool.'},
       {name:'Skill Proficiencies', desc:'Stealth, Deception, and Chakra Knowledge are natural fits for a Hebi, reflecting the clan\'s cunning, patience, taste for subterfuge, and obsession with understanding chakra itself.'},
-      {name:'Clan Appearance', desc:'Hebi tend to have very pale, almost translucent skin, golden or amber eyes with slitted, snake-like pupils, faint purple markings around the eyes, and sharp, fang-like canine teeth.'}
+      {name:'Clan Appearance', desc:'Hebi tend to have very pale, almost translucent skin, eyes that run golden, amber, or green with slitted, snake-like pupils, faint purple markings around the eyes, sharp, narrow, snake-like teeth, and an unnervingly flexible, almost boneless-looking build.'}
     ],
     asiFixed:{dex:2, int:1},
     skillProfsFixed:[],
     startingJutsu:['Hidden Shadow Snake Hands (Sen\'ei Jashu)'],
     features:[
-      {name:'Hebi Clan Techniques', desc:'You have narrative access to Hebi-exclusive jutsu in the Jutsu Library (snake-summoning and Otogakure-flavored techniques), which you may take instead of standard jutsu. Applying clan traits automatically adds Hidden Shadow Snake Hands (Sen\'ei Jashu) to your jutsu list, the clan\'s foundational technique.'},
-      {name:'Serpent\'s Tongue', desc:'As a Hebi, your body has been shaped by snakes from birth. Unlike other shinobi, you may cast Hidden Shadow Snake Hands directly from your mouth, your tongue lashing out to deliver the snakes, letting you use the technique without hand seals.'},
+      {name:'Hebi Clan Techniques', desc:'You have narrative access to Hebi-exclusive snake-based jutsu in the Jutsu Library, which you may take instead of standard jutsu. Applying clan traits automatically adds Hidden Shadow Snake Hands (Sen\'ei Jashu) to your jutsu list, a technique every Hebi is drilled in from childhood.'},
+      {name:'Serpent\'s Tongue', desc:'As a Hebi, your body has been shaped by snakes from birth, and it shows in how you fight. You may cast Hidden Shadow Snake Hands with no hand seals at all, straight from your mouth, your tongue lashing out to deliver the snakes, letting you use the technique even when your hands are bound, full, or otherwise out of commission.'},
       {name:'Molting Resilience', desc:'As a Hebi, your body heals and adapts with unsettling speed, as though shedding away injury like an old skin. Whenever Constitution is rolled to judge how well you\'re recovering from a wound or a toxin, your DM should lean generous.'},
-      {name:'Watchful Coil', desc:'As a Hebi, you\'ve learned to read a room the way a snake reads warmth: waiting, watching, and striking only once you\'re certain. Ask your DM for a free Insight or Investigation check to sense that someone is lying to you or hiding something, before you\'d otherwise have reason to suspect it.'}
+      {name:'Watchful Coil', desc:'As a Hebi, you\'ve learned to read a room the way a snake reads warmth: waiting, watching, and striking only once you\'re certain. Ask your DM for a free Insight or Investigation check to sense that someone is lying to you or hiding something, before you\'d otherwise have reason to suspect it.'},
+      {name:'Serpentine Body', desc:'As a Hebi, your body moves the way a snake\'s does: unnervingly flexible, capable of sudden, boneless-looking motion. You can stretch your neck and tongue out to unnatural lengths to strike or retrieve something just out of arm\'s reach, and you can drop low and slither across open ground at speeds a normal sprint can\'t match, including straight up a tree trunk or a sheer wall the way a real snake climbs. Ask your DM for a free Athletics check when using this kind of movement to close a gap, escape a grapple, or reach somewhere a normal body couldn\'t.'},
+      {name:'Throat Cache', desc:'As a Hebi, your throat isn\'t just for talking. Much like Orochimaru is known to keep the Kusanagi blade sheathed inside his own body, you can swallow and store a small blade, a scroll, or another slim object inside your throat, concealed from patdowns and casual searches, and cough or regurgitate it back into your hand the instant you need it.'},
+      {name:'Skin of the Serpent', desc:'As a Hebi, your clan\'s mastery over its own body extends to escaping death itself. The Hebi-Style Body Replacement Technique lets you regurgitate an entirely new, uninjured body from your own mouth the instant your current one is beaten past saving, shedding the old one the way a snake sheds its skin, clothing and all, even severed limbs, restored in the process. It\'s a last resort, not a party trick: it burns through chakra fast and leaves you disoriented for a moment after you emerge, so save it for the fights you genuinely shouldn\'t have survived. Add it to your jutsu list from the Jutsu Library once your training or your story has earned it.'},
+      {name:'Manda\'s Kin', desc:'As a Hebi, you have narrative access to forming a bond with a great serpent of your own, in the same tradition as Orochimaru\'s bond with Manda, provided you can find one willing to test you first. Once that bond is established through roleplay, seal it with a summoning contract in blood on a scroll, then roll Fūinjutsu to perform the Summoning Technique and call your bonded serpent into a fight, whether that\'s a single titanic snake for an overwhelming show of force, or a smaller cluster of serpents for something more precise. Ask your DM for an Animal Handling check when you need to direct it exactly, especially mid-fight, a snake that size doesn\'t take orders lightly.'},
+      {name:'The Sunken Nest', desc:'Somewhere in Otogakure lies an abandoned Hebi stronghold, a warren of tunnels and chambers your clan hasn\'t openly used in years, said to still hold scrolls nobody ever catalogued. As a Hebi, you have the clearest narrative reason of anyone to go looking for it: to dig into your clan\'s true origins, to see what forbidden or simply forgotten techniques were left behind and might be worth learning, or even to restore the place and quietly turn it into a base for your own research, however dark that research ends up being. What you find there, and what you choose to do with it, is entirely up to you and your DM.'},
+      {name:'Vessel of the White Snake', desc:'Orochimaru\'s Living Corpse Reincarnation (Fushi Tensei) lets its user abandon a dying or defeated body and transfer their soul into a new one entirely, at the cost of revealing a monstrous true form made of countless smaller snakes. This isn\'t a starting ability, it\'s one of the setting\'s most forbidden kinjutsu, campaign-altering by design. Choosing the Hebi clan simply gives you the clearest narrative in-road to eventually chase it down, whether through lineage, mentorship, or forbidden research, subject to heavy DM oversight and a story that has actually earned it.'}
+    ]
+  },
+  'Senju': {
+    label:'Senju Clan', shortLabel:'Senju',
+    quote:'One of the two clans that founded Konohagakure alongside their old rivals the Uchiha, the Senju are remembered as "the clan with a thousand skills": rather than mastering one specialty, they trained broadly across ninjutsu, taijutsu, and genjutsu, backed by unusually deep chakra reserves and life force said to trace back to Asura Ōtsutsuki. Three Hokage have come from Senju blood, Hashirama, Tobirama, and Tsunade, and the clan\'s Will of Fire still shapes Konoha\'s politics long after the Senju name stopped being commonly heard around the village.',
+    traits:[
+      {name:'Ability Score Increase', desc:'Senju don\'t lean on one specialty either, their reputation as "the clan with a thousand skills" comes from generations who trained broadly instead of narrowly, backed by a naturally sturdy constitution. Choose one combination below. This is a bonus on top of your normal 27-point pool.'},
+      {name:'Skill Proficiencies', desc:'Ninjutsu, Taijutsu, and Genjutsu are all natural fits for a Senju, reflecting the clan\'s reputation as versatile all-rounders rather than one-trick specialists.'},
+      {name:'Clan Appearance', desc:'Senju don\'t share one unmistakable physical trait the way some bloodlines do, what marks them instead is vitality: even young Senju tend to run unusually hardy, with deep chakra reserves and a naturally robust build.'}
+    ],
+    asiOptions:[
+      {value:'con2-str1', label:'+2 Constitution, +1 Strength', alloc:{con:2,str:1}},
+      {value:'con2-int1', label:'+2 Constitution, +1 Intelligence', alloc:{con:2,int:1}},
+      {value:'con2-wis1', label:'+2 Constitution, +1 Wisdom', alloc:{con:2,wis:1}}
+    ],
+    skillProfsFixed:[],
+    features:[
+      {name:'Senju Clan Techniques', desc:'You have narrative access to Senju-exclusive jutsu in the Jutsu Library (a broad spread across Ninjutsu, Taijutsu, and Genjutsu, plus the clan\'s rare, dangerous Wood Release inheritance), which you may take instead of standard jutsu.'},
+      {name:'Wood Release Bloodline', desc:'Wood Release has never been a guarantee of being a Senju, historically, it\'s only ever been confirmed in Hashirama Senju himself, born from an extraordinarily rare fusion of his life-force-heavy chakra with an equally rare affinity. Choosing the Senju clan doesn\'t hand you Wood Release automatically, but it gives you the clearest narrative in-road to eventually claim it: work out a convincing lineage with your DM, direct descent from Hashirama, a close blood relative, whatever fits your campaign, and once approved, mark Wood Release as Known in the Elements tab to unlock its jutsu from the Jutsu Library.'},
+      {name:'Second Hokage\'s Legacy', desc:'The Flying Thunder God Technique (Hiraishin) isn\'t locked behind the Senju bloodline, even Minato Namikaze, who wasn\'t a Senju, learned and mastered it. But it was invented by Tobirama Senju, the clan\'s own Second Hokage, and by all rights should have been passed down through his line before it ever reached Minato. As a Senju, you have the easiest in-story reason to go looking for it: an inherited scroll, a surviving family teacher, or a direct blood tie to Tobirama himself. The same goes for his other, far more dangerous creation, Summoning: Impure World Reincarnation (Edo Tensei), a forbidden kinjutsu you\'d have a natural head start on tracking down if your story ever goes there.'},
+      {name:'Undying Vitality', desc:'As a Senju, distant relatives of the Uzumaki, you carry a trace of that same unusually deep well of life force and chakra. Whenever Constitution is rolled to judge how well you\'re recovering from a wound, poison, or exhaustion, your DM should lean generous.'}
     ]
   },
   'Other': {
@@ -959,7 +1052,7 @@ function hasClanAccess(clanKey){
 
 function populateClanSelect(){
   const el = document.getElementById('f_clan');
-  const order = ['Non-Clan','Uchiha','Hyuga','Akimichi','Nara','Uzumaki','Aburame','Inuzuka','Hoshigaki','Bakuton','Hebi'];
+  const order = ['Non-Clan','Uchiha','Hyuga','Akimichi','Nara','Uzumaki','Aburame','Inuzuka','Hoshigaki','Bakuton','Hebi','Senju'];
   el.innerHTML = order.map(k => `<option value="${k}">${clanData[k].shortLabel}</option>`).join('') + `<option value="Other">Other / Custom</option>`;
 }
 
@@ -1143,8 +1236,53 @@ function applyClanTraits(){
       extras.push(customName);
     }
   });
+  (data.features||[]).forEach(f => {
+    if(!f.choice || !f.choice.weaponMap) return;
+    const choices = state.clanChoices[key] || {};
+    const chosen = choices[f.choice.key];
+    if(!chosen) return;
+    const weaponName = f.choice.weaponMap[chosen];
+    if(weaponName){
+      if(state.weapons.some(w => w.name === weaponName)) return;
+      const preset = weaponPresets.find(p => p.name === weaponName);
+      if(!preset) return;
+      state.weapons.push({id:nextWeaponId++, name:preset.name, desc:preset.desc, type:preset.type||'weapon'});
+      extras.push(preset.name);
+    } else if(chosen === 'custom'){
+      const customName = choices[f.choice.key+'CustomName'];
+      if(!customName) return;
+      if(state.weapons.some(w => w.name === customName)) return;
+      state.weapons.push({id:nextWeaponId++, name:customName, desc:choices[f.choice.key+'CustomDesc']||'', type:'weapon'});
+      extras.push(customName);
+    }
+  });
+  (data.features||[]).forEach(f => {
+    if(!f.choice || !f.choice.noteMap) return;
+    const choices = state.clanChoices[key] || {};
+    const chosen = choices[f.choice.key];
+    if(chosen && f.choice.noteMap[chosen]) extras.push(f.choice.noteMap[chosen]);
+  });
+  (data.features||[]).forEach(f => {
+    if(!f.choice || !f.choice.isCompanion) return;
+    const choices = state.clanChoices[key] || {};
+    const chosen = choices[f.choice.key];
+    if(!chosen) return;
+    if(chosen === 'custom'){
+      const customName = choices[f.choice.key+'CustomName'];
+      if(!customName) return;
+      if(state.companions.some(c => c.name === customName)) return;
+      state.companions.push({id:nextCompanionId++, name:customName, desc:choices[f.choice.key+'CustomDesc']||'', type:f.choice.companionType||'ninken'});
+      extras.push(customName);
+    } else {
+      const opt = f.choice.options.find(o=>o.value===chosen);
+      if(!opt) return;
+      if(state.companions.some(c => c.name === opt.label)) return;
+      state.companions.push({id:nextCompanionId++, name:opt.label, desc:opt.desc||'', type:f.choice.companionType||'ninken'});
+      extras.push(opt.label);
+    }
+  });
   const displayLabel = (key==='Other' && state.clanCustomName) ? state.clanCustomName : data.shortLabel;
-  renderAbilities(); renderSkills(); renderElements(); renderJutsu(); renderJutsuLibrary();
+  renderAbilities(); renderSkills(); renderElements(); renderJutsu(); renderJutsuLibrary(); renderWeapons(); renderCompanions();
   logEntry(`<b>Clan traits applied:</b> ${displayLabel}${applied.length ? ', ' + applied.join(', ') + ' (bonus points, does not touch your 27-point pool)' : ' (no Ability Score Increase chosen yet)'}${extras.length ? ', also granted: ' + extras.join(', ') : ''}`);
 }
 
@@ -1224,6 +1362,7 @@ const jutsuPresets = [
   // Taijutsu
   {name:'Gentle Fist (Jūken)', clan:'Hyuga', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:0, desc:'The Hyūga clan’s signature taijutsu style. Strikes are aimed precisely at the tenketsu, damaging a target’s chakra network and internal organs directly rather than harming them on the surface.'},
   {name:'Eight Trigrams Sixty-Four Palms (Hakke Rokujūyon Shō)', clan:'Hyuga', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:20, desc:'An advanced Gentle Fist sequence that unleashes a rapid, escalating chain of chakra-point strikes, sealing off more and more of the target’s tenketsu with each successive hit.'},
+  {name:'Eight Trigrams Palms Revolving Heaven (Kaiten)', clan:'Hyuga', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:18, desc:'The Hyūga clan\'s signature defensive technique: the user releases chakra from every tenketsu at once while spinning rapidly, creating an impenetrable dome of rotating chakra that repels incoming attacks in every direction.'},
   {name:'Primary Lotus (Konoha Senpū)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:15, desc:'A devastating close-combat technique that relies purely on raw taijutsu skill: the user closes in, strikes the target skyward, and drives them into the ground with tremendous force. Famously used by Rock Lee.'},
   {name:'Front Lotus (Omote Renge)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:15, desc:'Requires the opening of the first of the Eight Chakra Gates, giving the user five times their normal strength. The user launches the opponent into the air and then uses Shadow of the Dancing Leaf. Now behind his opponent, the user restrains them and pile-drives them into the ground headfirst. Because it uses one of the chakra gates, the user is left extremely fatigued, making this jutsu a "double-edged sword."'},
   {name:'Eight Gates Released Formation (Hachimon Tonkō no Jin)', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:100, desc:'The state assumed by a user who has opened all Eight Gates. Entering this state uses up all of the body\'s energy while making the heart pump at maximum power, temporarily gaining powers a hundred times greater than their normal self, far beyond that of the five Kage. Releasing all Eight Gates will lead the user to inevitably die because of the damage done to their body.'},
@@ -1242,6 +1381,8 @@ const jutsuPresets = [
   {name:'Water Release: Water Clone Jutsu', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:12, desc:'Creates a physical clone from water. The clone can fight and use techniques, but is far less durable than the original and collapses when destroyed.'},
   {name:'Water Release: Water Dragon Bullet Technique', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:18, desc:'Shapes water into a dragon and directs it at a target. Existing water makes the technique easier to perform, while skilled shinobi can create the water themselves.'},
   {name:'Water Release: Water Shark Bullet Technique (Suiton: Suikōdan no Jutsu)', clan:'Hoshigaki', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:14, desc:'Shapes a body of water into the form of a huge shark, then drives it at the target with tremendous speed and force, delivering a crushing blow on impact. A signature technique of the Hoshigaki clan.'},
+  {name:'Water Release: Five Eating Sharks (Suiton: Goshokuzame)', clan:'Hoshigaki', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:20, desc:'A more advanced variant of the Water Shark Bullet Technique: shapes water into multiple sharks at once, which streak toward the target from several directions simultaneously, making them far harder to dodge or block.'},
+  {name:'Water Prison Technique (Suirō no Jutsu)', clan:'Hoshigaki', skillType:'Ninjutsu', element:'Water', category:'Water Release', cost:16, desc:'Traps a target inside a sphere of highly pressurized water that\'s nearly impossible to escape from the inside. The technique requires the caster\'s hand to remain in contact with the sphere to sustain it, unless a water clone is used to maintain it instead.'},
   {name:'Water Release: Amoeba Drop Technique', skillType:'Fūinjutsu', element:'Water', category:'Water Release', cost:10, desc:'[Homebrew] After capturing specimens of the brain-eating amoeba Naegleria fowleri in a dropper, the user seals the dropper into a scroll via Fūinjutsu, each amoeba held inside a single drop of water. On release, the user summons the dropper, then uses Water Release to wrap a chakra envelope directly around each amoeba (not the drop itself), freezing it inside in a harmless, dormant state kept in check by the user\'s own water-natured chakra. In this sealed form the drop is safe to touch, drink, or inhale. With a Kai, the user can release the chakra envelope around a chosen amoeba, unfreezing it; if the drop containing it was already ingested or inhaled by a target, the amoeba becomes active and lethal inside them. Best used for blackmail or coercion: an opponent forced to swallow or breathe in a sealed drop can be threatened into submission, since the user alone controls whether the seal is ever released.'},
 
   // Wind Release
@@ -1275,6 +1416,8 @@ const jutsuPresets = [
   {name:'Shadow Stabbing Technique', clan:'Nara', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:16, desc:'The user forces their shadow to rise up off the ground and split into many needle-like points, then launches them at a target, stabbing into them and knocking them down.'},
   {name:'Shadow Barrage Technique', clan:'Nara', skillType:'Ninjutsu', element:'Yin', category:'Yin Release', cost:20, desc:'[Homebrew] The user first immobilizes the target with a standard shadow technique, then shapes the restraining shadow into a barrage of fist-like projections that rise up and pummel the trapped target with a flurry of shadow punches.'},
   {name:'Multi-Size Technique', clan:'Akimichi', skillType:'Ninjutsu', element:'Yang', category:'Yang Release', cost:12, desc:'Uses Yang Release to increase the body’s size dramatically, turning the user into a much larger and stronger combatant.'},
+  {name:'Partial Expansion Technique (Baika no Jutsu)', clan:'Akimichi', skillType:'Ninjutsu', element:'Yang', category:'Yang Release', cost:8, desc:'A more precise version of the clan\'s size-changing techniques: rather than enlarging the whole body, the user swells a single limb, most often an arm or leg, to deliver an outsized, crushing blow.'},
+  {name:'Human Bullet Tank (Nikudan Sensha)', clan:'Akimichi', skillType:'Ninjutsu', element:'Yang', category:'Yang Release', cost:16, desc:'The user curls into a ball and expands dramatically, then spins rapidly like a tank shell, barreling through anything in their path with tremendous crushing force.'},
 
   // Non-elemental
   {name:'Transformation Jutsu (Henge no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:3, desc:'Transforms the user’s appearance into another person, creature, or object of similar size. The disguise changes form rather than creating a true duplicate.'},
@@ -1286,14 +1429,18 @@ const jutsuPresets = [
   {name:'Hawk Eye Technique', skillType:'Perception', element:'Non-Elemental', category:'Non-Elemental', cost:2, desc:'[Homebrew] The user focuses chakra into their pupils, sharply extending their visual range. While active, the eyes function like a pair of binoculars, letting the user pick out distant details, read movement far across a battlefield, or spot a target well beyond normal eyesight. A purely utility technique with no offensive application.'},
   {name:'Sexy Technique', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:3, desc:'A variant of the Transformation Technique, the Sexy Technique transforms the user into a very sexy woman, usually nude or in a bikini. Naruto uses this technique to distract or win over men, with all successful attempts causing an exaggerated nosebleed by the victim. It is a joke jutsu but could be used as a distraction.'},
   {name:'Rope Escape Technique', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:0, desc:'This is the first jutsu taught in Konohagakure\'s Ninja Academy. When the user is bound, they do what they can to escape, such as by finding a way to untie the knot or dislocating their joints in order to get free of the bindings.'},
-  {name:'Hidden Shadow Snake Hands (Sen\'ei Jashu)', clan:'Hebi', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:10, desc:'The user calls forth several live snakes from their sleeve, usually after a punching motion, sending them to bite or constrict a target from a short distance. A variant of the Summoning Technique, it can also be used to latch onto surroundings and pull the user toward a destination.'},
+  {name:'Hidden Shadow Snake Hands (Sen\'ei Jashu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:10, desc:'The user calls forth several live snakes from their sleeve, usually after a punching motion, sending them to bite or constrict a target from a short distance. A variant of the Summoning Technique, it can also be used to latch onto surroundings and pull the user toward a destination. Not exclusive to any clan, Sasuke Uchiha and Anko Mitarashi both use it freely. Only performing it without hand seals, straight from the mouth, is a Hebi-exclusive method (see the Hebi clan\'s Serpent\'s Tongue feature).'},
 
   // Fūinjutsu
-  {name:'Summoning Technique (Kuchiyose no Jutsu)', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:12, desc:'After forming a contract, the user can summon a bonded creature by using chakra and a blood-marked summoning seal.'},
+  {name:'Summoning Technique (Kuchiyose no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:12, desc:'After forming a contract, the user can summon a bonded creature by using chakra and a blood-marked summoning seal.'},
   {name:'Dead Demon Consuming Seal (Shiki Fūjin)', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:100, desc:'A forbidden sealing technique that calls upon the Shinigami to rip out and seal away a target’s soul. Its use always costs the caster their own life as payment.'},
   {name:'Rasengan', skillType:'Chakra Control', element:'Non-Elemental', category:'Non-Elemental', cost:20, desc:'A dense sphere of rotating chakra formed in the palm. It requires no nature transformation and inflicts powerful concentrated impact on contact.'},
   {name:'Mystical Palm Technique', skillType:'Chakra Control', element:'Non-Elemental', category:'Non-Elemental', cost:8, desc:'A medical-nin technique that gathers healing chakra into the hands, allowing the user to mend wounds and repair damaged tissue directly through touch.'},
   {name:'Summoning: Impure World Reincarnation (Edo Tensei)', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:150, desc:'The Summoning: Impure World Reincarnation binds the soul of a deceased person to a living vessel, restoring them as they were when they were alive in order to do their summoner\'s bidding. It was originally created by Tobirama Senju, after which he declared it a kinjutsu. Requires DNA of the target and a living sacrifice.'},
+  {name:'Flying Thunder God Technique (Hiraishin)', skillType:'Ninjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:50, desc:'An S-rank space-time technique that instantly teleports the user to a location already marked with a Flying Thunder God Formula seal, bringing along anyone or anything in contact with their chakra. Requires a mark to already be in place, this jutsu performs the teleport itself, not the marking. Invented by Tobirama Senju, the Second Hokage. Not locked to any bloodline, but historically only a handful of shinobi have ever mastered it. Roll Ninjutsu to perform the teleport. See Rules → Fūinjutsu for the full breakdown.'},
+  {name:'Flying Thunder God Formula', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:5, desc:'The marking half of the Flying Thunder God Technique. Roll Fūinjutsu to apply this seal formula onto a person, object, or surface, creating a permanent teleport marker at that point. A user can maintain many marks at once, not just one. If the formula is inscribed onto a kunai meant to be thrown (a Flying Thunder God Kunai), roll Shurikenjutsu afterward to see if the throw successfully plants the mark where intended. This jutsu only creates and places the mark, actually warping to it requires the separate Flying Thunder God Technique (Ninjutsu). See Rules → Fūinjutsu for the full breakdown.'},
+  {name:'Living Corpse Reincarnation (Fushi Tensei)', clan:'Hebi', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:120, desc:'A forbidden S-rank kinjutsu that transfers the user\'s soul into a prepared host body, or "vessel," abandoning a monstrous true form made of countless smaller snakes in the process. Devastating and campaign-altering by design: this is not a jutsu to hand out lightly, and should only ever be added with heavy DM oversight and a story reason to match its weight.'},
+  {name:'Hebi-Style Body Replacement Technique', clan:'Hebi', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:50, desc:'A unique form of substitution: rather than swapping places with an object, the user regurgitates an entirely new body from their own mouth, shedding the old one the way a snake sheds its skin. Emerging from it fully restores clothing and injuries, even severed limbs, no matter how grievous the wound was a moment ago. Extremely chakra-costly and hard to detect, usually reserved for escaping otherwise-fatal situations.'},
 
   // Genjutsu
   {name:'Demonic Illusion: False Surroundings Technique', skillType:'Genjutsu', element:'Non-Elemental', category:'Genjutsu', cost:10, desc:'This technique layers an illusion over a location, causing it to look like a different location. Because of how wide an area the illusion can be placed over, that in turn makes it easy to trick others: any who enter the area will be affected by the illusion and see the false location.'},
@@ -1301,17 +1448,17 @@ const jutsuPresets = [
   {name:'Demonic Illusion: Tree Binding Death', skillType:'Genjutsu', element:'Non-Elemental', category:'Genjutsu', cost:20, desc:'The target experiences the illusion of a tree coiling around them, preventing them from moving. Because targets are immobile yet still conscious, this technique is a useful way to perform interrogations. Alternatively, users can simply kill the immobilised targets. This technique has been passed down through the generations among Konohagakure\'s villagers. It was originally created during the time of Hashirama Senju, intended to make victims believe they were fighting Hashirama himself and his Wood Release. A technique used by Kurenai Yuhi.'},
 
   // Wood Release
-  {name:'Wood Release: Binding Jutsu', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:15, desc:'Wooden growths erupt and coil around a target, restraining movement through the combination of Earth and Water nature transformations.'},
-  {name:'Wood Release: Wood Clone Technique', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:14, desc:'Creates a physical clone from living wood. Unlike a shadow clone, it is a durable, independent body that can take real damage and act on its own.'},
-  {name:'Wood Release: Four-Pillar Prison Technique', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:25, desc:'Raises four great wooden pillars around a target area that grow inward into a dense, enclosing dome, sealing whatever is trapped inside.'},
-  {name:'Wood Release: Deep Forest Emergence', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:35, desc:'Summons a dense forest of massive trees to erupt from the ground across a wide area, overwhelming the battlefield and any enemies caught within it.'},
-  {name:'Wood Release: Nativity of a World of Trees', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:90, desc:'An immense technique that generates a colossal world tree and countless offshoots, capable of blanketing an entire landscape and draining chakra from anyone it touches.'},
-  {name:'Wood Release: Four Pillars House Technique', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:10, desc:'By sending chakra into the ground, the roots of plants are converted into raw materials and forced into accelerated growth to construct a building. The size and shape come from the user\'s imagination or memories. By placing fuda tags around the house, the user creates a barrier that makes it impossible for enemies to detect, allowing the user to camp in peace.'},
-  {name:'Wood Release: Transformation', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:8, desc:'A Transformation Technique that uses Wood Release: wood emerges and covers the user\'s entire body with a puff of smoke or chakra, acting more like a costume than an illusion. The user can leave the wooden shell behind if necessary and can adjust their voice while transformed.'},
-  {name:'Wood Release: Wood Dragon Technique', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:40, desc:'After performing the required hand seals, the user creates a gigantic wooden dragon from any surface, which is then directed to attack an intended target. Its serpentine body can constrict larger opponents and it has the ability to absorb a tailed beast\'s chakra once it is bound.'},
-  {name:'Wood Release: Hand Tool Manipulation', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:5, desc:'The user transforms their hand into a wooden tool. This has been used to create keys, shields, and openings in structures.'},
-  {name:'Transmission Wood', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:6, desc:'A wood clone is transformed into a seed and planted on a target. Only the caster can sense the seed\'s transmissions, allowing them to track the target\'s location.'},
-  {name:'Top Transformed Buddha (Chōjō Kebutsu)', skillType:'Ninjutsu', element:'Wood', category:'Wood Release', cost:100, desc:'A colossal wooden statue with hundreds of thousands of arms delivers an overwhelming barrage of punches. The sheer volume of attacks makes it nearly impossible to defend against.'},
+  {name:'Wood Release: Binding Jutsu', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:15, desc:'Wooden growths erupt and coil around a target, restraining movement through the combination of Earth and Water nature transformations.'},
+  {name:'Wood Release: Wood Clone Technique', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:14, desc:'Creates a physical clone from living wood. Unlike a shadow clone, it is a durable, independent body that can take real damage and act on its own.'},
+  {name:'Wood Release: Four-Pillar Prison Technique', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:25, desc:'Raises four great wooden pillars around a target area that grow inward into a dense, enclosing dome, sealing whatever is trapped inside.'},
+  {name:'Wood Release: Deep Forest Emergence', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:35, desc:'Summons a dense forest of massive trees to erupt from the ground across a wide area, overwhelming the battlefield and any enemies caught within it.'},
+  {name:'Wood Release: Nativity of a World of Trees', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:90, desc:'An immense technique that generates a colossal world tree and countless offshoots, capable of blanketing an entire landscape and draining chakra from anyone it touches.'},
+  {name:'Wood Release: Four Pillars House Technique', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:10, desc:'By sending chakra into the ground, the roots of plants are converted into raw materials and forced into accelerated growth to construct a building. The size and shape come from the user\'s imagination or memories. By placing fuda tags around the house, the user creates a barrier that makes it impossible for enemies to detect, allowing the user to camp in peace.'},
+  {name:'Wood Release: Transformation', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:8, desc:'A Transformation Technique that uses Wood Release: wood emerges and covers the user\'s entire body with a puff of smoke or chakra, acting more like a costume than an illusion. The user can leave the wooden shell behind if necessary and can adjust their voice while transformed.'},
+  {name:'Wood Release: Wood Dragon Technique', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:40, desc:'After performing the required hand seals, the user creates a gigantic wooden dragon from any surface, which is then directed to attack an intended target. Its serpentine body can constrict larger opponents and it has the ability to absorb a tailed beast\'s chakra once it is bound.'},
+  {name:'Wood Release: Hand Tool Manipulation', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:5, desc:'The user transforms their hand into a wooden tool. This has been used to create keys, shields, and openings in structures.'},
+  {name:'Transmission Wood', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:6, desc:'A wood clone is transformed into a seed and planted on a target. Only the caster can sense the seed\'s transmissions, allowing them to track the target\'s location.'},
+  {name:'Top Transformed Buddha (Chōjō Kebutsu)', skillType:'Ninjutsu', clan:'Senju', element:'Wood', category:'Wood Release', cost:100, desc:'A colossal wooden statue with hundreds of thousands of arms delivers an overwhelming barrage of punches. The sheer volume of attacks makes it nearly impossible to defend against.'},
 
   // Ice, Lava, Storm, Magnet, Boil
   {name:'Ice Release: Ice Mirrors', skillType:'Ninjutsu', element:'Ice', category:'Ice Release', cost:22, desc:'Creates reflective ice mirrors around the battlefield, allowing the user to move between them at blinding speed while attacking from multiple angles.'},
@@ -1322,12 +1469,36 @@ const jutsuPresets = [
   {name:'Boil Release: Unrivalled Strength', skillType:'Ninjutsu', element:'Boil', category:'Boil Release', cost:20, desc:'Chakra is heated to the boiling point, generating powerful steam that evaporates water and ice on contact. The steam pressure enhances physical attacks, granting immense strength and speed.'},
 
   // Explosion Release
-  {name:'C1', skillType:'Ninjutsu', element:'Explosion', category:'Explosion Release', cost:10, desc:'A basic and versatile form of explosive clay, molded from a single palm mouth into small animated figures that often resemble birds or insects. Their explosive yield is low, but their small size and mobility make them ideal for scouting, sabotage, and other covert operations. This technique is famously used by Deidara.'},
-  {name:'C2', skillType:'Ninjutsu', element:'Explosion', category:'Explosion Release', cost:30, desc:'An advanced explosive clay technique that requires shaping material from both palm mouths at once, forming a large, flight-capable creature such as a dragon. The construct can carry its user safely through the air while releasing smaller clay figures that home in on targets like guided missiles, as well as scattering clay mines across the battlefield. This technique is famously used by Deidara.'},
-  {name:'C3', skillType:'Ninjutsu', element:'Explosion', category:'Explosion Release', cost:60, desc:'The most powerful and destructive form of explosive clay, molded into an enormous, roughly human-shaped statue and dropped onto a target area from above. Its detonation releases devastating explosive force capable of leveling large sections of a village or fortification. This technique is famously used by Deidara.'},
+  {name:'C1', skillType:'Ninjutsu', clan:'Bakuton', element:'Explosion', category:'Explosion Release', cost:10, desc:'A basic and versatile form of explosive clay, molded from a single palm mouth into small animated figures that often resemble birds or insects. Their explosive yield is low, but their small size and mobility make them ideal for scouting, sabotage, and other covert operations. This technique is famously used by Deidara.'},
+  {name:'C2', skillType:'Ninjutsu', clan:'Bakuton', element:'Explosion', category:'Explosion Release', cost:30, desc:'An advanced explosive clay technique that requires shaping material from both palm mouths at once, forming a large, flight-capable creature such as a dragon. The construct can carry its user safely through the air while releasing smaller clay figures that home in on targets like guided missiles, as well as scattering clay mines across the battlefield. This technique is famously used by Deidara.'},
+  {name:'C3', skillType:'Ninjutsu', clan:'Bakuton', element:'Explosion', category:'Explosion Release', cost:60, desc:'The most powerful and destructive form of explosive clay, molded into an enormous, roughly human-shaped statue and dropped onto a target area from above. Its detonation releases devastating explosive force capable of leveling large sections of a village or fortification. This technique is famously used by Deidara.'},
+  {name:'Explosion Release: Landmine Fist', skillType:'Taijutsu', element:'Explosion', category:'Explosion Release', cost:15, desc:'The user channels Explosion Release directly into their fists, so that whatever they land a solid punch on detonates from the inside a moment later, turning ordinary taijutsu into a devastating close-range weapon. Unlike the clay-based C1-C3 techniques, this doesn\'t require the Bakuton clan\'s extra mouths to knead and shape material, just Explosion Release chakra and a good punch, so it\'s available to any character with Explosion Release known, Bakuton or otherwise.'},
+
+  // Uzumaki
+  {name:'Adamantine Sealing Chains (Kongō Fūsa)', clan:'Uzumaki', skillType:'Fūinjutsu', element:'Non-Elemental', category:'Fūinjutsu', cost:30, desc:'A Hiden technique characteristic of the Uzumaki clan, kept secret and passed down only within the family. The user manifests durable chains made of their own chakra, usually from their torso, to bind, restrain, or batter a target, chains strong enough to hold down even a tailed beast. Multiple chains can also be anchored together to form a nearly impenetrable barrier.'},
+
+  // Aburame
+  {name:'Insect Clone Technique (Mushi Bunshin no Jutsu)', clan:'Aburame', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:8, desc:'The user\'s kikaichū swarm together into the shape of a convincing decoy of the caster, fooling an opponent into attacking it. The moment it takes real damage, the clone breaks apart and scatters back into loose insects.'},
+  {name:'Secret Technique: Insect Sphere (Mushi Dama)', clan:'Aburame', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:22, desc:'The user\'s kikaichū spread out over a wide area, then converge all at once around a target, coalescing into a dense sphere that traps them inside and begins devouring their chakra.'},
+
+  // Inuzuka
+  {name:'Four Legs Technique (Shikyaku no Jutsu)', clan:'Inuzuka', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:6, desc:'The user coats their body in chakra and drops onto all fours, gaining animal-like reflexes, speed, and ferocity, along with sharper teeth and claws. Often used to set up other Inuzuka techniques.'},
+  {name:'Beast Human Clone (Jūjin Bunshin)', clan:'Inuzuka', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:10, desc:'After the user\'s ninken partner ingests a soldier pill, this technique transforms them into a near-perfect copy of the user, letting the two fight as identical partners and pull off techniques that need two attackers at once.'},
+  {name:'Fang Passing Fang (Gatsūga)', clan:'Inuzuka', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:18, desc:'The user and their ninken partner, using the Four Legs Technique and often a Beast Human Clone to fight in sync, spin their bodies at ferocious speed and slam into a target with a barrage of rapid, claw-and-fang body blows from multiple angles at once.'},
+
+  // Hebi
+  {name:'Snake Swallowing Technique (Orochi Nomi no Jutsu)', clan:'Hebi', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:28, desc:'The user summons a massive snake from their mouth that lunges forward and swallows a target whole, trapping them alive inside its body. A favorite technique for taking a target out of a fight without killing them outright.'},
 ];
 
 const kekkeiGenkaiElements = ['Wood','Ice','Lava','Storm','Magnet','Boil','Explosion'];
+
+// Techniques that involve summoned/produced snakes, kept in the Non-Elemental category
+// but grouped together at the bottom of that section in the Jutsu Library for clarity.
+const serpentineJutsuNames = [
+  'Hebi-Style Body Replacement Technique',
+  'Snake Swallowing Technique (Orochi Nomi no Jutsu)',
+  'Hidden Shadow Snake Hands (Sen\'ei Jashu)'
+];
 
 function elementLockNote(elementName){
   if(!elementName || elementName === 'Non-Elemental') return '';
@@ -1363,7 +1534,14 @@ function renderJutsuLibrary(){
     ['Explosion Release','Explosion Release','Kekkei genkai techniques using the Explosion Release, most notably to animate and detonate explosive clay.']
   ];
   el.innerHTML = groups.map(([title,cat,note]) => {
-    const items = jutsuPresets.filter(p => p.category === cat);
+    const items = jutsuPresets.filter(p => p.category === cat).sort((a,b) => {
+      if(cat === 'Non-Elemental'){
+        const aS = serpentineJutsuNames.includes(a.name), bS = serpentineJutsuNames.includes(b.name);
+        if(aS && !bS) return 1;
+        if(!aS && bS) return -1;
+      }
+      return jutsuPresets.indexOf(a) - jutsuPresets.indexOf(b);
+    });
     if(!items.length) return '';
     const colorClass = ({'Fire Release':'category-fire','Water Release':'category-water','Wind Release':'category-wind','Lightning Release':'category-lightning','Earth Release':'category-earth','Dōjutsu':'category-doujutsu','Taijutsu':'category-taijutsu','Fūinjutsu':'category-fuin','Yin Release':'category-yin','Yang Release':'category-yang','Wood Release':'category-wood','Ice Release':'category-ice','Lava Release':'category-lava','Storm Release':'category-storm','Magnet Release':'category-magnet','Boil Release':'category-boil','Explosion Release':'category-none','Non-Elemental':'category-none'}[cat] || 'category-none');
     return `<details class="jutsu-library-group"><summary><span class="cat-title ${colorClass}">${title}</span></summary><div class="group-body">${note?`<div class="group-note">${note}</div>`:''}${items.map(p => {
@@ -1384,6 +1562,7 @@ function addPresetJutsu(i){
   const p = jutsuPresets[i];
   state.jutsu.push({id:nextJutsuId++, name:p.name, skillType:p.skillType, element:p.element||'Non-Elemental', cost:p.cost, desc:p.desc});
   renderJutsu();
+  renderCompanions();
   logEntry(`<b>${p.name}</b> added to your Jutsu list.`);
 }
 
@@ -1398,7 +1577,7 @@ const weaponPresets = [
   {name:'Kusanagi Sword', desc:'A legendary blade associated with Orochimaru and Sasuke. Its extraordinary sharpness and chakra manipulation make it especially dangerous in the hands of a skilled shinobi.', type:'weapon'},
   {name:'Hiramekarei', desc:'A massive twin-handled sword of the Seven Ninja Swordsmen of the Mist that stores chakra and releases it into powerful hammer- or blade-like forms.', type:'weapon'},
   {name:'Shibuki (Explosive Sword)', desc:'A sword of the Seven Ninja Swordsmen of the Mist lined with explosive tags, allowing its wielder to combine kenjutsu with chained explosions.', type:'weapon'},
-  {name:'Chakra Blade', desc:'A weapon into which the wielder can flow chakra to grant it additional properties, most commonly used to imbue it with a chakra nature and augment taijutsu. Designs vary by user, from trench-knife knuckle blades to standard sword or claw forms.', type:'weapon'},
+  {name:'Chakra Blades', desc:'A pair of trench knives worn like brass knuckles, each fitted with a zigzag-edged blade for extra "teeth." Made of a special metal that accepts chakra directly, letting the wielder imbue them with a chakra nature to augment their taijutsu, turning ordinary strikes into something sharper, longer-reaching, or outright elemental depending on what\'s channeled through them. These are the same blades famously used by Asuma Sarutobi.', type:'weapon'},
 ];
 
 function renderWeaponLibrary(){
@@ -1431,6 +1610,7 @@ const itemPresets = [
   {name:'Smoke Bomb', category:'tools', desc:'A small pellet that bursts into a thick cloud of smoke on impact, used to cover a retreat, break line of sight, or set up a surprise attack.'},
   {name:'Explosive Tag', category:'tools', desc:'A paper tag inscribed with an explosive seal, triggered by chakra or a lit fuse, capable of leveling structures or arming traps when attached to objects.'},
   {name:'Kunai with Explosive Tag', category:'tools', desc:'A kunai with an explosive tag attached to the ring, meant to be thrown so the tag detonates on impact or after a short fuse, combining a thrown weapon with an explosive.'},
+  {name:'Flying Thunder God Kunai', category:'tools', desc:'A three-pronged kunai with a Flying Thunder God Formula already imprinted on the blade. Throwing it (roll Shurikenjutsu) plants a Flying Thunder God mark wherever it lands, and the wielder can then warp straight to it with the Flying Thunder God Technique (Ninjutsu). See Rules → Fūinjutsu for the full step-by-step.'},
   {name:'Wire Strings', category:'tools', desc:'A thin, nearly invisible ninja wire used to set traps, bind or trip opponents, guide thrown weapons with precision, or manipulate objects from a distance.'},
   {name:'Summoning Scroll', category:'scrolls', desc:'A scroll inscribed with a summoning contract, allowing whoever has signed it in blood to call forth the animal or creature bound to that pact.'},
   {name:'Empty Scroll', category:'scrolls', desc:'A blank scroll ready to be filled with sealing formulas, storage jutsu, coded messages, or notes meant to be deciphered by allies.'},
@@ -1485,7 +1665,7 @@ function addPresetItem(i){
 function createDefaultState(){ return {
   name:'', village:'', title:'', className:'', level:1, clan:'Non-Clan', clanCustomName:'',
   clanBonus:{str:0,dex:0,con:0,int:0,wis:0,cha:0}, clanChoices:{}, clanFilter:'all',
-  clanAccess:{Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Bakuton:false,Hebi:false}, element:'',
+  clanAccess:{Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Bakuton:false,Hebi:false,Senju:false}, element:'',
   customClanText:{},
   profBonus:2,
   cp:0, cpMax:0, chakraPerLevel:5,
@@ -1528,7 +1708,6 @@ function createDefaultState(){ return {
     {name:'Weapons', desc:'Kenjutsu, bow, and other weapon styles such as Puppets, for attacks, contests, or checks', ability:'dex', prof:false},
   ],
   weapons: [
-    {id:1, name:'', desc:'', type:'weapon'},
   ],
   elements: [
     {name:'Fire', color:'#b3383f', active:false, custom:false},
@@ -1552,11 +1731,12 @@ function createDefaultState(){ return {
     {id:3, name:'Substitution Jutsu (Kawarimi no Jutsu)', skillType:'Ninjutsu', element:'Non-Elemental', cost:5, desc:'Reaction: swaps the user with a nearby object an instant before taking a hit.'},
   ],
   inventory: [],
+  companions: [],
   details: {age:'', role:'', description:'', backstory:'', nindo:''},
 }; }
 
 let state = createDefaultState();
-let nextJutsuId = 4, nextItemId = 1, nextWeaponId = 2;
+let nextJutsuId = 4, nextItemId = 1, nextWeaponId = 2, nextCompanionId = 1;
 
 function d(sides){ return Math.floor(Math.random()*sides)+1; }
 function logEntry(html){
@@ -1716,7 +1896,7 @@ function renderJutsu(){
       <div class="jutsu-actions">
         <button class="cast-btn" onclick="rollJutsu(${i})">Roll ${j.skillType || 'Ninjutsu'}</button>
         <button class="cast-btn" ${state.cp < (j.cost||0) ? 'disabled' : ''} onclick="castJutsu(${i})">Cast Jutsu (${j.cost||0} chakra)</button>
-        <button class="del-btn" onclick="state.jutsu.splice(${i},1); renderJutsu()">Delete</button>
+        <button class="del-btn" onclick="state.jutsu.splice(${i},1); renderJutsu(); renderCompanions()">Delete</button>
       </div>
     </div>
   `;
@@ -1726,6 +1906,7 @@ function renderJutsu(){
 function addJutsu(){
   state.jutsu.push({id:nextJutsuId++, name:'New Jutsu', skillType:'Ninjutsu', element:'Non-Elemental', cost:0, desc:''});
   renderJutsu();
+  renderCompanions();
 }
 
 function tomoeBonus(){
@@ -1783,12 +1964,13 @@ function renderInventory(){
           <option value="scrolls" ${item.type==='scrolls'?'selected':''}>Scroll</option>
         </select>
       </div>
-      <div style="display:flex; align-items:center; gap:2px">
-        <input class="small" type="number" value="${item.qty}" placeholder="Qty" style="max-width:60px" onchange="state.inventory[${i}].qty=parseInt(this.value)||0">
+      <div style="display:flex; align-items:center; gap:6px">
+        <input class="small" type="number" value="${item.qty}" placeholder="Qty" style="max-width:60px" onchange="state.inventory[${i}].qty=Math.max(0,parseInt(this.value)||0); renderInventory()">
         <div style="display:flex; flex-direction:column; gap:1px">
           <button onclick="adjustItemQty(${i},1)" style="width:20px; height:15px; padding:0; font-size:0.6rem; line-height:1; background:transparent; border:1px solid var(--mist-light); color:var(--foam); cursor:pointer">▲</button>
           <button onclick="adjustItemQty(${i},-1)" style="width:20px; height:15px; padding:0; font-size:0.6rem; line-height:1; background:transparent; border:1px solid var(--mist-light); color:var(--foam); cursor:pointer">▼</button>
         </div>
+        ${(item.type==='tools' || item.type==='consumables') ? `<button class="item-use-btn" onclick="useItem(${i})" ${((item.qty||0)<=0)?'disabled':''}>Use</button>` : ''}
       </div>
       <textarea class="idesc" placeholder="Description" onchange="state.inventory[${i}].desc=this.value">${item.desc}</textarea>
       ${item.type==='scrolls' ? `<div class="jutsu-actions" style="margin-top:6px">
@@ -1806,6 +1988,13 @@ function addItem(){
 function adjustItemQty(i, delta){
   state.inventory[i].qty = Math.max(0, (state.inventory[i].qty||0) + delta);
   renderInventory();
+}
+function useItem(i){
+  const item = state.inventory[i];
+  if(!item || (item.type!=='tools' && item.type!=='consumables') || (item.qty||0) <= 0) return;
+  item.qty = Math.max(0, (item.qty||0) - 1);
+  renderInventory();
+  logEntry(`<b>${item.name||'Item'}</b> used — ${item.qty} remaining.`);
 }
 function adjustRyo(delta){
   state.ryo = Math.max(0, (parseInt(state.ryo)||0) + delta);
@@ -1879,7 +2068,60 @@ function rollWeaponChakraControl(i){
   logEntry(`<b>${w.name||'Puppet'}</b> (Chakra Control) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
 }
 
-function renderAll(){ renderHeader(); renderAbilities(); renderSkills(); renderJutsu(); renderInventory(); renderWeapons(); renderChakraPoints(); renderJutsuLibrary(); renderWeaponLibrary(); renderItemLibrary(); renderElements(); renderClanPanel(); }
+function renderCompanions(){
+  const el = document.getElementById('companions');
+  if(!el) return;
+  if(!state.companions.length){
+    el.innerHTML = `<p style="font-size:0.85rem; color:var(--mist-light); font-style:italic; margin:0 0 8px;">No bonded animals yet. Add a Summoning Jutsu bond (a giant summon, an ordinary animal, or a group of them) or, if you're an Inuzuka, your ninken partner.</p>`;
+    return;
+  }
+  const hasSummoningJutsu = state.jutsu.some(j => j.name === 'Summoning Technique (Kuchiyose no Jutsu)');
+  el.innerHTML = state.companions.map((c,i) => `
+    <div class="weapon-card" style="margin-bottom:8px">
+      <div class="weapon-row">
+        <input placeholder="Companion name" style="flex:2; min-width:160px" value="${c.name}" onchange="state.companions[${i}].name=this.value">
+        <select style="flex:1; min-width:170px" onchange="state.companions[${i}].type=this.value; renderCompanions()">
+          <option value="ninken" ${c.type!=='summon'&&c.type!=='other'?'selected':''}>Ninken</option>
+          <option value="summon" ${c.type==='summon'?'selected':''}>Summoning Animal / Group</option>
+          <option value="other" ${c.type==='other'?'selected':''}>Other Bonded Animal</option>
+        </select>
+      </div>
+      <textarea placeholder="Description, role, or group size" rows="2" style="width:100%" onchange="state.companions[${i}].desc=this.value">${c.desc}</textarea>
+      <div class="jutsu-actions" style="margin-top:10px">
+        ${(c.type!=='ninken' && hasSummoningJutsu) ? `<button class="cast-btn" onclick="rollCompanionSummoning(${i})">Roll Summoning Technique</button>` : ''}
+        <button class="cast-btn" onclick="rollCompanionAnimalHandling(${i})">Roll Animal Handling</button>
+        <button class="del-btn" onclick="state.companions.splice(${i},1); renderCompanions()">Delete</button>
+      </div>
+      ${(c.type!=='ninken' && !hasSummoningJutsu) ? `<div class="lib-lock" style="margin-top:8px">🔒 Add <b>Summoning Technique (Kuchiyose no Jutsu)</b> to your Jutsu list to unlock a quick Summoning Technique roll for this companion, right from here.</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function addCompanion(){
+  state.companions.push({id:nextCompanionId++, name:'', desc:'', type:'ninken'});
+  renderCompanions();
+}
+
+function rollCompanionAnimalHandling(i){
+  const c = state.companions[i];
+  const mod = skillMod('Animal Handling');
+  const raw = d(20); const total = raw + mod;
+  flash(total);
+  const crit = raw===20?' — CRITICAL!':(raw===1?' — critical failure':'');
+  logEntry(`<b>${c.name||'Companion'}</b> (Animal Handling) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
+}
+
+function rollCompanionSummoning(i){
+  const c = state.companions[i];
+  const mod = skillMod('Ninjutsu');
+  const raw = d(20); const total = raw + mod;
+  flash(total);
+  const crit = raw===20?' — CRITICAL!':(raw===1?' — critical failure':'');
+  logEntry(`<b>${c.name||'Companion'}</b> — Summoning Technique (Kuchiyose no Jutsu) (Ninjutsu) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
+}
+
+
+function renderAll(){ renderHeader(); renderAbilities(); renderSkills(); renderJutsu(); renderInventory(); renderWeapons(); renderCompanions(); renderChakraPoints(); renderJutsuLibrary(); renderWeaponLibrary(); renderItemLibrary(); renderElements(); renderClanPanel(); }
 
 function exportChar(){
   const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
@@ -1909,7 +2151,7 @@ function importChar(event){
       state.clanCustomName = data.clanCustomName || '';
       state.clanBonus = Object.assign({str:0,dex:0,con:0,int:0,wis:0,cha:0}, data.clanBonus || {});
       state.clanChoices = data.clanChoices || {};
-      state.clanAccess = Object.assign({Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Bakuton:false,Hebi:false}, data.clanAccess || {});
+      state.clanAccess = Object.assign({Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Bakuton:false,Hebi:false,Senju:false}, data.clanAccess || {});
       state.customClanText = data.customClanText || {};
       state.clanFilter = 'all';
       if(!data.elements){ state.elements = createDefaultState().elements; }
@@ -1918,6 +2160,8 @@ function importChar(event){
       if(!state.elements.some(e=>e.name==='Yin')) state.elements.push({name:'Yin',color:'#555860',active:false,custom:false});
       if(!state.elements.some(e=>e.name==='Yang')) state.elements.push({name:'Yang',color:'#f4d35e',active:false,custom:false});
       state.weapons = (state.weapons||[]).map(w => ({id:w.id, name:w.name||'', desc:w.desc||'', type:w.type==='puppet'?'puppet':'weapon'}));
+      state.companions = (data.companions||[]).map(c => ({id:c.id, name:c.name||'', desc:c.desc||'', type:(c.type==='summon'||c.type==='other')?c.type:'ninken'}));
+      nextCompanionId = Math.max(1, ...(state.companions||[]).map(c=>c.id||0)) + 1;
       nextJutsuId = Math.max(1, ...(state.jutsu||[]).map(j=>j.id||0)) + 1;
       state.inventory = (state.inventory||[]).map(it => ({id:it.id, name:it.name==='Clay'?'Exploding Clay':(it.name||''), qty:it.qty||0, desc:it.name==='Clay'?'A special type of clay that is able to conduct chakra, making it perfect for being infused with Explosion Release chakra and shaped into explosive creations.':(it.desc||''), type:(it.type==='misc'||it.type==='scrolls'||it.type==='consumables')?it.type:'tools'}));
       nextItemId = Math.max(1, ...(state.inventory||[]).map(it=>it.id||0)) + 1;
@@ -1948,7 +2192,7 @@ function handleResetClick(){
 
 function resetChar(){
   state = createDefaultState();
-  nextJutsuId = 4; nextItemId = 1; nextWeaponId = 2;
+  nextJutsuId = 4; nextItemId = 1; nextWeaponId = 2; nextCompanionId = 1;
   renderAll();
   populateNindoSelect();
   logEntry('<b>Character reset to blank.</b>');
