@@ -325,6 +325,15 @@
     color: var(--mist-light);
     letter-spacing: 0.06em;
   }
+  .footer .gh-link { display:inline-flex; margin-top:12px; color:var(--mist-light); transition:color .15s, transform .15s; }
+  .footer .gh-link:hover { color:var(--blood-bright); transform:translateY(-2px); }
+  .footer .gh-link svg { width:26px; height:26px; fill:currentColor; }
+
+  /* Top credit */
+  .top-credit { text-align:center; margin:8px 0 22px; }
+  .top-credit .tc-title { font-family:'Shippori Mincho', serif; font-size:1.05rem; letter-spacing:0.08em; color:var(--gold); }
+  .top-credit .tc-rules { margin-top:8px; display:inline-block; font-family:'Shippori Mincho', serif; font-weight:700; font-size:0.95rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--blood-bright); background:none; border:1px solid var(--blood-bright); border-radius:6px; padding:6px 16px; cursor:pointer; }
+  .top-credit .tc-rules:hover { background:var(--blood-bright); color:#fff; }
 </style>
 </head>
 <body data-theme="yin">
@@ -339,6 +348,11 @@
     <button onclick="document.getElementById('importFile').click()">⬆ Import Character</button>
     <input type="file" id="importFile" accept="application/json" onchange="importChar(event)">
     <button id="resetBtn" onclick="handleResetClick()">✕ Reset to Blank</button>
+  </div>
+
+  <div class="top-credit">
+    <div class="tc-title">Naruto D&amp;D-style RPG by RED7734</div>
+    <button class="tc-rules" onclick="openOverlay('rules')">Important: read the rules</button>
   </div>
 
   <section>
@@ -525,7 +539,11 @@
   <div id="log"><div class="empty">Roll results will appear here.</div></div>
 
   <!-- Footer -->
-  <div class="footer">Naruto D&D-style RPG by RED7734</div>
+  <div class="footer">Naruto D&D-style RPG by RED7734<br>
+    <a class="gh-link" href="https://github.com/RED7734/Naruto-DnD" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository" title="GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
 </div>
 
 <div class="overlay-backdrop" id="rulesOverlay" onclick="if(event.target===this) closeOverlay('rules')">
@@ -535,6 +553,9 @@
     <div class="overlay-subtitle">by RED7734</div>
 
     <p>Naruto D&D-style RPG is a D&D-style experience set in the Naruto universe. Its goal is to bring the feel of a D&D campaign into the shinobi world, while removing mechanics like Hit Points and Armor Class, rewarding imagination over pure combat math.</p>
+
+    <p><b>WARNING: this is NOT classic D&amp;D.</b> The name may be misleading, so read this well: this is a D&amp;D-<i>style</i> RPG, not D&amp;D. It is inspired by D&amp;D, but it is its own thing, with its own rules.</p>
+    <p>Here, narrative matters more than numbers. There are no Hit Points and no Armor Class to whittle down or beat. You describe what your character does, roll the skill that fits, and the DM decides what happens from your roll and your description: how well a strike lands, how badly someone is hurt, what a technique really does. Your imagination and the story you are telling count for more than the math, so the DM's judgement is the center of every fight.</p>
 
     <h3>Character Creation</h3>
     <ul>
@@ -648,12 +669,12 @@
       <li><b>Walking arsenals:</b> puppets are packed with hidden mechanical weaponry, such as poison-coated blades, senbon launchers, shuriken and smoke bombs.</li>
       <li><b>Chakra-controlled equipment:</b> they are moved remotely through invisible chakra threads extending from the user's fingers, so they work as extensions of the shinobi's own limbs and combat gear.</li>
       <li><b>Storage in scrolls:</b> because they are treated as standard tactical gear, puppeteers usually seal their puppets inside scrolls with fūinjutsu, for quick deployment and transport.</li>
-      <li><b>Human puppets:</b> master puppeteers can turn human corpses into specialized puppets, keeping their original chakra flows and kekkei genkai abilities, to use as living-grade combat tools.</li>
+      <li><b>Human puppets:</b> master puppeteers can turn human corpses into specialized puppets, keeping their original chakra flows and kekkei genkai abilities, to use as living-grade combat tools. Making one takes a Medicine roll, because you have to remove the organs and blood from the body and add preservatives so it won't decay before it can become a puppet.</li>
     </ul>
     <p>Fighting through a puppet is a two-part check, reflecting both the physical skill of the puppeteer and the chakra threads used to control the puppet:</p>
     <ul>
       <li><b>Roll Weapons (Dexterity):</b> represents the puppeteer's physical skill at maneuvering and fighting through the puppet, the same way any other weapon check would.</li>
-      <li><b>Roll Chakra Control:</b> made after the Weapons roll, this represents the precision needed to manage the chakra threads that actually move the puppet.</li>
+      <li><b>Roll Chakra Threads (Puppet Technique):</b> made after the Weapons roll, you roll the technique itself, which uses the skill Chakra Control and represents the precision needed to manage the chakra threads that actually move the puppet. Add it to your Jutsu list from the Jutsu Library, where you find it in the Non-Elemental section.</li>
       <li><b>Chakra cost:</b> operating a puppet drains chakra. The DM sets whether the cost is paid once per use of the puppet or once per turn it stays active, depending on the campaign's rules.</li>
     </ul>
 
@@ -697,6 +718,13 @@
     <p><b>Tenshi</b> fills a similar gap for players who want to play a character inspired by Konan. Konan's paper techniques are canonically her own developed ninjutsu, not the result of a canon Paper Release Kekkei Genkai or a known paper bloodline. She developed her style around origami and paper from childhood. Technically, that means another shinobi could learn paper-based ninjutsu with sufficient training. For this game, however, the Tenshi clan gives that concept a coherent hereditary foundation so that a character whose entire combat identity revolves around paper does not feel mechanically or narratively disconnected from their origin. Tenshi possess a unique non-elemental bloodline that gives their bodies and chakra a natural affinity for paper, allowing them to manipulate it, transform their bodies through paper-based techniques, and build their entire fighting style around the material. The result is not claiming that Tenshi are canon Naruto lore; it is deliberately filling a canon gap so a Konan-inspired character can have a clear reason for being born with and specializing in that style.</p>
     <p><b>Jorōgumo</b> fills the gap for players who want to play a character built around a distinctive spider-ninja fighting style. The Jorōgumo clan gives it a hereditary answer: a clan of spider-ninja from Otogakure, the Village Hidden in the Sound, whose bodies naturally produce chakra-laced silk and Sticky Gold, whose members can be born with extra arms and a third eye, and who bond with spiders. Like Tenshi, they are a non-elemental hiden style and not a canon Kekkei Genkai, so a Jorōgumo's spider abilities are the inherited foundation of the character and not powers that appeared from nowhere. A non-Jorōgumo can still learn these techniques when there is a strong in-story reason, but the spider body itself is what remains unique to the clan.</p>
     <p>This is the underlying purpose of these homebrew clans: <b>they turn a recognizable character concept into an understandable in-world origin.</b> Deidara-style characters are born Bakuton, Orochimaru-style characters are born Hebi, Konan-style characters are born Tenshi, and spider-ninja characters are born Jorōgumo. Their defining traits therefore have a place in their personal history and family lineage. The clans are not meant to say that Naruto canon secretly contained these clans; they are a game-design tool that expands the setting while preserving the feeling and internal logic of Naruto.</p>
+    <h4>Semi-Homebrew Clans</h4>
+    <p>Semi-Homebrew Clans are clans that are technically canon, but about which we do not know enough to put them in the game exactly as they are. Their existence or their name comes from canon, but a lot of what is written in their clan list is <b>not canon</b>: it was added by this game to give the clan more flavor, and to make it playable, fun and not inferior to the other clans. Every semi-homebrew clan is marked with <b>[Semi-Homebrew]</b> in its description. Having them in the game gives players a unique playstyle that no other clan gives.</p>
+    <p><b>Jūgo:</b> Jūgo's clan exists in canon, but its name is unknown, and we know very little about it beyond its members' ability to absorb natural energy and their surges of madness. In this game it is called the Jūgo clan, and it lets you build a Jūgo-style character.</p>
+    <p><b>Kazekage:</b> canon has a clan of Sunagakure with high authority, from which several Kazekage came, but its real name is unknown. It is known to be skilled in Wind Release, with some members inheriting Magnet Release. In this game it is called the Kazekage clan, and it lets you play a Gaara-style character with Magnet Release and sand.</p>
+    <p><b>Terumī:</b> the surname Terumī exists in canon, but nobody says whether a Terumī clan exists, or why Mei Terumī has two kekkei genkai, Lava Release and Boil Release. Creating the clan gives that a reason, and lets someone play a character like her who uses both natures.</p>
+    <p><b>What is canon and what is not:</b> the names (Jūgo, Kazekage, Terumī) and the few things we know about these clans are canon. Some of their features are not: they were added to give the clan flavor. They try to follow canon by taking traits of a canon character and giving them to the whole clan. For example, a calm Jūgo loves animals and talks to them. That is canon for Jūgo, but we don't know if it is his personal trait or a trait of his clan, so in this game it is a clan feature. That makes it semi-canon.</p>
+    <p><b>Why "semi":</b> they are not fully homebrew, because they keep a canon name and canon information, and they are not fully canon, because part of their features is added. Treat the canon parts as canon, and the rest as the flavor that makes the clan work at the table.</p>
 
     <h3>Passive Abilities</h3>
     <p>Some abilities are not a one-off technique but a <b>state</b> you enter and stay in. These are <b>passive abilities</b>, and the main ones are <b>Sage Mode</b>, the <b>Curse Mark</b>, the Jūgo clan's <b>Sage Transformation</b> and a Jinchūriki's <b>Chakra Cloak</b> and <b>Nine-Tails Chakra Mode</b>. You roll once to enter the state and its chakra is spent then, and from that moment the state <b>remains</b> on your body until you end it or lose it. While you are in it, the DM should be <b>kind</b> to your rolls that the state would obviously help, such as Strength, Ninjutsu, Taijutsu, Genjutsu, Perception or Chakra Control, usually a passive <b>+5</b> or more according to the DM's own rules and how strong the state is. Every now and then the DM can ask you to roll <b>Chakra Control</b> to see if you can still hold it. If you fail and lose the state, the kindness is gone with it. The stronger the state, the harder it is to hold, so the DM can ask more often. Nothing here changes a number on your sheet, it is the DM's judgement of what your state deserves.</p>
@@ -834,6 +862,26 @@ const hatakeHeirloomMap = {
   sabre:'White Light Chakra Sabre'
 };
 
+const akasunaPuppetOptions = [
+  {value:'hiruko', label:'Hiruko', desc:'A puppet worn as armour, with a poisoned scorpion tail and launchers of poisoned needles, so the puppeteer is not a separate, exposed target.'},
+  {value:'kuroari', label:'Kuroari', desc:'An already existing puppet made by a skilled puppet master.'},
+  {value:'karasu', label:'Karasu', desc:'An already existing puppet made by a skilled puppet master.'},
+  {value:'sanshouo', label:'Sanshōuo', desc:'An already existing puppet made by a skilled puppet master.'},
+  {value:'custom', label:'Name Your Own Puppet…', desc:''}
+];
+const akasunaPuppetMap = {
+  hiruko:'Hiruko',
+  kuroari:'Kuroari',
+  karasu:'Karasu',
+  sanshouo:'Sanshōuo'
+};
+const akasunaBodyOptions = [
+  {value:'body', label:'Puppet Body', desc:'Your own body, turned into a puppet, keeping only a core of living flesh.'}
+];
+const akasunaBodyMap = {
+  body:'Puppet Body'
+};
+
 const inuzukaNinkenOptions = [
   {value:'loyal_hound', label:'Loyal Hound (Akamaru-style)', desc:'A single large, powerfully built ninken raised alongside you since childhood, capable of tremendous growth when the fight calls for it, fighting fang and claw at your side and lending itself to combination techniques like Fang Passing Fang and Beast Human Clone.'},
   {value:'pack', label:'Ninken Pack', desc:'A smaller pack of several ninken raised together, favoring coordinated pack tactics, flanking, and scent-tracking over the raw size of a single partner.'},
@@ -880,8 +928,11 @@ const clanAccessInfo = [
   {key:'Hoshigaki', label:'Hoshigaki Clan Techniques', desc:'Hoshigaki Water Release and shark-summoning jutsu.'},
   {key:'Hozuki', label:'Hōzuki Clan Techniques', desc:'Hydrification and liquid-body Water Release jutsu of the Hōzuki clan.'},
   {key:'Bakuton', label:'Bakuton Clan Techniques (Explosion Release)', desc:'Bakuton Explosion Release and explosive clay techniques.'},
-  {key:'Jugo', label:'Jūgo Clan Techniques', desc:'Sage Transformation and body-shaping jutsu of the Jūgo clan.'},
+  {key:'Jugo', label:'Jūgo Clan Techniques', desc:'[Semi-Homebrew] Sage Transformation and body-shaping jutsu of the Jūgo clan.'},
   {key:'Hatake', label:'Hatake Clan Heirlooms', desc:'The White Light Chakra Sabre, the Hatake clan heirloom.'},
+  {key:'Terumi', label:'Terumī Clan Techniques (Lava & Boil)', desc:'[Semi-Homebrew] Terumī acidic Lava Release and corrosive Boil Release techniques.'},
+  {key:'Kazekage', label:'Kazekage Clan Techniques (Magnet Release)', desc:'[Semi-Homebrew] Sunagakure Magnet Release techniques of the Kazekage clan.'},
+  {key:'Akasuna', label:'Akasuna Clan Techniques (Puppets)', desc:'[Homebrew] Red Sand puppet techniques, inspired by Sasori.'},
   {key:'Kaguya', label:'Kaguya Clan Techniques', desc:'Shikotsumyaku bone techniques of the Kaguya clan.'},
   {key:'Hebi', label:'Hebi Clan Techniques', desc:'[Homebrew] Hebi snake-summoning and Otogakure-flavored techniques.'},
   {key:'Yuki', label:'Yuki Clan Techniques (Ice Release)', desc:'Yuki Clan Ice Release and Haku-inspired ice techniques.'},
@@ -1024,11 +1075,11 @@ const clanData = {
   },
   'Uzumaki': {
     label:'Uzumaki Clan', shortLabel:'Uzumaki',
-    quote:'Formerly the ruling family of Whirlpool Country, mostly scattered to Konoha after their homeland\'s destruction, though the clan has grown active and prominent again in recent generations. Renowned for their mastery of Fūinjutsu and for chakra reserves and lifespans that dwarf those of other clans.',
+    quote:"A formerly prominent clan of Uzushiogakure, the Village Hidden by Whirling Tides in the Land of Whirlpools. Their name means 'whirlpool' or 'spiral'. The Uzumaki are known for bright red hair, an incredibly strong life force and chakra, notoriously long lives, and a mastery of fūinjutsu that earned them both respect and fear across the ninja world. Other villages, fearing that power, destroyed Uzushiogakure, and the survivors went into hiding and scattered across the world, many finding their way to Konoha, whose Senju clan is a distant blood relative of the Uzumaki. In recent generations the clan has grown active and prominent again.",
     traits:[
       {name:'Ability Score Increase', desc:'Your Constitution score increases by 2 and your Charisma score increases by 1. This is a bonus on top of your normal 27-point pool.'},
-      {name:'Skill Proficiencies', desc:'Chakra Control and Medicine are natural fits for an Uzumaki, reflecting their Ninshō traditions, sealing arts, and exceptional vitality.'},
-      {name:'Clan Appearance', desc:'Uzumaki tend to have distinctive, vividly red hair, a trait rare enough elsewhere that it\'s treated as a clan calling card on its own.'}
+      {name:'Skill Proficiencies', desc:'Chakra Control and Medicine are natural fits for an Uzumaki, reflecting their sealing arts and exceptional vitality.'},
+      {name:'Clan Appearance', desc:"Uzumaki tend to have distinctive, vividly red hair, a trait rare enough elsewhere that it is treated as a clan calling card on its own, though not every Uzumaki inherits it. Their outfits traditionally carry the Uzushiogakure crest on the shoulders, and their seals typically show a spiral crest, like the clan's symbol."}
     ],
     asiFixed:{con:2, cha:1},
     skillProfsFixed:[],
@@ -1036,7 +1087,12 @@ const clanData = {
       {name:'Uzumaki Sealing Techniques', desc:'You have narrative access to Uzumaki-exclusive jutsu in the Jutsu Library (advanced sealing arts), which you may take instead of standard jutsu.'},
       {name:'Wellspring of Chakra', desc:'As an Uzumaki, your reserves run unusually deep even by clan standards. Talk to your DM about raising your Chakra per Level above the default 5 (many tables use 10 to 15 for an Uzumaki) to reflect this.'},
       {name:'Uzumaki Vitality', desc:'As an Uzumaki, your body recovers from wounds and exhaustion faster than most. Whenever Constitution is rolled to judge how well you\'re recovering, physically or spiritually, your DM should lean generous.'},
-      {name:'Sealer\'s Instinct', desc:'As an Uzumaki, sealing is close to instinctive for your clan, even members who never formally study Fūinjutsu tend to develop a knack for spotting it, a side effect of growing up surrounded by seals your whole life. Ask your DM for an Investigation roll to notice a nearby seal, ward, or sealing array, and whether something about it feels off, before you\'d otherwise have reason to look closely.'}
+      {name:'The Spiral Signature', desc:"Fūinjutsu made by an Uzumaki carries the clan's spiral at its centre, like a signature. You can feel it in return: when a seal, ward or sealing array is near you, you can roll Fūinjutsu to sense it, read who made it, and tell whether it has been tampered with, even if nobody told you where to look. You can recognise an Uzumaki seal at a glance, and other sealers who know the clan can recognise yours. Your DM decides how much the roll reveals."},
+      {name:'The Fall of Uzushiogakure', desc:"Uzushiogakure was the shinobi village of the Land of Whirlpools, also called the Village of Longevity. Its ninja were renowned for their fūinjutsu, and other villages, some believing it too powerful to be allowed to continue, targeted and destroyed it. The survivors went into hiding and scattered across the world. As an Uzumaki, you have a narrative lever to go to the ruins of Uzushiogakure: investigate them, discover your past, find hidden Uzumaki jutsu, and maybe, one day, refound the village. What you find there is up to you and your DM."},
+      {name:'Long Life', desc:"The Uzumaki's strong life force gives them very long lifespans, and they age slowly. You can play an Uzumaki who is older than they look, and your DM can let your body hold up to the years better than most."},
+      {name:'Chakra Fit for a Vessel', desc:"Uzumaki chakra is unusually well suited to hosting a tailed beast. If you want to be a jinchūriki, your clan gives you a natural reason to be a candidate, and your life force helps you survive far more than most would. It is still dangerous: even an Uzumaki is left severely weakened when a beast is torn out (see the Jinchūriki rules)."},
+      {name:'Chakra Chains', desc:"Some Uzumaki can make chains out of their own chakra, a rare gift that not every member of the clan has. It is behind the Adamantine Sealing Chains in the Jutsu Library, so ask your DM if your character has this gift."},
+      {name:'Friends of Konoha', desc:"Uzushiogakure and Konoha had close ties, because the Uzumaki and the Senju are distant blood relatives, and the Uzushiogakure crest is still worn on the flak jackets of Konoha's chūnin and jōnin as a symbol of that friendship. You have narrative access to being welcomed in Konoha, and to Senju relatives and friends."}
     ]
   },
   'Aburame': {
@@ -1157,7 +1213,7 @@ const clanData = {
   },
   'Jugo': {
     label:"Jūgo Clan", shortLabel:"Jūgo",
-    quote:"A family whose bodies constantly absorb natural energy from their surroundings, granting them huge chakra reserves and the power to reshape their own bodies, but at a terrible cost: sudden surges of madness in which they go berserk. When they are calm they are gentle, animal-loving people, and when they are angry they are a danger to everyone around them. The special fluids in their bodies were once studied to discover the origin of the Curse Mark.",
+    quote:"[Semi-Homebrew] A family whose bodies constantly absorb natural energy from their surroundings, granting them huge chakra reserves and the power to reshape their own bodies, but at a terrible cost: sudden surges of madness in which they go berserk. When they are calm they are gentle, animal-loving people, and when they are angry they are a danger to everyone around them. The special fluids in their bodies were once studied to discover the origin of the Curse Mark.",
     traits:[
       {name:'Ability Score Increase', desc:"Your Strength score increases by 2 and your Constitution score increases by 1. This is a bonus on top of your normal 27-point pool."},
       {name:'Skill Proficiencies', desc:"Animal Handling, Athletics, and Taijutsu are natural fits for a Jūgo, reflecting a gentle bond with animals, raw physical power, and a body that fights as much as it transforms."},
@@ -1297,11 +1353,77 @@ const clanData = {
       {name:'Children of the Sound', desc:"The Jorōgumo come from Otogakure, the Village Hidden in the Sound. You have narrative access to being a shinobi of the Land of Sound: its people, its secrets, and its reputation for producing shinobi with strange, unusual bodies and abilities."},
       {name:'Spider Body', desc:"A Jorōgumo has a unique body structure, and many are born with two extra pairs of arms. The extra arms let you hold multiple tools, do several things at once, form several hand seals at the same time, and add extra power and variety to your attacks. They can also pull a bowstring to incredible tension, greatly increasing the power of your arrows. Not every Jorōgumo has all of them, so you and your DM decide how many arms your character has. The DM decides what several hands can meaningfully do in a single moment."},
       {name:'Third Eye', desc:"Some Jorōgumo are born with a third eye on the forehead, usually covered by a forehead protector. In a serious fight you can reveal it, and it greatly increases your perception and accuracy: you can pinpoint an enemy's vital points with an arrow, and even tell how many centimeters a missed shot was off from far away. Ask your DM for Perception when you use it. You can keep it hidden if you don't want anyone to know."},
-      {name:'Web Weaver', desc:"By mixing your chakra with your spit or sweat, you can spin sticky, elastic webs, usually from your mouth. You can use them to restrain and trap opponents, to climb through the environment, and to change the trajectory of your arrows by tying them to a thread. Your chakra constantly flows through the strands, so you can sense any movement across them, and ordinary tools like kunai can't cut them. Only something that attacks chakra itself, like the Gentle Fist, can. The DM decides what a web can and can't hold."},
+      {name:'Web Weaver', desc:"By mixing your chakra with your spit or sweat, you can spin sticky, elastic webs, usually from your mouth. You can use them to restrain and trap opponents, to climb through the environment, and to change the trajectory of your arrows by tying them to a thread. Your chakra constantly flows through the strands, so you can sense any movement across them (roll Perception to do so), and ordinary tools like kunai can't cut them. Only something that attacks chakra itself, like the Gentle Fist, can. The DM decides what a web can and can't hold."},
       {name:'Sticky Gold', desc:"Your body produces a thick golden liquid from your mouth and sweat glands. The liquid is soft and shapeable while it is being produced, but it hardens rapidly when exposed to air, becoming a chakra-resistant metal. You can spread it over your body to form protective armour, or shape it before it hardens into weapons. Jorōgumo are renowned for long-range archery and can form their own bows and arrows from Sticky Gold, turning their bodies into a natural long-range arsenal. The hardened metal can resist ordinary attacks and even interfere with chakra-based strikes such as the Gentle Fist. You can also chew your web liquid into a denser, gum-like material and shape it into improvised tools or weapons. The DM decides how much punishment the hardened metal can withstand."},
       {name:"The Sniper's Patience", desc:"Jorōgumo fight best from range, patiently setting traps across the battlefield, testing an opponent's defenses, and enjoying the puzzle of finding the way through them. You have narrative access to being a long-range tactician, and your DM should reward careful preparation and observation. Pinned down in close-quarters, however, you are at a disadvantage, and the DM can make an ambush or a rush on you dangerous."},
       {name:'Spiders of the Sound', desc:"As a Jorōgumo, you have an instinctive affinity with spiders, giving you easy narrative access to forming a bond with a spider or spider group. This is not an instant free summon: first establish the bond through roleplay, then learn Summoning Technique (Kuchiyose no Jutsu), perform the required training, and complete a blood contract by using Fūinjutsu to seal the agreement on a scroll. Once that story has happened, the chosen spider or spider group can be tracked mechanically in Companion Animals as a Summoning Animal / Group and can be called through Summoning Technique. Choose a premade giant spider, a group of spiders, or create your own custom spider or spider group below.", choice:{key:'jorogumoSpider', label:'Choose your spider summon', options:jorogumoSpiderOptions, isCompanion:true, companionType:'summon'}},
       {name:'Spider Archery', desc:"Jorōgumo are renowned for long-range archery. Your Sticky Gold can be shaped into a functional bow and arrows before it hardens, allowing you to fight as a dedicated spider archer without needing to carry a conventional bow. Choose the Sticky Gold War Bow below to add it directly to your Weapons section, or create your own bow. The weapon is still rolled with Weapons, while the Sticky Gold itself remains your clan technique.", choice:{key:'jorogumoBow', label:'Choose your spider archer bow', options:jorogumoBowOptions, weaponMap:jorogumoBowMap}},
+    ]
+  },
+  'Terumi': {
+    label:"Terumī Clan", shortLabel:"Terumī",
+    quote:"[Semi-Homebrew] A rare clan of Kirigakure that carries two kekkei genkai at once: Lava Release and Boil Release. Being born with either was dangerous in the era of the Bloody Mist, when Kirigakure persecuted those with kekkei genkai, so many Terumī grew up hiding what they were. Their name means 'shining beauty'. The clan produced a Mizukage who ended that persecution, abolished the brutal academy graduation ritual, and worked to reform Kirigakure and rebuild its relations with other villages.",
+    traits:[
+      {name:'Ability Score Increase', desc:"Your Charisma score increases by 2 and your Constitution score increases by 1. This is a bonus on top of your normal 27-point pool."},
+      {name:'Skill Proficiencies', desc:"Ninjutsu, Persuasion, and Tactics are natural fits for a Terumī, reflecting two kekkei genkai, a leader's charm, and a sharp, perceptive strategist's mind."},
+      {name:'Clan Affinity', desc:"You have a natural affinity for Lava Release and Boil Release. Applying clan traits automatically marks Lava Release and Boil Release as Known, along with the Fire, Earth and Water they are made of, and adds a signature technique of each to your Jutsu list."},
+      {name:'Clan Appearance', desc:"Terumī looks vary, but many are known for striking looks and for long, carefully kept hair. Their name means 'shining beauty'. In the dark years of Kirigakure they learned to keep their gifts hidden, but they tend to carry themselves with confidence."}
+    ],
+    asiFixed:{cha:2, con:1},
+    skillProfsFixed:[],
+    startingElements:['Fire','Earth','Water','Lava','Boil'],
+    startingJutsu:['Lava Release: Melting Apparition Technique','Boil Release: Skilled Mist Technique'],
+    features:[
+      {name:'Terumī Clan Techniques', desc:"You have narrative access to Terumī-exclusive techniques in the Jutsu Library, such as the Melting Apparition Technique, and to every Lava Release and Boil Release technique there. Applying clan traits automatically adds the Melting Apparition Technique and the Skilled Mist Technique to your Jutsu list."},
+      {name:'Two Bloodlines', desc:"You carry two kekkei genkai, Lava Release and Boil Release, a very rare gift that almost no one else has. This is the reason a Terumī can use both natures from the start, and it gives you an easy narrative reason to play a character built around them."},
+      {name:'Acidic Lava', desc:"Your Lava Release is not molten rock but a corrosive, acidic mud, like the mud of a mud volcano. It melts through almost anything, including chakra-based defences, and it is just as effective against obstacles as regular lava while still holding its own against Water Release."},
+      {name:'Corrosive Mist', desc:"Your Boil Release is a corrosive vapour that fills confined spaces quickly and dissolves most substances after brief exposure. You control how strong its acid is, from a thin, harmless haze to a lethal cloud. It is dangerous to allies as well as enemies, but it does not harm you."},
+      {name:'The Bloody Mist Legacy', desc:"Kirigakure once persecuted anyone with a kekkei genkai and forced its students to kill each other to graduate. As a Terumī, you have narrative access to that history: a childhood spent hiding your gifts, scars from the old ways, allies among other kekkei genkai families, and a desire to make sure it never happens again. How much of that era exists in your campaign is up to you and your DM."},
+      {name:'Mizukage Legacy', desc:"The clan produced a Mizukage who reformed the village and rebuilt its relations with the other villages. You have narrative access to the clan's gift for leading and negotiating: your DM can let your confidence and charm open doors, and let councils, officials and other villages take you seriously."}
+    ]
+  },
+  'Kazekage': {
+    label:"Kazekage Clan", shortLabel:"Kazekage",
+    quote:"[Semi-Homebrew] A shinobi clan of Sunagakure with high, influential authority in the village. It is called the Kazekage clan because so many of its members have been Kazekage, which has made the leadership of the sand almost a hereditary system. Its members are skilled in Wind Release, like most Suna shinobi, and select members inherit the rare Magnet Release kekkei genkai, which lets them manipulate large quantities of mineral substances to blanket the battlefield and overwhelm opponents. The clan has also produced other people of high authority, such as the village's ambassador.",
+    traits:[
+      {name:'Ability Score Increase', desc:"Your Charisma score increases by 2 and your Intelligence score increases by 1. This is a bonus on top of your normal 27-point pool."},
+      {name:'Skill Proficiencies', desc:"Ninjutsu, Persuasion, and Chakra Control are natural fits for a member of the Kazekage clan, reflecting the clan's range of techniques, its political authority, and the precise chakra needed for puppets and mineral control."},
+      {name:'Clan Affinity', desc:"You have a natural affinity for Magnet Release. Applying clan traits automatically marks Magnet Release as Known, along with the Wind Release and Earth Release it is made of."},
+      {name:'Clan Appearance', desc:"Kazekage clan looks vary, but many have the weathered, sun-tanned look of Suna and a composed, watchful bearing. On formal occasions, they are used to wearing the Kage's robes and hat."}
+    ],
+    asiFixed:{cha:2, int:1},
+    skillProfsFixed:[],
+    startingElements:['Wind','Earth','Magnet'],
+    features:[
+      {name:'Kazekage Clan Techniques', desc:"You have narrative access to the Magnet Release techniques in the Jutsu Library, such as sand, iron sand and gold dust, as well as to Wind Release techniques and to Suna's puppet arts."},
+      {name:'Magnet Release', desc:"You are one of the members of the clan who inherited the rare Magnet Release kekkei genkai. It lets you manipulate large quantities of mineral substances, such as sand, iron sand or gold dust, to blanket the battlefield and overwhelm your opponents."},
+      {name:'Blood of the Kazekage', desc:"Many members of your clan have been Kazekage, and relatives of a Kazekage are seen as the most suitable to be the next one. When the Kazekage dies or is missing for a long time, the Suna Council chooses the next, and your family name carries weight with it. You have a narrative lever for political connections in Sunagakure: allies on the Suna Council, access to the Kazekage's Office, an audience with the village's leaders, and even being considered for the position one day. Marriages have also given the clan connections in Konohagakure. That standing has a price: the council can pressure you about marriage and heirs, some extremists would rather see the clan banished, and the title of Kazekage is sometimes considered cursed, since many have been killed by assassins."},
+      {name:'Family Specialties', desc:"Members of the clan usually specialize in one path. Some follow Wind Release, like most Suna shinobi, others master the puppet arts (see Puppets in the Rules), and others simply take full advantage of their Magnet Release. You have narrative access to any of these three as your family's specialty."}
+    ]
+  },
+  'Akasuna': {
+    label:"Akasuna Clan", shortLabel:"Akasuna",
+    quote:"[Homebrew] The Akasuna, the Red Sand, are a clan of skilled puppet masters from Sunagakure, obsessed with making art that lasts forever. Their puppets fight for them from a distance, packed with hidden weapons and poison, and the most devoted members go further, turning even their own bodies into puppets to escape age, pain and decay, keeping only a core of living flesh. Many of them end up joining Sunagakure's Puppet Brigade, but not all of them are members. Their name comes from the blood their puppets spilled on the sand in war.",
+    traits:[
+      {name:'Ability Score Increase', desc:"Your Wisdom score increases by 2 and your Dexterity score increases by 1. This is a bonus on top of your normal 27-point pool."},
+      {name:'Skill Proficiencies', desc:"Weapons, Chakra Control, and Medicine are natural fits for an Akasuna. Weapons and Chakra Control come from puppets, which count as weapons and are controlled with chakra threads. Medicine comes from their expertise in making poisons, and from studying anatomy and the human body to build puppets, which makes them skilled in medicine almost by accident."},
+      {name:'Clan Affinity', desc:"[Homebrew] The Akasuna are simply a clan of skilled puppet masters, with no special bloodline and no particular style: no Kekkei Genkai and no chakra nature. Applying clan traits does not mark any chakra nature as Known, and adds Chakra Threads to your Jutsu list."},
+      {name:'Clan Appearance', desc:"Akasuna tend to have short red hair and calm, half-closed eyes with a dreamy, distant look. A member who has turned their body into a puppet never looks older than when they converted. When they fight through their own puppet body, their eyes open wide with a manic look."}
+    ],
+    asiFixed:{wis:2, dex:1},
+    skillProfsFixed:[],
+    startingJutsu:['Chakra Threads (Puppet Technique)'],
+    features:[
+      {name:'Akasuna Clan Techniques', desc:"You have narrative access to Akasuna-exclusive puppet techniques in the Jutsu Library: the Red Secret Technique: Performance of a Hundred Puppets and Core Transfer. Applying clan traits automatically adds Chakra Threads to your Jutsu list, a technique that anyone can learn."},
+      {name:'Puppet Brigade Ties', desc:"Many Akasuna end up joining Sunagakure's Puppet Brigade, but not all of them are members, and you don't have to be one. Because so many Akasuna are or have been members, you have narrative access to learning from an older Akasuna who was part of the Brigade, and to the Brigade's contacts and reputation. You and your DM decide whether your character is in the Brigade, used to be, or never was."},
+      {name:'Puppet Workshop', desc:"The Akasuna have a puppet workshop in Sunagakure, where they craft puppets and sell them: puppets for company, for beauty, for performances, and for war itself. You have narrative access to the workshop: a place to work on your puppets, to buy and sell them, and to meet customers, from ordinary villagers to shinobi and nobles."},
+      {name:'Puppet Collection', desc:"An Akasuna is never without a puppet. Puppets are weapons, so you roll Weapons to fight with them (see Puppets in the Rules). If you want one, pick your first puppet below, an already existing puppet made by a skilled puppet master, or one of your own, and it is added straight to your Weapons the moment you hit Apply Clan Traits. Leave it on (No Choice Made) to play without one for now.", choice:{key:'puppet', label:'Choose your first puppet (optional)', options: akasunaPuppetOptions, weaponMap: akasunaPuppetMap}},
+      {name:'Chakra Thread Mastery', desc:"Your chakra threads can be suppressed until they are invisible, so opponents can't see how your puppets are being moved. A beginner controls a few puppets, but a puppeteer who has installed a thread-spinning mechanism in their body can control dozens, even a hundred, at once. You can also control weakened living people as puppets, even against their will. The DM decides how many puppets you can control at your current level."},
+      {name:'Students of the Human Body', desc:"The Akasuna study anatomy and the human body in depth, with one purpose: building realistic puppets that move like people. That knowledge makes them skilled in medicine almost by accident."},
+      {name:"Puppeteer's Poison", desc:"You have narrative access to making poisons, an art common in the Akasuna clan. You decide what your poisons do, and how skilled you are at preparing them depends on how much you have trained. Akasuna poisons can take effect instantly, some are so complex that they are considered incurable, and one can kill after three days of suffering. You lace nearly every weapon in your arsenal with them, and preparing a poison, or its antidote, is a Medicine roll."},
+      {name:'Puppet Body', desc:"The most devoted Akasuna turn their own body into a puppet, keeping only a core of living flesh. If you go this way, your body doesn't age, so you keep the youth you had when you converted, you need no food, and you feel no fatigue, muscle failure, blood loss, wounds or pain, while still being able to see, hear and speak. It can be smashed apart and put back together, and it hides weapons inside it, like spinning blades, a stinger, flame pipes in the palms and a scroll holder on the back, so you don't have the puppeteer's weakness of being exposed at close range. The price is that your core is your one living part: if it is destroyed, you die. You can also move it to another puppet body (see Core Transfer). Your DM decides when in your story you make the change. If you want it from the start, pick it below and the Puppet Body is added to your Weapons when you hit Apply Clan Traits. Leave it on (No Choice Made) to keep your natural body.", choice:{key:'body', label:'Your body (optional)', options: akasunaBodyOptions, weaponMap: akasunaBodyMap}},
+      {name:'Human Puppets', desc:"The Akasuna's most forbidden craft is turning human bodies into puppets. It is not a ninjutsu technique, it is an old-style craft you do by hand, rolling Medicine. To make one, you first remove the body's organs, then clean and drain it of blood, then add a preservative so it won't decay, and finally install weapons and defences in it. A human puppet is far more versatile than an ordinary puppet: it can use chakra and any kekkei genkai it had in life. Akasuna usually dissect the dead bodies of their adversaries to make them. In wartime, Sunagakure often lets the Akasuna of its Puppet Brigade do this, to grow its arsenal, but never with its own citizens or other Suna ninja. Also in wartime, Akasuna children learn this craft, so as adults they are skilled puppet makers. Your DM decides whether your character has learned it, and how the world reacts if it finds out."},
+      {name:'Eternal Art', desc:"The Akasuna believe true art must last forever. That obsession drives them to make puppets that outlive their makers, and even to turn their own bodies into puppets to escape age and decay. You have narrative access to playing a cold, aloof, patient or impatient character (an Akasuna dislikes waiting, and dislikes making others wait), and to slowly discovering that what really lasts are the creations you put your heart into. Your DM can let this obsession come up in the story."}
     ]
   },
   'Other': {
@@ -1551,13 +1673,15 @@ function applyClassPreset(className){
   logEntry(`<b>Class preset applied:</b> ${className}`);
 }
 
+function clanDisplayName(clanKey){ return (clanData[clanKey] && clanData[clanKey].shortLabel) ? clanData[clanKey].shortLabel : clanKey; }
+
 function hasClanAccess(clanKey){
   return state.clan === clanKey || !!(state.clanAccess && state.clanAccess[clanKey]);
 }
 
 function populateClanSelect(){
   const el = document.getElementById('f_clan');
-  const order = ['Non-Clan','Uchiha','Hyuga','Senju','Hatake','Akimichi','Yamanaka','Nara','Uzumaki','Aburame','Inuzuka','Hoshigaki','Hozuki','Bakuton','Hebi','Jugo','Kaguya','Yuki','Tenshi','Jorogumo'];
+  const order = ['Non-Clan','Uchiha','Hyuga','Senju','Hatake','Akimichi','Yamanaka','Nara','Uzumaki','Aburame','Inuzuka','Hoshigaki','Hozuki','Terumi','Yuki','Kaguya','Bakuton','Hebi','Tenshi','Jorogumo','Akasuna','Jugo','Kazekage'];
   el.innerHTML = order.map(k => `<option value="${k}">${clanData[k].shortLabel}</option>`).join('') + `<option value="Other">Other / Custom</option>`;
 }
 
@@ -2069,6 +2193,7 @@ const jutsuPresets = [
   {name:'Sage Art: Goemon', skillType:'Ninjutsu', element:'Fire', category:'Senjutsu', cost:60, libNote:"Can only be used while in Sage Mode (see Passive Abilities in the Rules). It is a cooperation technique that needs three senjutsu users, such as you and two animal sages fused to your shoulders.", desc:"After driving the enemy into a corner, such as indoors or in a pit, one user creates a large volume of oil, a partner propels it with a large Wind Release technique, and another ignites it with a large Fire Release technique. In an instant the area is filled with oil burning at temperatures of thousands of degrees, reducing the target and everything around them to cinders."},
   {name:'Sage Art: Hair Needle Senbon', skillType:'Ninjutsu', element:'Non-Elemental', category:'Senjutsu', cost:25, libNote:"Can only be used while in Sage Mode (see Passive Abilities in the Rules).", desc:"Senjutsu chakra hardens the user's hair, which is then fired at the enemy as a multitude of senbon needles. The technique has great damaging power and a very long range."},
   {name:'Sage Art: Amphibian Technique', skillType:'Chakra Control', element:'Non-Elemental', category:'Senjutsu', cost:15, libNote:"Needs an animal sage to fuse with you. It is the one Sage Art you use to enter and keep Sage Mode, so it is used before and during it (see Passive Abilities in the Rules).", desc:"A sage merges onto the user's shoulders and gathers natural energy from its stationary position, for the user to use. This lets the user enter or keep Sage Mode in the middle of a fight without having to stand still."},
+  {name:'Sage Art: Sage Animal Technique', skillType:'Chakra Control', element:'Non-Elemental', category:'Senjutsu', cost:15, libNote:"[Homebrew] Needs a sage animal to fuse with you. It is the one Sage Art you use to enter and keep Sage Mode, so it is used before and during it (see Passive Abilities in the Rules).", desc:"[Homebrew] Your sage animal, whichever animal taught you senjutsu, such as a snake, a rabbit or a dog, climbs onto your shoulders and gathers natural energy from its stationary position, for you to use. This lets you enter or keep Sage Mode in the middle of a fight without having to stand still. It is the same as the Sage Art: Amphibian Technique, made for any other sage animal."},
   {name:'Curse Mark', skillType:'Chakra Control', element:'Non-Elemental', category:'Senjutsu', cost:20, libNote:"⚠️ <b>Story-locked in practice:</b> only about one in ten bodies survives the seal, so do not add this at character creation without a DM-approved story. It is a passive ability, see Passive Abilities in the Rules.", desc:"A transformation-based cursed seal (Juinjutsu) invented by Orochimaru. While studying the body of Jūgo, he found that it has an innate ability to passively absorb natural energy, and that it secretes special bodily fluids that react to senjutsu chakra, causing immediate physical alterations, a controlled shape-shifting quality and greatly enhanced physical capabilities. By isolating an enzyme from those fluids and mixing it with his own senjutsu chakra, he created a seal he could brand on others. It is applied with a bite on the neck, and the seal appears near the puncture wound. The recipient falls unconscious while their body accepts or rejects it, and only about 10% of bodies are compatible: everyone else dies. If you survive, you can call on the seal's power boosts, and that access grows through repeated use. If left unused, the seal grows dormant. It is a passive ability."},
   {name:'Sage Transformation', clan:'Jugo', skillType:'Chakra Control', element:'Non-Elemental', category:'Senjutsu', cost:30, libNote:"It is a passive ability, see Passive Abilities in the Rules. Unlike Sage Mode it needs no stillness and no teacher, but it comes with the clan's surges of rage.", desc:"A way of attaining Sage Mode through a bodily reaction of the Jūgo clan. By exposing their special bodily fluids to the natural energy their bodies constantly absorb, the user gains increased physical capabilities and the ability to shape-shift: creating weapon-like appendages, changing form almost instantly, and isolating the change to specific parts of the body. Strength, speed, stamina, reflexes, perception and durability rise, and techniques become more powerful. Once transformed, common features are yellow irides with black sclerae, altered skin colour and longer hair. The constant intake of natural energy also gives massive chakra reserves, and brings sudden, uncontrollable surges of rage. It is a passive ability."},
   {name:'Piston Fist', clan:'Jugo', skillType:'Taijutsu', element:'Non-Elemental', category:'Senjutsu', cost:20, libNote:"Can only be used while in Sage Transformation (see Passive Abilities in the Rules).", desc:"Using Sage Transformation, the user alters their arm into a piston to increase their attack power. To increase it even more, they can form jets on their hands or elbows."},
@@ -2085,9 +2210,26 @@ const jutsuPresets = [
   {name:'Ten-Finger Drilling Bullets (Teshi Sendan)', clan:'Kaguya', skillType:'Taijutsu', element:'Non-Elemental', category:'Taijutsu', cost:20, desc:"The user forcefully ejects the bones of their fingers from all ten fingers, firing them as bullets. The broken skin heals rapidly afterwards, and the bones can be regrown."},
   {name:'Dance of the Seedling Fern (Sawarabi no Mai)', clan:'Kaguya', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:40, desc:"The last of the dances of the Kaguya clan's Shikotsumyaku. While underground, the user produces as many as ten thousand blades of bone that sprout from the earth. Because of how quickly the bones appear, how wide an area they cover and how high they extend, the technique deals extensive damage and kills indiscriminately, including anyone on the ground's surface. It is the only Shikotsumyaku technique classified as ninjutsu."},
   // Jorōgumo
-  {name:'Spider Web', clan:'Jorogumo', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:12, desc:"The user mixes chakra with their spit or sweat and spins sticky, elastic webs, usually released from the mouth. The webs can restrain and trap opponents, help the user climb through the environment, and be tied to arrows to change their trajectory. Chakra constantly flows through the strands, so the user can sense any movement across them, and ordinary tools such as kunai can't cut them. Only something that attacks chakra itself, such as the Gentle Fist, can."},
+  {name:'Spider Web', clan:'Jorogumo', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:12, desc:"The user mixes chakra with their spit or sweat and spins sticky, elastic webs, usually released from the mouth. The webs can restrain and trap opponents, help the user climb through the environment, and be tied to arrows to change their trajectory. Chakra constantly flows through the strands, so the user can sense any movement across them, and ordinary tools such as kunai can't cut them. Only something that attacks chakra itself, such as the Gentle Fist, can. You can also lay thin threads across an area to scout it: your chakra flows through them, so you can roll Perception to sense whether an enemy has passed near your threads."},
   {name:'Sticky Gold', clan:'Jorogumo', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:18, desc:"The user produces a golden metallic substance from their mouth and the whole body, a thick liquid that hardens on contact with air into a metal that blocks chakra. It can cover the body as an armoured layer that resists attacks, even chakra-based ones like the Gentle Fist, and it can be shaped into kunai, a bow and arrows for a long-range arsenal. Chewing web liquid can also make it more solid and gum-like, allowing makeshift weapons."},
-  {name:'Spider War Bow: Terrible Split', clan:'Jorogumo', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:30, desc:"The user forms a bow from Sticky Gold and fires arrows with such power they can smash trees and create craters. Extra arms can pull the string to incredible tension, greatly increasing the power, and the user can add rotation to the arrow for even more devastating results. An arrow can be tied to a chakra-filled web cord to steer it toward a blind spot, or to carry the user's own chakra to the target. Roll Ninjutsu to form the bow, and Weapons to shoot it."},
+  {name:'Spider War Bow: Terrible Split', clan:'Jorogumo', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:30, desc:"The user fires arrows with such power they can smash trees and create craters. Extra arms can pull the string to incredible tension, greatly increasing the power, and the user can add rotation to the arrow for even more devastating results. An arrow can be tied to a chakra-filled web cord to steer it toward a blind spot, or to carry the user's own chakra to the target. This ninjutsu can only be performed if you already have a bow equipped in your Weapons list, which you can create from your own Sticky Gold. Roll Weapons to shoot, then Ninjutsu to add the rotation and chakra to the arrow."},
+  // Lava Release
+  {name:'Lava Release: Melting Apparition Technique', clan:'Terumi', skillType:'Ninjutsu', element:'Lava', category:'Lava Release', cost:30, desc:"The user spews a large flow of acidic mud from their mouth, like the mud of a mud volcano, instead of molten rock. The mud is highly corrosive and melts through almost anything, including chakra-based defences like Susanoo, and it holds its own against Water Release. It is a form of Lava Release only the Terumī can use."},
+  {name:'Lava Release: Quicklime Congealing Technique', skillType:'Ninjutsu', element:'Lava', category:'Lava Release', cost:20, desc:"The user expels a large quantity of quicklime from their mouth, capable of damaging an opponent. The remnants can also restrict the target's movements, acting like quick-drying cement, but the quicklime needs water to harden. This is easily added with a Water Release technique, which also increases the area covered."},
+  {name:'Lava Release: Ash Stone Seal Technique', skillType:'Ninjutsu', element:'Lava', category:'Lava Release', cost:20, desc:"The user spews a thick cloud of ash from their mouth that wraps around an opponent to restrain them. By focusing their chakra, the user can maintain and enhance the binding properties of the ash."},
+  {name:'Lava Release: Rubber Wall', skillType:'Ninjutsu', element:'Lava', category:'Lava Release', cost:18, desc:"The user creates an enormous torrent of lava from the ground directly in front of them, which forms a wall with immense durability thanks to its rubbery consistency. It deforms when attacked, absorbing and dissipating the force behind a blow instead of only blocking it, and it can reinforce an existing barrier. The rubber is strong against Lightning Release."},
+  {name:'Lava Release: Expanding Flame Rings', skillType:'Ninjutsu', element:'Lava', category:'Lava Release', cost:25, desc:"The user expands a ring of melting flames, which can be sealed inside a projectile to melt it and change it into a spiral shape. The sealed flames then cause a high-pressure shock wave that melts the projectile and explodes in a storm of flames."},
+  {name:'Lava Release: Planet-Branding Blast', skillType:'Ninjutsu', element:'Lava', category:'Lava Release', cost:40, desc:"The user launches a blast of strong acidic fluid that explodes on impact and coats the ground, melting through rock and stone. It can also be thrown as a projectile to melt weapons such as shuriken sent at the user."},
+  {name:'Lava Release: Flower-Fruit Mountain', skillType:'Ninjutsu', element:'Lava', category:'Lava Release', cost:45, desc:"The user raises a small volcano that erupts violently, sending molten rock flying in every direction like a giant flower and covering a wide area in lava."},
+  {name:'Lava Release: Scorching Stream Rock Technique', skillType:'Ninjutsu', element:'Lava', category:'Lava Release', cost:25, desc:"The user spits out a large amount of lava that immediately solidifies into blocks of molten rock, fired in a volley scattered over a wide arc, which makes them hard to dodge. Due to their composition, the boulders melt through most objects."},
+  // Boil Release
+  {name:'Erupting Propulsion Fist', skillType:'Ninjutsu', element:'Boil', category:'Boil Release', cost:20, desc:"After raising the temperature of their chakra to the boiling point, the user releases boiling steam from their body and delivers a steam-enhanced punch that sends the opponent flying far away."},
+  {name:'Erupting Strong Foot', skillType:'Ninjutsu', element:'Boil', category:'Boil Release', cost:20, desc:"After raising the temperature of their chakra to the boiling point, the user releases boiling steam from their body and delivers a powerful kick with enhanced force through steam armour. It has enough force to send the opponent reeling backwards."},
+  {name:'Steam Dash', skillType:'Ninjutsu', element:'Boil', category:'Boil Release', cost:15, desc:"After raising the temperature of their chakra to the boiling point, the user releases boiling steam from their body and dashes straight at the opponent in a line, like a locomotive, with a sound similar to a steam whistle."},
+  // Akasuna
+  {name:'Chakra Threads (Puppet Technique)', skillType:'Chakra Control', element:'Non-Elemental', category:'Non-Elemental', cost:8, desc:"The user extends chakra threads from their fingertips and connects them to puppets or objects, controlling them from a distance. This is the technique you roll to control puppets (see Puppets in the Rules). The threads can be suppressed until they are invisible, which makes them hard to notice or intercept, and with practice the user can control more puppets at once."},
+  {name:'Red Secret Technique: Performance of a Hundred Puppets', clan:'Akasuna', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:60, desc:"The user controls up to a hundred puppets at once, stored in a scroll and released into the battlefield, each linked by chakra threads, overwhelming the enemy with sheer numbers. A mechanism installed in the user's body helps spin that many threads. It is said to have once taken down a small nation. Puppets controlled this way don't work together as well as puppets built to cooperate."},
+  {name:'Core Transfer', clan:'Akasuna', skillType:'Ninjutsu', element:'Non-Elemental', category:'Non-Elemental', cost:25, libNote:"[Homebrew] Needs a Puppet Body (see the Akasuna clan features).", desc:"[Homebrew] The user, whose body is a puppet, moves their core of living flesh into another puppet body in a split second, abandoning a body that is damaged beyond repair."},
 ];
 
 const kekkeiGenkaiElements = ['Wood','Ice','Lava','Storm','Magnet','Boil','Explosion'];
@@ -2168,7 +2310,7 @@ function renderJutsuLibrary(){
       return `<div class="library-card">
         <div class="lib-top"><div class="lib-name">${p.name}</div><div class="lib-tags">${p.skillType} · ${p.cost} chakra</div></div>
         <div class="lib-desc">${p.desc}</div>
-        ${locked ? `<div class="lib-lock">🔒 Normally exclusive to the ${p.clan} clan, you can still add it, just make sure it's justified in-story (see Clan → Access).</div>` : ''}
+        ${locked ? `<div class="lib-lock">🔒 Normally exclusive to the ${clanDisplayName(p.clan)} clan, you can still add it, just make sure it's justified in-story (see Clan → Access).</div>` : ''}
         ${p.rareWarning ? `<div class="lib-lock">⚠️ <b>Extremely rare dōjutsu:</b> do not add this at character creation without a strong, DM-approved roleplay reason. The Rinnegan is not clan-locked in this tool, but it is intentionally story-locked in practice because almost nobody possesses it.</div>` : ''}
         ${p.libNote ? `<div class="lib-lock">${p.libNote}</div>` : ''}
         ${elementLockNote(p.element)}
@@ -2188,6 +2330,7 @@ function addPresetJutsu(i){
 
 const weaponPresets = [
   {name:'Kunai', desc:'A kunai held in the hand for close combat, not to be thrown, although it may still be thrown, as of right now you\'re using it as a weapon.', type:'weapon'},
+  {name:'Puppet Body', clan:'Akasuna', desc:'Your own body, turned into a puppet, with only a core of living flesh left inside. It hides spinning blades on the lower back, a stinger, pipes in the palms that spew flame hot enough to melt rock, and a scroll holder that stores extra armament, all under your clothes. It can be smashed apart and reassembled, and its core is your only weakness: if it is destroyed, you die. Fight through it like any puppet: roll Weapons, then Chakra Threads (Puppet Technique).', type:'puppet'},
   {name:'Hiruko', desc:'A puppet that doubles as armour, letting the user hide inside it while it protects them from close-range attacks. It fights with an extendable iron tail for stabbing and defensive spinning, a heavy back shell, rapid senbon launched from the mouth, and a torpedo-shaped arm that scatters senbon shrapnel. Every weapon it carries is coated in a slow-acting poison that leaves the victim in painful paralysis for days.', type:'puppet'},
   {name:'Karasu', desc:'One of Kankurō’s signature puppets, built for concealed weapons, blades, and deceptive close-range attacks.', type:'puppet'},
   {name:'Kuroari', desc:'A capture-oriented puppet used to trap opponents and set up Kankurō’s puppet techniques.', type:'puppet'},
@@ -2272,7 +2415,7 @@ function renderItemLibrary(){
     return `<details class="jutsu-library-group"><summary><span class="cat-title">${title}</span></summary>${note}<div class="group-body">${items.map(p => {
       const i = itemPresets.indexOf(p);
       const outsider = p.clan && !hasClanAccess(p.clan);
-      const outsiderNote = outsider ? `<div class="lib-lock">🔒 Normally exclusive to the ${p.clan} clan, you can still add it, just make sure it's justified in-story (see Clan → Access).</div>` : '';
+      const outsiderNote = outsider ? `<div class="lib-lock">🔒 Normally exclusive to the ${clanDisplayName(p.clan)} clan, you can still add it, just make sure it's justified in-story (see Clan → Access).</div>` : '';
       return `<div class="library-card">
         <div class="lib-top">
           <div class="lib-name">${p.name}</div>
@@ -2295,7 +2438,7 @@ function addPresetItem(i){
 function createDefaultState(){ return {
   name:'', village:'', title:'', className:'', level:1, clan:'Non-Clan', clanCustomName:'', jinchuriki:'none', jinBonding:'', jinChakraMode:'',
   clanBonus:{str:0,dex:0,con:0,int:0,wis:0,cha:0}, clanChoices:{}, clanFilter:'all',
-  clanAccess:{Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Yamanaka:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Hozuki:false,Jugo:false,Kaguya:false,Bakuton:false,Hebi:false,Yuki:false,Tenshi:false,Jorogumo:false,Senju:false,Hatake:false}, element:'',
+  clanAccess:{Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Yamanaka:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Hozuki:false,Jugo:false,Kaguya:false,Bakuton:false,Hebi:false,Yuki:false,Tenshi:false,Jorogumo:false,Senju:false,Hatake:false,Terumi:false,Kazekage:false,Akasuna:false}, element:'',
   customClanText:{},
   profBonus:2,
   cp:0, cpMax:0, chakraPerLevel:5,
@@ -2319,7 +2462,7 @@ function createDefaultState(){ return {
     {name:'Intimidation', desc:'Instilling fear', ability:'cha', prof:false},
     {name:'Investigation', desc:'Finding clues, deducing details, deciphering messages', ability:'int', prof:false},
     {name:'Tactics', desc:'Battle IQ, battlefield strategy, and the ability to command a shinobi team toward victory through planning, adaptation, and clever combat tactics.', ability:'int', prof:false},
-    {name:'Medicine', desc:'Stabilizing and diagnosing wounds', ability:'wis', prof:false},
+    {name:'Medicine', desc:'Stabilizing and diagnosing wounds, but also performing operations, healing someone, creating an antidote or medical remedies, or even the opposite, creating poisons. What heals can sometimes do the opposite.', ability:'wis', prof:false},
     {name:'Nature', desc:'Terrain, animals, natural phenomena', ability:'int', prof:false},
     {name:'Perception', desc:'Spotting enemies, ambushes, and hidden things, whether with your eyes or your ninja instincts. At high levels it starts to work like a sensory ninja\'s range: picking up chakra signatures, sounds, or scents. With a Dōjutsu active it also governs how well you use it (Byakugan\'s sight, Sharingan\'s prediction). See Rules for details.', ability:'wis', prof:false},
     {name:'Performance', desc:'Performing, distracting an audience', ability:'cha', prof:false},
@@ -2668,7 +2811,7 @@ function renderWeapons(){
       <textarea placeholder="Notes / fighting style" rows="2" style="width:100%" onchange="state.weapons[${i}].desc=this.value">${w.desc}</textarea>
       <div class="jutsu-actions" style="margin-top:10px">
         <button class="cast-btn" onclick="rollWeaponSkill(${i})">Roll Weapons</button>
-        ${w.type==='puppet' ? `<button class="cast-btn" onclick="rollWeaponChakraControl(${i})">Roll Chakra Control</button>` : ''}
+        ${w.type==='puppet' ? `<button class="cast-btn" onclick="rollWeaponChakraControl(${i})">Roll Chakra Threads</button>` : ''}
         <button class="del-btn" onclick="state.weapons.splice(${i},1); renderWeapons()">Delete</button>
       </div>
     </div>
@@ -2695,7 +2838,7 @@ function rollWeaponChakraControl(i){
   const raw = d(20); const total = raw + mod;
   flash(total);
   const crit = raw===20?' — CRITICAL!':(raw===1?' — critical failure':'');
-  logEntry(`<b>${w.name||'Puppet'}</b> (Chakra Control) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
+  logEntry(`<b>${w.name||'Puppet'}</b> (Chakra Threads, Puppet Technique) — d20(${raw})${fmt(mod)} = <span class="res">${total}</span>${crit}`);
 }
 
 function renderCompanions(){
@@ -2782,7 +2925,7 @@ function importChar(event){
       state.clanCustomName = data.clanCustomName || '';
       state.clanBonus = Object.assign({str:0,dex:0,con:0,int:0,wis:0,cha:0}, data.clanBonus || {});
       state.clanChoices = data.clanChoices || {};
-      state.clanAccess = Object.assign({Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Yamanaka:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Hozuki:false,Jugo:false,Kaguya:false,Bakuton:false,Hebi:false,Yuki:false,Tenshi:false,Jorogumo:false,Senju:false,Hatake:false}, data.clanAccess || {});
+      state.clanAccess = Object.assign({Uchiha:false,Hyuga:false,Nara:false,Akimichi:false,Yamanaka:false,Uzumaki:false,Aburame:false,Inuzuka:false,Hoshigaki:false,Hozuki:false,Jugo:false,Kaguya:false,Bakuton:false,Hebi:false,Yuki:false,Tenshi:false,Jorogumo:false,Senju:false,Hatake:false,Terumi:false,Kazekage:false,Akasuna:false}, data.clanAccess || {});
       state.customClanText = data.customClanText || {};
       state.clanFilter = 'all';
       state.jinchuriki = jinchurikiData[data.jinchuriki] ? data.jinchuriki : 'none';
